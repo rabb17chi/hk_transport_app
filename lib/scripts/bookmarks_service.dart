@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BookmarkItem {
@@ -39,6 +40,12 @@ class BookmarkItem {
 
 class BookmarksService {
   static const String _bookmarksKey = 'kmb_bookmarks_v1';
+  static String keyFor(BookmarkItem item) =>
+      '${item.route}|${item.bound}|${item.stopId}|${item.serviceType}';
+
+  // Global refresh trigger for all bookmark widgets
+  static final ValueNotifier<int> _refreshTrigger = ValueNotifier<int>(0);
+  static ValueNotifier<int> get refreshTrigger => _refreshTrigger;
 
   static Future<List<BookmarkItem>> getBookmarks() async {
     final prefs = await SharedPreferences.getInstance();
@@ -62,23 +69,22 @@ class BookmarksService {
 
   static Future<void> addBookmark(BookmarkItem item) async {
     final existing = await getBookmarks();
-    final already = existing.any((b) =>
-        b.route == item.route &&
-        b.bound == item.bound &&
-        b.stopId == item.stopId &&
-        b.serviceType == item.serviceType);
+    final already = existing.any((b) => keyFor(b) == keyFor(item));
     if (already) return;
     existing.add(item);
     await _save(existing);
+    _refreshTrigger.value++;
   }
 
   static Future<void> removeBookmark(BookmarkItem item) async {
     final existing = await getBookmarks();
-    existing.removeWhere((b) =>
-        b.route == item.route &&
-        b.bound == item.bound &&
-        b.stopId == item.stopId &&
-        b.serviceType == item.serviceType);
+    existing.removeWhere((b) => keyFor(b) == keyFor(item));
     await _save(existing);
+    _refreshTrigger.value++;
+  }
+
+  static Future<bool> isBookmarked(BookmarkItem item) async {
+    final existing = await getBookmarks();
+    return existing.any((b) => keyFor(b) == keyFor(item));
   }
 }

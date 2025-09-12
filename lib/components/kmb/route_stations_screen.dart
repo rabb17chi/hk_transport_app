@@ -155,9 +155,16 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                           itemCount: _routeStops.length,
                           itemBuilder: (context, index) {
                             final stop = _routeStops[index];
-                            final isLast = index == _routeStops.length - 1;
                             final isSelected = _selectedStopId == stop.stop &&
                                 _selectedStationSeq == stop.seq;
+                            final bookmarkItem = BookmarkItem(
+                              route: widget.routeNumber,
+                              bound: widget.bound,
+                              stopId: stop.stop,
+                              stopNameTc: stop.stopNameTc,
+                              stopNameEn: stop.stopNameEn,
+                              serviceType: '1',
+                            );
 
                             return Column(
                               children: [
@@ -165,74 +172,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                 GestureDetector(
                                   onTap: () async {
                                     HapticFeedback.lightImpact();
-                                    if (!mounted) return;
-                                    showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (_) => const AlertDialog(
-                                        content: SizedBox(
-                                          width: 48,
-                                          height: 48,
-                                          child: Center(
-                                            child: CircularProgressIndicator(),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                    await _loadETA(stop.stop, stop.seq);
-                                    if (!mounted) return;
-                                    Navigator.of(context).pop();
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        final relevant = _etaData
-                                            .where((e) => e.seq == stop.seq)
-                                            .toList();
-                                        return AlertDialog(
-                                          title: Text(
-                                              'ETA  ${widget.routeNumber} - ${stop.stopNameTc}'),
-                                          content: SizedBox(
-                                            width: double.maxFinite,
-                                            child: relevant.isEmpty
-                                                ? const Text('No ETA available')
-                                                : ListView(
-                                                    shrinkWrap: true,
-                                                    children: relevant
-                                                        .take(5)
-                                                        .map((e) {
-                                                      int displaySeq = e.etaSeq;
-                                                      if (displaySeq > 3)
-                                                        displaySeq -= 3;
-                                                      return Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                vertical: 6),
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Text(
-                                                                '第 $displaySeq 班'),
-                                                            Text(e
-                                                                .arrivalTimeString),
-                                                          ],
-                                                        ),
-                                                      );
-                                                    }).toList(),
-                                                  ),
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.of(context).pop(),
-                                              child: const Text('Close'),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
+                                    _loadETA(stop.stop, stop.seq);
                                   },
                                   onLongPress: () async {
                                     HapticFeedback.mediumImpact();
@@ -244,95 +184,112 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                       stopNameEn: stop.stopNameEn,
                                       serviceType: '1',
                                     );
-                                    await BookmarksService.addBookmark(item);
-                                    if (!mounted) return;
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(
-                                              'Bookmarked ${widget.routeNumber} - ${stop.stopNameTc}')),
-                                    );
+                                    final already =
+                                        await BookmarksService.isBookmarked(
+                                            item);
+                                    if (already) {
+                                      await BookmarksService.removeBookmark(
+                                          item);
+                                      if (!mounted) return;
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Removed bookmark: ${widget.routeNumber} - ${stop.stopNameTc}')),
+                                      );
+                                    } else {
+                                      await BookmarksService.addBookmark(item);
+                                      if (!mounted) return;
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Bookmarked ${widget.routeNumber} - ${stop.stopNameTc}')),
+                                      );
+                                    }
+                                    if (mounted) setState(() {});
                                   },
-                                  child: Container(
-                                    margin: const EdgeInsets.only(bottom: 8),
-                                    padding: const EdgeInsets.all(16),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white, // White background
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(
-                                        color: isSelected
-                                            ? Colors.green
-                                            : Colors
-                                                .black, // Green when selected, black otherwise
-                                        width: isSelected
-                                            ? 3
-                                            : 1, // Thicker border when selected
-                                      ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        // Station Number
-                                        Container(
-                                          width: 40,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFFF7A925),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
+                                  child: FutureBuilder<bool>(
+                                    future: BookmarksService.isBookmarked(
+                                        bookmarkItem),
+                                    builder: (context, snap) {
+                                      final bookmarked = snap.data == true;
+                                      return Container(
+                                        margin:
+                                            const EdgeInsets.only(bottom: 8),
+                                        padding: const EdgeInsets.all(16),
+                                        decoration: BoxDecoration(
+                                          color: bookmarked
+                                              ? Colors.pink.withOpacity(0.15)
+                                              : Colors
+                                                  .white, // White background
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          border: Border.all(
+                                            color: isSelected
+                                                ? Colors.green
+                                                : Colors
+                                                    .black, // Green when selected, black otherwise
+                                            width: isSelected
+                                                ? 3
+                                                : 1, // Thicker border when selected
                                           ),
-                                          child: Center(
-                                            child: Text(
-                                              '${index + 1}',
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            // Station Number
+                                            Container(
+                                              width: 40,
+                                              height: 40,
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFFF7A925),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  '${index + 1}',
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 16),
-                                        // Station Info
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                stop.stopNameTc,
-                                                style: const TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors
-                                                      .black, // Black text
-                                                ),
+                                            const SizedBox(width: 16),
+                                            // Station Info
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    stop.stopNameTc,
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors
+                                                          .black, // Black text
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    stop.stopNameEn,
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.grey[
+                                                          700], // Darker grey for better contrast
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                stop.stopNameEn,
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.grey[
-                                                      700], // Darker grey for better contrast
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                        // Arrow or End indicator
-                                        if (isLast)
-                                          const Icon(
-                                            Icons.flag,
-                                            color: Color(0xFFF7A925),
-                                            size: 24,
-                                          )
-                                        else
-                                          const Icon(
-                                            Icons.arrow_downward,
-                                            color: Color(0xFFF7A925),
-                                            size: 20,
-                                          ),
-                                      ],
-                                    ),
+                                      );
+                                    },
                                   ),
                                 ),
                                 // ETA Display Section - Only show under selected station
@@ -344,7 +301,6 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                     margin: const EdgeInsets.only(bottom: 16),
                                     padding: const EdgeInsets.all(16),
                                     decoration: BoxDecoration(
-                                      // color: const Color(0xFF1E1E1E),
                                       borderRadius: BorderRadius.circular(12),
                                       border: Border.all(
                                         color: Colors.green,

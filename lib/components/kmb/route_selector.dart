@@ -94,10 +94,6 @@ class _RouteSelectorState extends State<RouteSelector> {
                   );
                 }
               },
-              onSubmitted: (_) {
-                // Clear search when submitted
-                _searchController.clear();
-              },
             ),
             const SizedBox(height: 8),
             if (_searchController.text.isNotEmpty) ...[
