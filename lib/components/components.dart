@@ -5,9 +5,9 @@
 // KMB Components
 export 'kmb/route_selector.dart';
 export 'kmb/route_banner.dart';
-export 'kmb/kmb_test_screen_refactored.dart';
+export 'kmb/kmb_screen_refactored.dart';
 export 'kmb/route_stations_screen.dart';
 
 // General Components
-export 'bookmarked_route_n_station.dart';
-export 'InputKeyboard.dart';
+export 'kmb/bookmarked_route_n_station.dart';
+export 'kmb/InputKeyboard.dart';

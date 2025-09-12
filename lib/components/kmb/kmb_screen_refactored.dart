@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hk_transport_app/components/bookmarked_route_n_station.dart';
+import 'package:hk_transport_app/components/kmb/bookmarked_route_n_station.dart';
 import '../../scripts/kmb_api_service.dart';
 import '../../scripts/kmb_cache_service.dart';
 import 'route_selector.dart';

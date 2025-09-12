@@ -77,7 +77,7 @@ class _RouteSelectorState extends State<RouteSelector> {
             TextField(
               controller: _searchController,
               decoration: const InputDecoration(
-                hintText: 'Enter route number',
+                hintText: '請輸入路線號碼',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.search),
                 // suffixIcon: Icon(Icons.clear),
@@ -151,12 +151,12 @@ class _RouteSelectorState extends State<RouteSelector> {
                       Icon(Icons.search_off, size: 48, color: Colors.grey),
                       SizedBox(height: 8),
                       Text(
-                        'No routes found',
+                        '沒有相應路線',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        'Try a different search term',
+                        '請重新檢查路線號碼',
                         style: TextStyle(color: Colors.grey),
                       ),
                     ],
@@ -171,12 +171,12 @@ class _RouteSelectorState extends State<RouteSelector> {
                     Icon(Icons.search, size: 48, color: Colors.grey),
                     SizedBox(height: 8),
                     Text(
-                      'Start typing to search routes',
+                      '請輸入路線號碼',
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      'e.g., 1A, 960, 2A',
+                      '例如: 1A',
                       style: TextStyle(color: Colors.grey),
                     ),
                   ],

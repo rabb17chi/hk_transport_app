@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../scripts/kmb_api_service.dart';
-import '../scripts/bookmarks_service.dart';
+import '../../scripts/kmb_api_service.dart';
+import '../../scripts/bookmarks_service.dart';
 
 /// BookmarkedRouteWithStation Widget
 ///

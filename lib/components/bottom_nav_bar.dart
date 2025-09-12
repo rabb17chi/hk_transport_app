@@ -13,15 +13,15 @@ class AppBottomNavBar extends StatelessWidget {
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.train),
-          label: 'MTR',
+          label: '港鐵',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.directions_bus),
-          label: 'KMB',
+          label: '巴士',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.menu),
-          label: 'Menu',
+          label: '設定',
         ),
       ],
       currentIndex: currentIndex,
