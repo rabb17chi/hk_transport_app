@@ -21,22 +21,33 @@ class KMBApiService {
 
       // If no cache, fetch from API
       print('Fetching routes from API...');
-      final response = await http.get(Uri.parse('$baseUrl/route'));
+      final url = '$baseUrl/route';
+      print('API URL: $url');
+
+      final response = await http.get(Uri.parse(url));
+      print('Response status: ${response.statusCode}');
+      print('Response body length: ${response.body.length}');
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final List<dynamic> routesData = data['data'] ?? [];
+        print('Parsed routes count: ${routesData.length}');
+
         final routes =
             routesData.map((route) => KMBRoute.fromJson(route)).toList();
 
         // Cache the data for future use
         await KMBCacheService.cacheRoutes(routes);
+        print('Routes cached successfully: ${routes.length} routes');
 
         return routes;
       } else {
-        throw Exception('Failed to load routes: ${response.statusCode}');
+        print('API Error: ${response.statusCode} - ${response.body}');
+        throw Exception(
+            'Failed to load routes: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
+      print('Error in getAllRoutes: $e');
       throw Exception('Error fetching routes: $e');
     }
   }
@@ -53,21 +64,32 @@ class KMBApiService {
 
       // If no cache, fetch from API
       print('Fetching stops from API...');
-      final response = await http.get(Uri.parse('$baseUrl/stop'));
+      final url = '$baseUrl/stop';
+      print('API URL: $url');
+
+      final response = await http.get(Uri.parse(url));
+      print('Response status: ${response.statusCode}');
+      print('Response body length: ${response.body.length}');
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final List<dynamic> stopsData = data['data'] ?? [];
+        print('Parsed stops count: ${stopsData.length}');
+
         final stops = stopsData.map((stop) => KMBStop.fromJson(stop)).toList();
 
         // Cache the data for future use
         await KMBCacheService.cacheStops(stops);
+        print('Stops cached successfully: ${stops.length} stops');
 
         return stops;
       } else {
-        throw Exception('Failed to load stops: ${response.statusCode}');
+        print('API Error: ${response.statusCode} - ${response.body}');
+        throw Exception(
+            'Failed to load stops: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
+      print('Error in getAllStops: $e');
       throw Exception('Error fetching stops: $e');
     }
   }

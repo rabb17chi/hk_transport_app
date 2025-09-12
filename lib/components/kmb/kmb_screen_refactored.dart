@@ -15,13 +15,10 @@ class KMBTestScreenRefactored extends StatefulWidget {
 class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
   List<KMBRoute> _routes = [];
   List<KMBStop> _stops = [];
-  List<KMBETA> _etas = [];
 
   bool _isLoading = false;
   String _errorMessage = '';
   String _selectedRouteKey = ''; // Changed to store routeKey (route + bound)
-  String _selectedStop = '';
-  String _selectedServiceType = '1';
   Map<String, dynamic> _cacheInfo = {};
 
   @override
@@ -86,71 +83,9 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
     }
   }
 
-  // Removed _searchRoutes method as filtering is now handled internally by RouteSelector
-
-  Future<void> _searchStops(String query) async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = '';
-    });
-
-    try {
-      final stops = await KMBApiService.searchStops(query);
-      setState(() {
-        _stops = stops;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Error searching stops: $e';
-        _isLoading = false;
-      });
-    }
-  }
-
-  Future<void> _getETA() async {
-    if (_selectedRouteKey.isEmpty || _selectedStop.isEmpty) {
-      setState(() {
-        _errorMessage = 'Please select both route and stop';
-      });
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-      _errorMessage = '';
-    });
-
-    try {
-      final etas = await KMBApiService.getETA(
-          _selectedStop, _selectedRouteKey.split('_')[0], _selectedServiceType);
-      setState(() {
-        _etas = etas;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Error fetching ETA: $e';
-        _isLoading = false;
-      });
-    }
-  }
-
   void _onRouteSelected(String routeKey) {
     setState(() {
       _selectedRouteKey = routeKey;
-    });
-  }
-
-  void _onStopSelected(String stop) {
-    setState(() {
-      _selectedStop = stop;
-    });
-  }
-
-  void _onServiceTypeChanged(String serviceType) {
-    setState(() {
-      _selectedServiceType = serviceType;
     });
   }
 
@@ -161,32 +96,99 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
         title: const Text('KMB ETA'),
         backgroundColor: Colors.blue[600],
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _refreshCache,
+            tooltip: 'Refresh Cache',
+          ),
+        ],
       ),
       body: _isLoading && _routes.isEmpty && _stops.isEmpty
           ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Route Selector
-                  RouteSelector(
-                    allRoutes: _routes,
-                    selectedRouteKey: _selectedRouteKey,
-                    onRouteSelected: _onRouteSelected,
+          : _errorMessage.isNotEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error_outline,
+                        size: 64,
+                        color: Colors.red[300],
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Error Loading Data',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      const SizedBox(height: 8),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 32),
+                        child: Text(
+                          _errorMessage,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      ElevatedButton.icon(
+                        onPressed: _loadInitialData,
+                        icon: const Icon(Icons.refresh),
+                        label: const Text('Retry'),
+                      ),
+                    ],
                   ),
+                )
+              : SingleChildScrollView(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Show cache info if available
+                      if (_cacheInfo.isNotEmpty)
+                        Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Cache Status',
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Routes: ${_cacheInfo['routesCached'] == true ? 'Cached' : 'Not cached'}',
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                                Text(
+                                  'Stops: ${_cacheInfo['stopsCached'] == true ? 'Cached' : 'Not cached'}',
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      const SizedBox(height: 16),
 
-                  const SizedBox(height: 16),
+                      // Route Selector
+                      RouteSelector(
+                        allRoutes: _routes,
+                        selectedRouteKey: _selectedRouteKey,
+                        onRouteSelected: _onRouteSelected,
+                      ),
 
-                  // Bookmarked Stop Selector
-                  const BookmarkedRouteWithStation(),
+                      const SizedBox(height: 16),
 
-                  const SizedBox(height: 16),
+                      // Bookmarked Stop Selector
+                      const BookmarkedRouteWithStation(),
 
-                  // InputKeyboard()
-                ],
-              ),
-            ),
+                      const SizedBox(height: 16),
+
+                      // InputKeyboard()
+                    ],
+                  ),
+                ),
     );
   }
 }
