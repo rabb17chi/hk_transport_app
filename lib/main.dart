@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'components/kmb/kmb_screen_refactored.dart';
 import 'components/menu.dart';
 import 'components/bottom_nav_bar.dart';
+import 'components/mtr/mtr_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -51,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> pages = <Widget>[
-      _buildHomeContent(context),
+      const MTRScreen(),
       const KMBTestScreenRefactored(),
       const MenuScreen(),
     ];
