@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'components/kmb/kmb_test_screen_refactored.dart';
 import 'components/menu.dart';
+import 'components/bottom_nav_bar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,70 +23,77 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('HK Transport App'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.menu),
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  int _currentIndex = 0;
+
+  Widget _buildHomeContent(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'Welcome to HK Transport App',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 30),
+          ElevatedButton.icon(
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const MenuScreen()),
+                MaterialPageRoute(
+                  builder: (context) => const KMBTestScreenRefactored(),
+                ),
               );
             },
-          )
+            icon: const Icon(Icons.directions_bus),
+            label: const Text('KMB API'),
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              textStyle: const TextStyle(fontSize: 16),
+            ),
+          ),
+          const SizedBox(height: 28),
+          ElevatedButton.icon(
+            onPressed: () {},
+            icon: const Icon(Icons.train),
+            label: const Text('MTR API'),
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              textStyle: const TextStyle(fontSize: 16),
+            ),
+          ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Welcome to HK Transport App',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              'Test KMB Bus API Integration',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-            const SizedBox(height: 30),
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const KMBTestScreenRefactored(),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.directions_bus),
-              label: const Text('KMB API'),
-              style: ElevatedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                textStyle: const TextStyle(fontSize: 16),
-              ),
-            ),
-            const SizedBox(height: 28),
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.train),
-              label: const Text('MTR API'),
-              style: ElevatedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                textStyle: const TextStyle(fontSize: 16),
-              ),
-            ),
-          ],
-        ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Widget> pages = <Widget>[
+      _buildHomeContent(context),
+      const KMBTestScreenRefactored(),
+      const MenuScreen(),
+    ];
+
+    return Scaffold(
+      body: IndexedStack(
+        index: _currentIndex,
+        children: pages,
+      ),
+      bottomNavigationBar: AppBottomNavBar(
+        currentIndex: _currentIndex,
+        onTap: (int index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
       ),
     );
   }
