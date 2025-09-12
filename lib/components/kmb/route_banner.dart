@@ -33,9 +33,7 @@ class RouteBanner extends StatelessWidget {
         decoration: BoxDecoration(
           color: const Color(0xFF323232),
           borderRadius: BorderRadius.circular(8),
-          border: isSelected
-              ? Border.all(color: Colors.red, width: 3)
-              : Border.all(color: Colors.grey[600]!, width: 3),
+          border: Border.all(color: Colors.grey[600]!, width: 3),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.2),

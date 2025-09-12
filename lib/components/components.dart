@@ -9,5 +9,5 @@ export 'kmb/kmb_test_screen_refactored.dart';
 export 'kmb/route_stations_screen.dart';
 
 // General Components
-export 'BookmarkedRouteWithStation.dart';
+export 'bookmarked_route_n_station.dart';
 export 'InputKeyboard.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../scripts/kmb_api_service.dart';
+import '../../scripts/bookmarks_service.dart';
 
 /// Route Stations Screen
 ///
@@ -162,16 +163,94 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                               children: [
                                 // Station Item
                                 GestureDetector(
-                                  onTap: () {
+                                  onTap: () async {
                                     HapticFeedback.lightImpact();
-                                    // Print station ID and details
-                                    print('=== Station Selected ===');
-                                    print(
-                                        'Station Name (TC): ${stop.stopNameTc}');
-                                    print('Station Sequence: ${stop.seq}');
-                                    print('Station ID: ${stop.stop}');
-                                    print('======================');
-                                    _loadETA(stop.stop, stop.seq);
+                                    if (!mounted) return;
+                                    showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (_) => const AlertDialog(
+                                        content: SizedBox(
+                                          width: 48,
+                                          height: 48,
+                                          child: Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                    await _loadETA(stop.stop, stop.seq);
+                                    if (!mounted) return;
+                                    Navigator.of(context).pop();
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        final relevant = _etaData
+                                            .where((e) => e.seq == stop.seq)
+                                            .toList();
+                                        return AlertDialog(
+                                          title: Text(
+                                              'ETA  ${widget.routeNumber} - ${stop.stopNameTc}'),
+                                          content: SizedBox(
+                                            width: double.maxFinite,
+                                            child: relevant.isEmpty
+                                                ? const Text('No ETA available')
+                                                : ListView(
+                                                    shrinkWrap: true,
+                                                    children: relevant
+                                                        .take(5)
+                                                        .map((e) {
+                                                      int displaySeq = e.etaSeq;
+                                                      if (displaySeq > 3)
+                                                        displaySeq -= 3;
+                                                      return Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                vertical: 6),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Text(
+                                                                '第 $displaySeq 班'),
+                                                            Text(e
+                                                                .arrivalTimeString),
+                                                          ],
+                                                        ),
+                                                      );
+                                                    }).toList(),
+                                                  ),
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: const Text('Close'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  onLongPress: () async {
+                                    HapticFeedback.mediumImpact();
+                                    final item = BookmarkItem(
+                                      route: widget.routeNumber,
+                                      bound: widget.bound,
+                                      stopId: stop.stop,
+                                      stopNameTc: stop.stopNameTc,
+                                      stopNameEn: stop.stopNameEn,
+                                      serviceType: '1',
+                                    );
+                                    await BookmarksService.addBookmark(item);
+                                    if (!mounted) return;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Bookmarked ${widget.routeNumber} - ${stop.stopNameTc}')),
+                                    );
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.only(bottom: 8),

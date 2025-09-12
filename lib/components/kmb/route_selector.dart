@@ -104,7 +104,7 @@ class _RouteSelectorState extends State<RouteSelector> {
               if (_filteredRoutes.isNotEmpty) ...[
                 const SizedBox(height: 12),
                 SizedBox(
-                  height: 320,
+                  height: 280,
                   child: ListView.builder(
                     itemCount: _filteredRoutes.length,
                     itemBuilder: (context, index) {
@@ -123,13 +123,8 @@ class _RouteSelectorState extends State<RouteSelector> {
                           print('=== Selected Route Data ===');
                           print('Route: ${route.route}');
                           print('Direction: $direction (${route.bound})');
-                          // print('Service Type: ${route.serviceType}');
-                          // print('Origin (EN): ${route.origEn}');
                           print('Origin (TC): ${route.origTc}');
-                          // print('Origin (SC): ${route.origSc}');
-                          // print('Destination (EN): ${route.destEn}');
                           print('Destination (TC): ${route.destTc}');
-                          // print('Destination (SC): ${route.destSc}');
                           print('========================');
 
                           // Navigate to route stations screen
