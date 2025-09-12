@@ -157,21 +157,9 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('KMB API Test'),
+        title: const Text('KMB ETA'),
         backgroundColor: Colors.blue[600],
         foregroundColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.cached),
-            onPressed: _refreshCache,
-            tooltip: 'Refresh Cache',
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadInitialData,
-            tooltip: 'Refresh Data',
-          ),
-        ],
       ),
       body: _isLoading && _routes.isEmpty && _stops.isEmpty
           ? const Center(child: CircularProgressIndicator())
@@ -189,13 +177,8 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
 
                   const SizedBox(height: 16),
 
-                  // Stop Selector
+                  // Bookmarked Stop Selector
                   // BookmarkedRouteWithStation(
-                  //   stops: _stops,
-                  //   selectedStop: _selectedStop,
-                  //   onStopSelected: _onStopSelected,
-                  //   onSearch: _searchStops,
-                  //   isLoading: _isLoading,
                   // ),
 
                   const SizedBox(height: 16),

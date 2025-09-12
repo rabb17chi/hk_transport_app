@@ -60,13 +60,7 @@ class _RouteSelectorState extends State<RouteSelector> {
         _filteredRoutes = widget.allRoutes
             .where((route) =>
                 route.route.toUpperCase().startsWith(query) ||
-                route.route.toUpperCase() == query ||
-                route.origEn.toUpperCase().contains(query) ||
-                route.destEn.toUpperCase().contains(query) ||
-                route.origTc.contains(query) ||
-                route.destTc.contains(query) ||
-                route.origSc.contains(query) ||
-                route.destSc.contains(query))
+                route.route.toUpperCase() == query)
             .toList();
       }
     });
@@ -80,11 +74,6 @@ class _RouteSelectorState extends State<RouteSelector> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Search Routes',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
             TextField(
               controller: _searchController,
               decoration: const InputDecoration(
@@ -114,13 +103,8 @@ class _RouteSelectorState extends State<RouteSelector> {
             if (_searchController.text.isNotEmpty) ...[
               if (_filteredRoutes.isNotEmpty) ...[
                 const SizedBox(height: 12),
-                const Text(
-                  'Select Route',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 4),
                 SizedBox(
-                  height: 200,
+                  height: 320,
                   child: ListView.builder(
                     itemCount: _filteredRoutes.length,
                     itemBuilder: (context, index) {
