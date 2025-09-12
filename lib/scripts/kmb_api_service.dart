@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'kmb_cache_service.dart';
 
 /// KMB API Service for Hong Kong Bus Data
 ///
@@ -11,13 +12,27 @@ class KMBApiService {
   /// Fetch all available KMB bus routes
   static Future<List<KMBRoute>> getAllRoutes() async {
     try {
+      // Try to get cached data first
+      final cachedRoutes = await KMBCacheService.getCachedRoutes();
+      if (cachedRoutes != null) {
+        print('Using cached routes: ${cachedRoutes.length} routes');
+        return cachedRoutes;
+      }
+
+      // If no cache, fetch from API
+      print('Fetching routes from API...');
       final response = await http.get(Uri.parse('$baseUrl/route'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final List<dynamic> routesData = data['data'] ?? [];
+        final routes =
+            routesData.map((route) => KMBRoute.fromJson(route)).toList();
 
-        return routesData.map((route) => KMBRoute.fromJson(route)).toList();
+        // Cache the data for future use
+        await KMBCacheService.cacheRoutes(routes);
+
+        return routes;
       } else {
         throw Exception('Failed to load routes: ${response.statusCode}');
       }
@@ -29,13 +44,26 @@ class KMBApiService {
   /// Fetch all available KMB bus stops
   static Future<List<KMBStop>> getAllStops() async {
     try {
+      // Try to get cached data first
+      final cachedStops = await KMBCacheService.getCachedStops();
+      if (cachedStops != null) {
+        print('Using cached stops: ${cachedStops.length} stops');
+        return cachedStops;
+      }
+
+      // If no cache, fetch from API
+      print('Fetching stops from API...');
       final response = await http.get(Uri.parse('$baseUrl/stop'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final List<dynamic> stopsData = data['data'] ?? [];
+        final stops = stopsData.map((stop) => KMBStop.fromJson(stop)).toList();
 
-        return stopsData.map((stop) => KMBStop.fromJson(stop)).toList();
+        // Cache the data for future use
+        await KMBCacheService.cacheStops(stops);
+
+        return stops;
       } else {
         throw Exception('Failed to load stops: ${response.statusCode}');
       }
@@ -74,59 +102,81 @@ class KMBApiService {
       // Convert bound to API format (I -> inbound, O -> outbound)
       final boundParam = bound == 'I' ? 'inbound' : 'outbound';
 
+      // Try cached route-stops first (service type fixed to '1' for now)
+      // Use the original bound parameter for cache consistency
+      final cached =
+          await KMBCacheService.getCachedRouteStops(route, bound, '1');
+      if (cached != null && cached.isNotEmpty) {
+        print(
+            'Using cached route-stops: $route $bound/1 count=${cached.length}');
+        // Debug: Print first few cached stops
+        for (int i = 0; i < cached.length && i < 3; i++) {
+          final stop = cached[i];
+          print(
+              'Cached Stop $i: ${stop.stopNameTc} (${stop.stopNameEn}) - Seq: ${stop.seq}');
+        }
+        return cached;
+      } else {
+        print('No valid cached data found, fetching from API...');
+      }
+
       // Use the correct API endpoint format: route-stop/{route}/{bound}/{service_type}
-      final response =
-          await http.get(Uri.parse('$baseUrl/route-stop/$route/$boundParam/1'));
+      final apiUrl = '$baseUrl/route-stop/$route/$boundParam/1';
+      print('API URL: $apiUrl');
+      final response = await http.get(Uri.parse(apiUrl));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        final List<dynamic> routeStopsData = data['data'] ?? [];
+        final List<dynamic> stopsData = data['data'] ?? [];
+        print('API Response - Number of stops: ${stopsData.length}');
 
-        // Get stop details for each route stop
-        final List<KMBRouteStop> routeStops = [];
-        for (final routeStopData in routeStopsData) {
-          try {
-            // Get stop details
-            final stopResponse = await http
-                .get(Uri.parse('$baseUrl/stop/${routeStopData['stop']}'));
+        // Get all stops to look up names
+        final allStops = await getAllStops();
+        final stopMap = {for (var stop in allStops) stop.stop: stop};
 
-            if (stopResponse.statusCode == 200) {
-              final stopData = json.decode(stopResponse.body);
-              final stopInfo = stopData['data'] ?? {};
+        // Create route stops with names from the stops data
+        final stops = <KMBRouteStop>[];
+        for (final stopData in stopsData) {
+          final stopId = stopData['stop'] as String;
+          final stopInfo = stopMap[stopId];
 
-              final routeStop = KMBRouteStop(
-                route: routeStopData['route'] ?? '',
-                bound: routeStopData['bound'] ?? '',
-                stop: routeStopData['stop'] ?? '',
-                seq: int.tryParse(routeStopData['seq']?.toString() ?? '0') ?? 0,
-                stopNameEn: stopInfo['name_en'] ?? '',
-                stopNameTc: stopInfo['name_tc'] ?? '',
-                stopNameSc: stopInfo['name_sc'] ?? '',
-              );
-
-              routeStops.add(routeStop);
-            }
-          } catch (e) {
-            // If stop details fail, still add the route stop with basic info
-            final routeStop = KMBRouteStop(
-              route: routeStopData['route'] ?? '',
-              bound: routeStopData['bound'] ?? '',
-              stop: routeStopData['stop'] ?? '',
-              seq: int.tryParse(routeStopData['seq']?.toString() ?? '0') ?? 0,
-              stopNameEn: 'Stop ${routeStopData['stop']}',
-              stopNameTc: '站點 ${routeStopData['stop']}',
-              stopNameSc: '站点 ${routeStopData['stop']}',
-            );
-
-            routeStops.add(routeStop);
+          if (stopInfo != null) {
+            stops.add(KMBRouteStop(
+              route: stopData['route']?.toString() ?? '',
+              bound: stopData['bound']?.toString() ?? '',
+              stop: stopId,
+              seq: int.tryParse(stopData['seq']?.toString() ?? '0') ?? 0,
+              stopNameEn: stopInfo.nameEn,
+              stopNameTc: stopInfo.nameTc,
+              stopNameSc: stopInfo.nameSc,
+            ));
+          } else {
+            // Fallback if stop not found
+            stops.add(KMBRouteStop(
+              route: stopData['route']?.toString() ?? '',
+              bound: stopData['bound']?.toString() ?? '',
+              stop: stopId,
+              seq: int.tryParse(stopData['seq']?.toString() ?? '0') ?? 0,
+              stopNameEn: 'Unknown Stop',
+              stopNameTc: '未知車站',
+              stopNameSc: '未知车站',
+            ));
           }
         }
 
-        // Sort by sequence number
-        routeStops.sort((a, b) => a.seq.compareTo(b.seq));
+        // Debug: Print first few stops with names
+        for (int i = 0; i < stops.length && i < 3; i++) {
+          final stop = stops[i];
+          print(
+              'Stop $i: ${stop.stopNameTc} (${stop.stopNameEn}) - Seq: ${stop.seq}');
+        }
 
-        return routeStops;
+        // Cache for future use using the original bound parameter
+        await KMBCacheService.cacheRouteStops(route, bound, '1', stops);
+
+        return stops;
       } else {
+        print('API Error: ${response.statusCode} - ${response.body}');
         throw Exception('Failed to load route stops: ${response.statusCode}');
       }
     } catch (e) {
@@ -194,6 +244,20 @@ class KMBRoute {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'route': route,
+      'bound': bound,
+      'service_type': serviceType,
+      'orig_en': origEn,
+      'orig_tc': origTc,
+      'orig_sc': origSc,
+      'dest_en': destEn,
+      'dest_tc': destTc,
+      'dest_sc': destSc,
+    };
+  }
+
   @override
   String toString() {
     return 'Route $route: $origEn → $destEn';
@@ -227,6 +291,17 @@ class KMBStop {
       lat: json['lat'] ?? '',
       long: json['long'] ?? '',
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'stop': stop,
+      'name_en': nameEn,
+      'name_tc': nameTc,
+      'name_sc': nameSc,
+      'lat': lat,
+      'long': long,
+    };
   }
 
   @override
@@ -384,7 +459,7 @@ class KMBRouteStop {
       route: json['route'] ?? '',
       bound: json['bound'] ?? '',
       stop: json['stop'] ?? '',
-      seq: json['seq'] ?? 0,
+      seq: int.tryParse(json['seq']?.toString() ?? '0') ?? 0,
       stopNameEn: json['stop_name_en'] ?? '',
       stopNameTc: json['stop_name_tc'] ?? '',
       stopNameSc: json['stop_name_sc'] ?? '',

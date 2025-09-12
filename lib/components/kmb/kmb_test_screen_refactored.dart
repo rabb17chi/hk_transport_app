@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../scripts/kmb_api_service.dart';
+import '../../scripts/kmb_cache_service.dart';
 import 'route_selector.dart';
 
 class KMBTestScreenRefactored extends StatefulWidget {
@@ -20,6 +21,7 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
   String _selectedRouteKey = ''; // Changed to store routeKey (route + bound)
   String _selectedStop = '';
   String _selectedServiceType = '1';
+  Map<String, dynamic> _cacheInfo = {};
 
   @override
   void initState() {
@@ -36,10 +38,12 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
     try {
       final routes = await KMBApiService.getAllRoutes();
       final stops = await KMBApiService.getAllStops();
+      final cacheInfo = await KMBCacheService.getCacheInfo();
 
       setState(() {
         _routes = routes;
         _stops = stops;
+        _cacheInfo = cacheInfo;
         _isLoading = false;
       });
     } catch (e) {
@@ -47,6 +51,37 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
         _errorMessage = 'Error loading data: $e';
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _refreshCache() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Clear existing cache
+      await KMBCacheService.clearCache();
+
+      // Reload data (will fetch from API and cache)
+      await _loadInitialData();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Cache refreshed successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error refreshing cache: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -126,6 +161,11 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
         backgroundColor: Colors.blue[600],
         foregroundColor: Colors.white,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.cached),
+            onPressed: _refreshCache,
+            tooltip: 'Refresh Cache',
+          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _loadInitialData,

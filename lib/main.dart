@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'components/kmb/kmb_test_screen_refactored.dart';
+import 'components/menu.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,6 +28,20 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('HK Transport App'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MenuScreen()),
+              );
+            },
+          )
+        ],
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -58,17 +73,9 @@ class MyHomePage extends StatelessWidget {
                 textStyle: const TextStyle(fontSize: 16),
               ),
             ),
-            // const SizedBox(width: 32),
             const SizedBox(height: 28),
             ElevatedButton.icon(
-              onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => const KMBTestScreenRefactored(),
-                //   ),
-                // );
-              },
+              onPressed: () {},
               icon: const Icon(Icons.train),
               label: const Text('MTR API'),
               style: ElevatedButton.styleFrom(
