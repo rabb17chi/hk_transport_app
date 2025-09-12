@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../scripts/kmb_api_service.dart';
-import '../screens/route_stations_screen.dart';
+import '../../scripts/kmb_api_service.dart';
+import 'route_stations_screen.dart';
 import 'route_banner.dart';
 
 /// Route Selector Component

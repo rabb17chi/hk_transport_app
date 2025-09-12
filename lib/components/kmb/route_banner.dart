@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../scripts/kmb_api_service.dart';
+import '../../scripts/kmb_api_service.dart';
 
 /// Route Banner Component
 ///

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/kmb_test_screen_refactored.dart';
+import 'components/kmb/kmb_test_screen_refactored.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../scripts/kmb_api_service.dart';
+import '../../scripts/kmb_api_service.dart';
 
 /// Route Stations Screen
 ///
@@ -32,6 +32,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
   List<KMBETA> _etaData = [];
   bool _isLoadingETA = false;
   String? _selectedStopId; // Track which station is selected
+  int? _selectedStationSeq; // Track the sequence number of selected station
 
   @override
   void initState() {
@@ -63,11 +64,12 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
     }
   }
 
-  Future<void> _loadETA(String stopId) async {
+  Future<void> _loadETA(String stopId, int stationSeq) async {
     try {
       setState(() {
         _isLoadingETA = true;
         _selectedStopId = stopId; // Set selected station
+        _selectedStationSeq = stationSeq; // Set selected station sequence
         _etaData = []; // Clear previous ETA data
       });
 
@@ -177,7 +179,8 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                     itemBuilder: (context, index) {
                       final stop = _routeStops[index];
                       final isLast = index == _routeStops.length - 1;
-                      final isSelected = _selectedStopId == stop.stop;
+                      final isSelected = _selectedStopId == stop.stop &&
+                          _selectedStationSeq == stop.seq;
 
                       return Column(
                         children: [
@@ -197,7 +200,13 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                               print('========================');
 
                               // Load ETA data for this station
-                              _loadETA(stop.stop);
+                              print('=== Station Clicked ===');
+                              print('Station Index: $index');
+                              print('Station Sequence: ${stop.seq}');
+                              print('Station ID: ${stop.stop}');
+                              print('Station Name: ${stop.stopNameTc}');
+                              print('======================');
+                              _loadETA(stop.stop, stop.seq);
                             },
                             child: Container(
                               margin: const EdgeInsets.only(bottom: 8),
@@ -281,7 +290,10 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                             ),
                           ),
                           // ETA Display Section - Only show under selected station
-                          if (isSelected && _etaData.isNotEmpty) ...[
+                          if (isSelected &&
+                              _etaData.isNotEmpty &&
+                              _etaData.any(
+                                  (eta) => eta.seq == _selectedStationSeq)) ...[
                             Container(
                               margin: const EdgeInsets.only(bottom: 16),
                               padding: const EdgeInsets.all(16),
@@ -306,6 +318,13 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                   ),
                                   const SizedBox(height: 12),
                                   ..._etaData
+                                      .where((eta) {
+                                        final matches =
+                                            eta.seq == _selectedStationSeq;
+                                        print(
+                                            'ETA Seq: ${eta.seq}, Selected Station Seq: $_selectedStationSeq, Matches: $matches');
+                                        return matches;
+                                      }) // Filter by sequence matching selected station sequence
                                       .map((eta) => Container(
                                             margin: const EdgeInsets.symmetric(
                                                 vertical: 8),

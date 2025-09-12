@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import '../scripts/kmb_api_service.dart';
-import '../components/route_selector.dart';
-import '../components/stop_selector.dart';
-import '../components/service_type_selector.dart';
-import '../components/eta_display.dart';
-import '../components/action_button.dart';
+import '../../scripts/kmb_api_service.dart';
+import 'route_selector.dart';
 
 class KMBTestScreenRefactored extends StatefulWidget {
   const KMBTestScreenRefactored({super.key});
@@ -154,46 +150,17 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                   const SizedBox(height: 16),
 
                   // Stop Selector
-                  StopSelector(
-                    stops: _stops,
-                    selectedStop: _selectedStop,
-                    onStopSelected: _onStopSelected,
-                    onSearch: _searchStops,
-                    isLoading: _isLoading,
-                  ),
+                  // BookmarkedRouteWithStation(
+                  //   stops: _stops,
+                  //   selectedStop: _selectedStop,
+                  //   onStopSelected: _onStopSelected,
+                  //   onSearch: _searchStops,
+                  //   isLoading: _isLoading,
+                  // ),
 
                   const SizedBox(height: 16),
 
-                  // Service Type Selector
-                  ServiceTypeSelector(
-                    selectedServiceType: _selectedServiceType,
-                    onServiceTypeChanged: _onServiceTypeChanged,
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // Get ETA Button
-                  ActionButton(
-                    text: 'Get Real-time ETA',
-                    icon: Icons.schedule,
-                    onPressed:
-                        _selectedRouteKey.isNotEmpty && _selectedStop.isNotEmpty
-                            ? _getETA
-                            : null,
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // ETA Display
-                  ETADisplay(
-                    etas: _etas,
-                    isLoading: _isLoading,
-                    selectedRoute: _selectedRouteKey.isNotEmpty
-                        ? _selectedRouteKey.split('_')[0]
-                        : '',
-                    errorMessage:
-                        _errorMessage.isNotEmpty ? _errorMessage : null,
-                  ),
+                  // InputKeyboard()
                 ],
               ),
             ),
