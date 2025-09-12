@@ -31,6 +31,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
   String _errorMessage = '';
   List<KMBETA> _etaData = [];
   bool _isLoadingETA = false;
+  String? _selectedStopId; // Track which station is selected
 
   @override
   void initState() {
@@ -66,6 +67,8 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
     try {
       setState(() {
         _isLoadingETA = true;
+        _selectedStopId = stopId; // Set selected station
+        _etaData = []; // Clear previous ETA data
       });
 
       print('=== Loading ETA Data ===');
@@ -121,7 +124,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            'Route ${widget.routeNumber} ${widget.bound == 'I' ? 'I' : 'O'} - ${widget.destinationTc}'),
+            '${widget.routeNumber} ${widget.bound == 'I' ? 'I' : 'O'} - 往 ${widget.destinationTc}'),
         backgroundColor: const Color(0xFF323232),
         foregroundColor: const Color(0xFFF7A925),
         actions: [
@@ -166,108 +169,20 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                     ],
                   ),
                 )
-              : Column(
-                  children: [
-                    // Route Info Header
-                    // ETA Display Section
-                    if (_etaData.isNotEmpty) ...[
-                      Container(
-                        margin: const EdgeInsets.all(16),
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1E1E1E),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: const Color(0xFFF7A925),
-                            width: 2,
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '🚌 實時到站時間',
-                              style: TextStyle(
-                                color: const Color(0xFFF7A925),
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            ..._etaData
-                                .map((eta) => Container(
-                                      margin: const EdgeInsets.only(bottom: 8),
-                                      padding: const EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF323232),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                '第 ${eta.etaSeq} 班',
-                                                style: const TextStyle(
-                                                  color:
-                                                      const Color(0xFFF7A925),
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              Text(
-                                                eta.destTc,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Text(
-                                                eta.arrivalTimeString,
-                                                style: const TextStyle(
-                                                  color: Color(0xFFF7A925),
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              Text(
-                                                eta.rmkTc,
-                                                style: TextStyle(
-                                                  color: Colors.grey[400],
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ))
-                                .toList(),
-                          ],
-                        ),
-                      ),
-                    ],
-                    // Stations List
-                    Expanded(
-                      child: ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: _routeStops.length,
-                        itemBuilder: (context, index) {
-                          final stop = _routeStops[index];
-                          final isLast = index == _routeStops.length - 1;
+              : SafeArea(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.fromLTRB(
+                        16, 16, 16, 100), // Bottom padding for navigation bar
+                    itemCount: _routeStops.length,
+                    itemBuilder: (context, index) {
+                      final stop = _routeStops[index];
+                      final isLast = index == _routeStops.length - 1;
+                      final isSelected = _selectedStopId == stop.stop;
 
-                          return GestureDetector(
+                      return Column(
+                        children: [
+                          // Station Item
+                          GestureDetector(
                             onTap: () {
                               HapticFeedback.lightImpact();
                               // Print station ID and details
@@ -288,11 +203,16 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                               margin: const EdgeInsets.only(bottom: 8),
                               padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF323232),
+                                color: Colors.white, // White background
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                  color: const Color(0xFF555555),
-                                  width: 1,
+                                  color: isSelected
+                                      ? Colors.green
+                                      : Colors
+                                          .black, // Green when selected, black otherwise
+                                  width: isSelected
+                                      ? 3
+                                      : 1, // Thicker border when selected
                                 ),
                               ),
                               child: Row(
@@ -328,15 +248,16 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                           style: const TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,
-                                            color: Color(0xFFF7A925),
+                                            color: Colors.black, // Black text
                                           ),
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
                                           stop.stopNameEn,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 14,
-                                            color: Colors.grey,
+                                            color: Colors.grey[
+                                                700], // Darker grey for better contrast
                                           ),
                                         ),
                                       ],
@@ -358,11 +279,124 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                 ],
                               ),
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+                          ),
+                          // ETA Display Section - Only show under selected station
+                          if (isSelected && _etaData.isNotEmpty) ...[
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 16),
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                // color: const Color(0xFF1E1E1E),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: Colors.green,
+                                  width: 3,
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    '🚌 到站時間',
+                                    style: TextStyle(
+                                      // color: Color(0xFFF7A925),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  ..._etaData
+                                      .map((eta) => Container(
+                                            margin: const EdgeInsets.symmetric(
+                                                vertical: 8),
+                                            padding: const EdgeInsets.all(12),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: const Color(0xFF323232),
+                                                width: 1,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      '第 ${eta.etaSeq} 班',
+                                                      style: const TextStyle(
+                                                        color:
+                                                            Color(0xFF323232),
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: [
+                                                    Text(
+                                                      eta.arrivalTimeString,
+                                                      style: const TextStyle(
+                                                        color:
+                                                            Color(0xFF323232),
+                                                        fontSize: 24,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ))
+                                      .toList(),
+                                ],
+                              ),
+                            ),
+                          ],
+                          // Loading indicator for ETA
+                          if (isSelected && _isLoadingETA)
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 16),
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                // color: const Color(0xFF1E1E1E),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 2,
+                                ),
+                              ),
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircularProgressIndicator(
+                                    color: Colors.black,
+                                    strokeWidth: 2,
+                                  ),
+                                  SizedBox(width: 16),
+                                  Text(
+                                    '載入中...',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
     );
   }

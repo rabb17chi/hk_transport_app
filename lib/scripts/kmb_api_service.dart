@@ -330,7 +330,7 @@ class KMBETA {
     } else if (minutes == 0) {
       return '即將到達';
     } else {
-      return '已過期';
+      return '巴士可能已離站';
     }
   }
 
