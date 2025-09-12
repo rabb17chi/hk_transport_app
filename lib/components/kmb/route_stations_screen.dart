@@ -73,36 +73,13 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
         _etaData = []; // Clear previous ETA data
       });
 
-      print('=== Loading ETA Data ===');
-      print('Stop ID: $stopId');
-      print('Route: ${widget.routeNumber}');
-      print('Service Type: 1');
-      print('========================');
-
       final etaData =
           await KMBApiService.getETA(stopId, widget.routeNumber, '1');
 
-      print('=== ETA API Response ===');
-      print('Number of ETA entries: ${etaData.length}');
-      for (int i = 0; i < etaData.length; i++) {
+      for (int i = 0; i < 1; i++) {
         final eta = etaData[i];
-        print('--- ETA Entry $i ---');
-        print('Company: ${eta.co}');
-        print('Route: ${eta.route}');
-        print('Direction: ${eta.dir}');
-        print('Service Type: ${eta.serviceType}');
-        print('Sequence: ${eta.seq}');
-        print('Destination (TC): ${eta.destTc}');
-        print('Destination (EN): ${eta.destEn}');
-        print('ETA Seq: ${eta.etaSeq}');
-        print('ETA Time: ${eta.eta}');
-        print('Remarks (TC): ${eta.rmkTc}');
-        print('Data Timestamp: ${eta.dataTimestamp}');
-        print('Minutes Until Arrival: ${eta.minutesUntilArrival}');
-        print('Arrival Time String: ${eta.arrivalTimeString}');
         print(
-            'Current Time (GMT+8): ${DateTime.now().toUtc().add(const Duration(hours: 8))}');
-        print('-------------------');
+            'RouteData: ${eta.route} | ${eta.dir} | ${eta.serviceType} | by ${eta.co}');
       }
       print('========================');
 
@@ -125,17 +102,9 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            '${widget.routeNumber} ${widget.bound == 'I' ? 'I' : 'O'} - 往 ${widget.destinationTc}'),
+        title: Text('${widget.routeNumber} 往 ${widget.destinationTc}'),
         backgroundColor: const Color(0xFF323232),
         foregroundColor: const Color(0xFFF7A925),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadRouteStops,
-            tooltip: 'Refresh Stations',
-          ),
-        ],
       ),
       body: _isLoading
           ? const Center(
@@ -181,7 +150,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                         )
                       : ListView.builder(
                           padding: const EdgeInsets.fromLTRB(16, 16, 16,
-                              100), // Bottom padding for navigation bar
+                              16), // Bottom padding for navigation bar
                           itemCount: _routeStops.length,
                           itemBuilder: (context, index) {
                             final stop = _routeStops[index];
@@ -197,24 +166,10 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                     HapticFeedback.lightImpact();
                                     // Print station ID and details
                                     print('=== Station Selected ===');
-                                    print('Station ID: ${stop.stop}');
                                     print(
                                         'Station Name (TC): ${stop.stopNameTc}');
-                                    print(
-                                        'Station Name (EN): ${stop.stopNameEn}');
-                                    print(
-                                        'Station Name (SC): ${stop.stopNameSc}');
-                                    print('Sequence: ${stop.seq}');
-                                    print('Route: ${stop.route}');
-                                    print('Bound: ${stop.bound}');
-                                    print('========================');
-
-                                    // Load ETA data for this station
-                                    print('=== Station Clicked ===');
-                                    print('Station Index: $index');
                                     print('Station Sequence: ${stop.seq}');
                                     print('Station ID: ${stop.stop}');
-                                    print('Station Name: ${stop.stopNameTc}');
                                     print('======================');
                                     _loadETA(stop.stop, stop.seq);
                                   },
@@ -330,76 +285,70 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                           ),
                                         ),
                                         const SizedBox(height: 12),
-                                        ..._etaData
-                                            .where((eta) {
-                                              final matches = eta.seq ==
-                                                  _selectedStationSeq;
-                                              print(
-                                                  'ETA Seq: ${eta.seq}, Selected Station Seq: $_selectedStationSeq, Matches: $matches');
-                                              return matches;
-                                            }) // Filter by sequence matching selected station sequence
-                                            .map((eta) => Container(
-                                                  margin: const EdgeInsets
-                                                      .symmetric(vertical: 8),
-                                                  padding:
-                                                      const EdgeInsets.all(12),
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                      color: const Color(
-                                                          0xFF323232),
-                                                      width: 1,
+                                        ..._etaData.where((eta) {
+                                          final matches =
+                                              eta.seq == _selectedStationSeq;
+                                          // print('ETA Seq: ${eta.seq}, Selected Station Seq: $_selectedStationSeq, Matches: $matches');
+                                          return matches;
+                                        }) // Filter by sequence matching selected station sequence
+                                            .map((eta) {
+                                          int displaySeq = eta.etaSeq;
+                                          if (displaySeq > 3) {
+                                            displaySeq -= 3;
+                                          }
+                                          return Container(
+                                            margin: const EdgeInsets.symmetric(
+                                                vertical: 8),
+                                            padding: const EdgeInsets.all(12),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: const Color(0xFF323232),
+                                                width: 1,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      '第 $displaySeq 班',
+                                                      style: const TextStyle(
+                                                        color:
+                                                            Color(0xFF323232),
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
                                                     ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            '第 ${eta.etaSeq} 班',
-                                                            style:
-                                                                const TextStyle(
-                                                              color: Color(
-                                                                  0xFF323232),
-                                                              fontSize: 20,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                            ),
-                                                          ),
-                                                        ],
+                                                  ],
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: [
+                                                    Text(
+                                                      eta.arrivalTimeString,
+                                                      style: const TextStyle(
+                                                        color:
+                                                            Color(0xFF323232),
+                                                        fontSize: 24,
+                                                        fontWeight:
+                                                            FontWeight.w600,
                                                       ),
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .end,
-                                                        children: [
-                                                          Text(
-                                                            eta.arrivalTimeString,
-                                                            style:
-                                                                const TextStyle(
-                                                              color: Color(
-                                                                  0xFF323232),
-                                                              fontSize: 24,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ))
-                                            .toList(),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }).toList(),
                                       ],
                                     ),
                                   ),

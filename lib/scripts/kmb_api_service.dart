@@ -366,24 +366,24 @@ class KMBETA {
   /// Calculate minutes until arrival from current time (GMT+8)
   int get minutesUntilArrival {
     try {
-      print('=== Time Calculation Debug ===');
+      // print('=== Time Calculation Debug ===');
       print('ETA String: $eta');
 
       // Parse ETA time (already in GMT+8 format with +08:00)
       final etaDateTime = DateTime.parse(eta);
-      print('Parsed ETA DateTime: $etaDateTime');
-      print('ETA DateTime UTC: ${etaDateTime.toUtc()}');
+      // print('Parsed ETA DateTime: $etaDateTime');
+      // print('ETA DateTime UTC: ${etaDateTime.toUtc()}');
 
       // Get current time
       final now = DateTime.now();
-      print('Current DateTime: $now');
-      print('Current DateTime UTC: ${now.toUtc()}');
+      // print('Current DateTime: $now');
+      // print('Current DateTime UTC: ${now.toUtc()}');
 
       // Compare both times in UTC
       // ETA is already converted to UTC by DateTime.parse()
       // Current time is already in UTC
       final difference = etaDateTime.toUtc().difference(now.toUtc());
-      print('Time Difference (UTC): $difference');
+      // print('Time Difference (UTC): $difference');
       print('Minutes Difference: ${difference.inMinutes}');
       print('==============================');
 

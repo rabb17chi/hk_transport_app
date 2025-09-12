@@ -80,7 +80,7 @@ class _RouteSelectorState extends State<RouteSelector> {
                 hintText: 'Enter route number',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.search),
-                suffixIcon: Icon(Icons.clear),
+                // suffixIcon: Icon(Icons.clear),
               ),
               textCapitalization: TextCapitalization.characters,
               onChanged: (value) {
@@ -123,13 +123,13 @@ class _RouteSelectorState extends State<RouteSelector> {
                           print('=== Selected Route Data ===');
                           print('Route: ${route.route}');
                           print('Direction: $direction (${route.bound})');
-                          print('Service Type: ${route.serviceType}');
-                          print('Origin (EN): ${route.origEn}');
+                          // print('Service Type: ${route.serviceType}');
+                          // print('Origin (EN): ${route.origEn}');
                           print('Origin (TC): ${route.origTc}');
-                          print('Origin (SC): ${route.origSc}');
-                          print('Destination (EN): ${route.destEn}');
+                          // print('Origin (SC): ${route.origSc}');
+                          // print('Destination (EN): ${route.destEn}');
                           print('Destination (TC): ${route.destTc}');
-                          print('Destination (SC): ${route.destSc}');
+                          // print('Destination (SC): ${route.destSc}');
                           print('========================');
 
                           // Navigate to route stations screen
