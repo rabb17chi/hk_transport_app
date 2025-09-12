@@ -1,0 +1,141 @@
+HONG KONG TRANSPORT TIME CHECKER APP - PROJECT DOCUMENTATION
+================================================================
+
+PROJECT OVERVIEW
+================
+This Flutter application is designed to provide real-time transport information for Hong Kong's public transportation system. The app serves as a mobile version of the web application found at: https://hk-transport-time-checker.vercel.app/
+
+The application focuses on two main transport modes:
+1. MTR (Mass Transit Railway) - Hong Kong's subway system
+2. KMB (Kowloon Motor Bus) - Hong Kong's bus system
+
+CORE FUNCTIONALITIES
+====================
+
+1. MTR MODE
+-----------
+- Interactive MTR map with clickable station buttons
+- Station selection interface for checking train arrival times
+- Real-time API integration to fetch incoming train information
+- Display of next 4 incoming trains with time differences
+- Visual representation of the MTR network
+
+Key Features:
+- Full MTR map display with all stations
+- Station selection mechanism
+- Real-time train arrival data
+- Time difference calculations for upcoming trains
+- User-friendly interface for station selection
+
+2. BUS (KMB) MODE
+-----------------
+- Bus route input and selection system
+- Station selection for chosen bus route
+- Real-time API integration for bus arrival information
+- Display of next 3 incoming buses with time differences
+- Route and station management
+
+Key Features:
+- Bus route search and selection
+- Station selection within chosen route
+- Real-time bus arrival data
+- Time difference calculations for upcoming buses
+- Efficient route and stop management
+
+TECHNICAL SPECIFICATIONS
+========================
+
+Platform: Flutter (Cross-platform mobile development)
+Target Platforms: iOS, Android, Web
+Language: Dart
+Architecture: Material Design 3
+
+Current Project Structure:
+- lib/main.dart: Main application entry point
+- Standard Flutter project structure with platform-specific folders
+- Material Design 3 theming
+- Cupertino Icons for iOS-style icons
+
+API INTEGRATION REQUIREMENTS
+============================
+- MTR API: For real-time train arrival data
+- KMB API: For real-time bus arrival data
+- Network connectivity for live data updates
+- Error handling for API failures
+- Data caching for offline functionality
+
+USER INTERFACE REQUIREMENTS
+===========================
+- Mode switching between MTR and Bus
+- Interactive map for MTR station selection
+- Input fields for bus route selection
+- Real-time data display with time differences
+- Responsive design for different screen sizes
+- Intuitive navigation between modes
+
+DEVELOPMENT PHASES
+==================
+1. Project Setup and Dependencies
+   - Configure Flutter project
+   - Add necessary dependencies for API calls
+   - Set up state management
+
+2. MTR Module Development
+   - Create MTR map interface
+   - Implement station selection
+   - Integrate MTR API
+   - Display train arrival times
+
+3. Bus Module Development
+   - Create bus route input system
+   - Implement station selection
+   - Integrate KMB API
+   - Display bus arrival times
+
+4. UI/UX Enhancement
+   - Apply Material Design 3
+   - Implement responsive design
+   - Add loading states and error handling
+   - Optimize user experience
+
+5. Testing and Optimization
+   - Unit testing
+   - Integration testing
+   - Performance optimization
+   - Bug fixes and refinements
+
+REFERENCE IMPLEMENTATION
+========================
+The web application at https://hk-transport-time-checker.vercel.app/ serves as the reference implementation with the following characteristics:
+- Mode switching functionality
+- MTR full map with station selection
+- Real-time data display
+- Clean and intuitive user interface
+- Mobile-responsive design
+
+TARGET USERS
+============
+- Hong Kong residents
+- Tourists visiting Hong Kong
+- Commuters using public transportation
+- Anyone needing real-time transport information
+
+SUCCESS CRITERIA
+================
+- Accurate real-time data display
+- Intuitive user interface
+- Fast and responsive performance
+- Reliable API integration
+- Cross-platform compatibility
+- Offline functionality where possible
+
+FUTURE ENHANCEMENTS
+===================
+- Additional transport modes (Tram, Ferry, etc.)
+- Route planning and navigation
+- Favorites and saved routes
+- Push notifications for delays
+- Multi-language support
+- Accessibility features
+
+This documentation serves as a comprehensive guide for the development of the Hong Kong Transport Time Checker mobile application, ensuring all requirements and features are properly implemented and documented.
