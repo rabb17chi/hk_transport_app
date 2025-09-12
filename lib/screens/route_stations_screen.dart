@@ -29,6 +29,8 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
   List<KMBRouteStop> _routeStops = [];
   bool _isLoading = true;
   String _errorMessage = '';
+  List<KMBETA> _etaData = [];
+  bool _isLoadingETA = false;
 
   @override
   void initState() {
@@ -60,12 +62,66 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
     }
   }
 
+  Future<void> _loadETA(String stopId) async {
+    try {
+      setState(() {
+        _isLoadingETA = true;
+      });
+
+      print('=== Loading ETA Data ===');
+      print('Stop ID: $stopId');
+      print('Route: ${widget.routeNumber}');
+      print('Service Type: 1');
+      print('========================');
+
+      final etaData =
+          await KMBApiService.getETA(stopId, widget.routeNumber, '1');
+
+      print('=== ETA API Response ===');
+      print('Number of ETA entries: ${etaData.length}');
+      for (int i = 0; i < etaData.length; i++) {
+        final eta = etaData[i];
+        print('--- ETA Entry $i ---');
+        print('Company: ${eta.co}');
+        print('Route: ${eta.route}');
+        print('Direction: ${eta.dir}');
+        print('Service Type: ${eta.serviceType}');
+        print('Sequence: ${eta.seq}');
+        print('Destination (TC): ${eta.destTc}');
+        print('Destination (EN): ${eta.destEn}');
+        print('ETA Seq: ${eta.etaSeq}');
+        print('ETA Time: ${eta.eta}');
+        print('Remarks (TC): ${eta.rmkTc}');
+        print('Data Timestamp: ${eta.dataTimestamp}');
+        print('Minutes Until Arrival: ${eta.minutesUntilArrival}');
+        print('Arrival Time String: ${eta.arrivalTimeString}');
+        print(
+            'Current Time (GMT+8): ${DateTime.now().toUtc().add(const Duration(hours: 8))}');
+        print('-------------------');
+      }
+      print('========================');
+
+      setState(() {
+        _etaData = etaData;
+        _isLoadingETA = false;
+      });
+    } catch (e) {
+      print('=== ETA Error ===');
+      print('Error: $e');
+      print('================');
+      setState(() {
+        _errorMessage = 'Error loading ETA: $e';
+        _isLoadingETA = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            'Route ${widget.routeNumber} - ${widget.bound == 'I' ? 'Inbound' : 'Outbound'}'),
+            'Route ${widget.routeNumber} ${widget.bound == 'I' ? 'I' : 'O'} - ${widget.destinationTc}'),
         backgroundColor: const Color(0xFF323232),
         foregroundColor: const Color(0xFFF7A925),
         actions: [
@@ -113,53 +169,95 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
               : Column(
                   children: [
                     // Route Info Header
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(16),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF323232),
-                        border: Border(
-                          bottom:
-                              BorderSide(color: Color(0xFF555555), width: 1),
+                    // ETA Display Section
+                    if (_etaData.isNotEmpty) ...[
+                      Container(
+                        margin: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF1E1E1E),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: const Color(0xFFF7A925),
+                            width: 2,
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '🚌 實時到站時間',
+                              style: TextStyle(
+                                color: const Color(0xFFF7A925),
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            ..._etaData
+                                .map((eta) => Container(
+                                      margin: const EdgeInsets.only(bottom: 8),
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF323232),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '第 ${eta.etaSeq} 班',
+                                                style: const TextStyle(
+                                                  color:
+                                                      const Color(0xFFF7A925),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              Text(
+                                                eta.destTc,
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                eta.arrivalTimeString,
+                                                style: const TextStyle(
+                                                  color: Color(0xFFF7A925),
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                eta.rmkTc,
+                                                style: TextStyle(
+                                                  color: Colors.grey[400],
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ))
+                                .toList(),
+                          ],
                         ),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Route ${widget.routeNumber} (${widget.bound == 'I' ? 'Inbound' : 'Outbound'})',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFFF7A925),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'To: ${widget.destinationTc}',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Color(0xFFF7A925),
-                            ),
-                          ),
-                          Text(
-                            'To: ${widget.destinationEn}',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Color(0xFFF7A925),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            '${_routeStops.length} stations',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    ],
                     // Stations List
                     Expanded(
                       child: ListView.builder(
@@ -172,7 +270,19 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                           return GestureDetector(
                             onTap: () {
                               HapticFeedback.lightImpact();
-                              // You can add navigation to stop details here
+                              // Print station ID and details
+                              print('=== Station Selected ===');
+                              print('Station ID: ${stop.stop}');
+                              print('Station Name (TC): ${stop.stopNameTc}');
+                              print('Station Name (EN): ${stop.stopNameEn}');
+                              print('Station Name (SC): ${stop.stopNameSc}');
+                              print('Sequence: ${stop.seq}');
+                              print('Route: ${stop.route}');
+                              print('Bound: ${stop.bound}');
+                              print('========================');
+
+                              // Load ETA data for this station
+                              _loadETA(stop.stop);
                             },
                             child: Container(
                               margin: const EdgeInsets.only(bottom: 8),

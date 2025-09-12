@@ -44,26 +44,6 @@ class KMBApiService {
     }
   }
 
-  /// Fetch real-time ETA for a specific route and stop
-  static Future<List<KMBETA>> getETA(
-      String stopId, String route, String serviceType) async {
-    try {
-      final response =
-          await http.get(Uri.parse('$baseUrl/eta/$stopId/$route/$serviceType'));
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final List<dynamic> etaData = data['data'] ?? [];
-
-        return etaData.map((eta) => KMBETA.fromJson(eta)).toList();
-      } else {
-        throw Exception('Failed to load ETA: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Error fetching ETA: $e');
-    }
-  }
-
   /// Search routes by route number
   static Future<List<KMBRoute>> searchRoutes(String query) async {
     final allRoutes = await getAllRoutes();
@@ -153,6 +133,27 @@ class KMBApiService {
       throw Exception('Error fetching route stops: $e');
     }
   }
+
+  /// Get ETA data for a specific stop, route, and service type
+  static Future<List<KMBETA>> getETA(
+      String stopId, String route, String serviceType) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/eta/$stopId/$route/$serviceType'),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final List<dynamic> etaData = data['data'] ?? [];
+
+        return etaData.map((eta) => KMBETA.fromJson(eta)).toList();
+      } else {
+        throw Exception('Failed to load ETA: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching ETA: $e');
+    }
+  }
 }
 
 /// KMB Route Data Model
@@ -239,8 +240,8 @@ class KMBETA {
   final String co;
   final String route;
   final String dir;
-  final String serviceType;
-  final String seq;
+  final int serviceType;
+  final int seq;
   final String destEn;
   final String destTc;
   final String destSc;
@@ -273,12 +274,12 @@ class KMBETA {
       co: json['co'] ?? '',
       route: json['route'] ?? '',
       dir: json['dir'] ?? '',
-      serviceType: json['service_type'] ?? '',
-      seq: json['seq'] ?? '',
+      serviceType: int.tryParse(json['service_type']?.toString() ?? '1') ?? 1,
+      seq: int.tryParse(json['seq']?.toString() ?? '0') ?? 0,
       destEn: json['dest_en'] ?? '',
       destTc: json['dest_tc'] ?? '',
       destSc: json['dest_sc'] ?? '',
-      etaSeq: json['eta_seq'] ?? 0,
+      etaSeq: int.tryParse(json['eta_seq']?.toString() ?? '0') ?? 0,
       eta: json['eta'] ?? '',
       rmkEn: json['rmk_en'] ?? '',
       rmkTc: json['rmk_tc'] ?? '',
@@ -287,15 +288,61 @@ class KMBETA {
     );
   }
 
-  /// Calculate minutes until arrival
+  /// Calculate minutes until arrival from current time (GMT+8)
   int get minutesUntilArrival {
     try {
-      final etaTime = DateTime.parse(eta);
+      print('=== Time Calculation Debug ===');
+      print('ETA String: $eta');
+
+      // Parse ETA time (already in GMT+8 format with +08:00)
+      final etaDateTime = DateTime.parse(eta);
+      print('Parsed ETA DateTime: $etaDateTime');
+      print('ETA DateTime UTC: ${etaDateTime.toUtc()}');
+
+      // Get current time
       final now = DateTime.now();
-      final difference = etaTime.difference(now);
+      print('Current DateTime: $now');
+      print('Current DateTime UTC: ${now.toUtc()}');
+
+      // Compare both times in UTC
+      // ETA is already converted to UTC by DateTime.parse()
+      // Current time is already in UTC
+      final difference = etaDateTime.toUtc().difference(now.toUtc());
+      print('Time Difference (UTC): $difference');
+      print('Minutes Difference: ${difference.inMinutes}');
+      print('==============================');
+
       return difference.inMinutes;
     } catch (e) {
+      print('=== Time Calculation Error ===');
+      print('Error parsing ETA: $e');
+      print('ETA String: $eta');
+      print('==============================');
       return -1; // Error parsing time
+    }
+  }
+
+  /// Get formatted arrival time string
+  String get arrivalTimeString {
+    final minutes = minutesUntilArrival;
+    if (minutes > 0) {
+      return '$minutes 分鐘';
+    } else if (minutes == 0) {
+      return '即將到達';
+    } else {
+      return '已過期';
+    }
+  }
+
+  /// Get formatted arrival time string in English
+  String get arrivalTimeStringEn {
+    final minutes = minutesUntilArrival;
+    if (minutes > 0) {
+      return '$minutes min';
+    } else if (minutes == 0) {
+      return 'Arriving now';
+    } else {
+      return 'Expired';
     }
   }
 
