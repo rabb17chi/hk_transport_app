@@ -63,13 +63,6 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
 
       // Reload data (will fetch from API and cache)
       await _loadInitialData();
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Cache refreshed successfully!'),
-          backgroundColor: Colors.green,
-        ),
-      );
     } catch (e) {
       setState(() {
         _isLoading = false;
@@ -144,34 +137,7 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Show cache info if available
-                      if (_cacheInfo.isNotEmpty)
-                        Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Cache Status',
-                                  style: Theme.of(context).textTheme.titleSmall,
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Routes: ${_cacheInfo['routesCached'] == true ? 'Cached' : 'Not cached'}',
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                                Text(
-                                  'Stops: ${_cacheInfo['stopsCached'] == true ? 'Cached' : 'Not cached'}',
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      const SizedBox(height: 16),
-
-                      // Route Selector
+                      // Route Input and Selector
                       RouteSelector(
                         allRoutes: _routes,
                         selectedRouteKey: _selectedRouteKey,
@@ -183,7 +149,7 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                       // Bookmarked Stop Selector
                       const BookmarkedRouteWithStation(),
 
-                      const SizedBox(height: 16),
+                      // const SizedBox(height: 16),
 
                       // InputKeyboard()
                     ],
