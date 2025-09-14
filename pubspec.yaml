@@ -46,6 +46,9 @@ dependencies:
   # SVG rendering for MTR map
   flutter_svg: ^2.0.9
 
+  # Vibration feedback for buttons
+  vibration: ^3.1.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

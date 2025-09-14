@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import '../../scripts/mtr/mtr_schedule_service.dart';
 import '../../scripts/mtr/mtr_data.dart';
+import '../../scripts/vibration_helper.dart';
 
 class MTRScheduleDialog extends StatefulWidget {
   final MTRScheduleResponse initialResponse;
@@ -192,13 +193,19 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () async {
+            // 觸發中等振動
+            await VibrationHelper.mediumVibrate();
+            Navigator.of(context).pop();
+          },
           child: const Text('關閉'),
         ),
         ElevatedButton(
           onPressed: isLoading
               ? null
-              : () {
+              : () async {
+                  // 觸發中等振動
+                  await VibrationHelper.mediumVibrate();
                   updateByRefresh();
                 },
           child: isLoading

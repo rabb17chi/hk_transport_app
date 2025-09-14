@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../scripts/mtr/mtr_data.dart';
 import '../../scripts/mtr/mtr_schedule_service.dart';
+import '../../scripts/mtr/mtr_station_order.dart';
+import '../../scripts/vibration_helper.dart';
 import 'mtr_schedule_dialog.dart';
 
 /// MTR 列表式車站選擇界面
@@ -17,7 +19,6 @@ class _MTRListScreenState extends State<MTRListScreen> {
   String? selectedStation;
   String? selectedStationId;
   String? selectedLineCode;
-  String searchQuery = '';
   String? currentLineCode; // 當前選擇的線路代碼
 
   @override
@@ -29,52 +30,24 @@ class _MTRListScreenState extends State<MTRListScreen> {
         foregroundColor: Colors.white,
         actions: [
           IconButton(
-            icon: const Icon(Icons.clear),
-            onPressed: () {
-              setState(() {
-                selectedStation = null;
-                selectedStationId = null;
-                selectedLineCode = null;
-                currentLineCode = null;
-                searchQuery = '';
-              });
+            icon: const Icon(Icons.map_rounded),
+            onPressed: () async {
+              // 觸發中等振動
+              await VibrationHelper.mediumVibrate();
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('模式切換'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
             },
-            tooltip: '清除選擇',
+            tooltip: '模式切換',
           )
         ],
       ),
       body: Column(
         children: [
-          // 搜索欄
-          // Padding(
-          //   padding: const EdgeInsets.all(16.0),
-          //   child: TextField(
-          //     decoration: const InputDecoration(
-          //       hintText: '搜尋車站...',
-          //       prefixIcon: Icon(Icons.search),
-          //       border: OutlineInputBorder(),
-          //     ),
-          //     onChanged: (value) {
-          //       setState(() {
-          //         searchQuery = value;
-          //       });
-          //     },
-          //   ),
-          // ),
-
-          // 已選擇車站信息
-          // if (selectedStation != null &&
-          //     selectedStationId != null &&
-          //     selectedLineCode != null)
-          //   MTRScheduleWidget(
-          //     lineCode: selectedLineCode!,
-          //     stationId: selectedStationId!,
-          //     stationNameTc: selectedStation!,
-          //     stationNameEn:
-          //         MTRData.mtrStations[selectedStationId!]?['nameEn'] ?? '',
-          //   ),
-
-          // 車站列表
           Expanded(
             child: _buildStationList(),
           ),
@@ -99,80 +72,17 @@ class _MTRListScreenState extends State<MTRListScreen> {
       }
     }
 
-    // 如果沒有搜索查詢，顯示所有線路
-    if (searchQuery.isEmpty) {
-      return ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: stationsByLine.length,
-        itemBuilder: (context, index) {
-          final lineCode = stationsByLine.keys.elementAt(index);
-          final stations = stationsByLine[lineCode]!;
+    // 顯示所有線路
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: stationsByLine.length,
+      itemBuilder: (context, index) {
+        final lineCode = stationsByLine.keys.elementAt(index);
+        final stations = stationsByLine[lineCode]!;
 
-          return _buildLineSection(lineCode, stations);
-        },
-      );
-    } else {
-      // 搜索模式：顯示匹配的車站
-      final matchingStations = MTRData.mtrStations.values
-          .where((station) =>
-              station['nameTc']!.contains(searchQuery) ||
-              station['fullName']!
-                  .toLowerCase()
-                  .contains(searchQuery.toLowerCase()))
-          .toList();
-
-      if (matchingStations.isEmpty) {
-        return const Center(
-          child: Padding(
-            padding: EdgeInsets.all(32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.search_off,
-                  size: 64,
-                  color: Colors.grey,
-                ),
-                SizedBox(height: 16),
-                Text(
-                  '找不到匹配的車站',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  '請嘗試其他關鍵字',
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      }
-
-      return ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: matchingStations.length,
-        itemBuilder: (context, index) {
-          final station = matchingStations[index];
-          // 從車站數據中查找對應的key
-          String? stationKey;
-          for (final entry in MTRData.mtrStations.entries) {
-            if (entry.value == station) {
-              stationKey = entry.key;
-              break;
-            }
-          }
-          return _buildStationTile(
-              station, stationKey ?? '', currentLineCode ?? '');
-        },
-      );
-    }
+        return _buildLineSection(lineCode, stations);
+      },
+    );
   }
 
   Widget _buildLineSection(
@@ -186,7 +96,12 @@ class _MTRListScreenState extends State<MTRListScreen> {
 
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(color: lineColor, width: 2),
+      ),
       child: ExpansionTile(
+        initiallyExpanded: false,
         title: Row(
           children: [
             Container(
@@ -233,7 +148,10 @@ class _MTRListScreenState extends State<MTRListScreen> {
             ),
           ],
         ),
-        onExpansionChanged: (isExpanded) {
+        onExpansionChanged: (isExpanded) async {
+          // 觸發輕微振動
+          await VibrationHelper.lightVibrate();
+
           if (isExpanded) {
             // 當展開線路時，設定當前線路代碼
             setState(() {
@@ -243,22 +161,42 @@ class _MTRListScreenState extends State<MTRListScreen> {
               selectedStationId = null;
               selectedLineCode = null;
             });
-            print('=== 線路選擇 ===');
-            print('$lineCode ($lineNameTc) ($lineNameEn)');
-            print('===============');
+
+            // 輸出所選路線的 lineCode
+            print('=== 選擇線路 ===');
+            print('線路代碼: $lineCode');
+            print('線路名稱: ${lineData?['fullNameTc'] ?? lineCode}');
+            print('================');
+          } else {
+            // 當關閉線路時，清除當前線路代碼
+            setState(() {
+              if (currentLineCode == lineCode) {
+                currentLineCode = null;
+                selectedStation = null;
+                selectedStationId = null;
+                selectedLineCode = null;
+              }
+            });
           }
         },
-        children: stations.map((station) {
-          // 從車站數據中查找對應的key
-          String? stationKey;
-          for (final entry in MTRData.mtrStations.entries) {
-            if (entry.value == station) {
-              stationKey = entry.key;
-              break;
+        children: () {
+          // 使用新的排序邏輯
+          final sortedStations =
+              MTRStationOrder.sortStationsByLine(lineCode, stations);
+
+          // 轉換為 Widget
+          return sortedStations.map((station) {
+            // 從車站數據中查找對應的key
+            String? stationKey;
+            for (final entry in MTRData.mtrStations.entries) {
+              if (entry.value == station) {
+                stationKey = entry.key;
+                break;
+              }
             }
-          }
-          return _buildStationTile(station, stationKey ?? '', lineCode);
-        }).toList(),
+            return _buildStationTile(station, stationKey ?? '', lineCode);
+          }).toList();
+        }(),
       ),
     );
   }
@@ -302,7 +240,10 @@ class _MTRListScreenState extends State<MTRListScreen> {
               color: _getLineColor(lineCode),
             )
           : null,
-      onTap: () {
+      onTap: () async {
+        // 觸發中等振動
+        await VibrationHelper.mediumVibrate();
+
         _selectStation(stationNameTc, stationKey, lineCode);
       },
     );
@@ -310,15 +251,14 @@ class _MTRListScreenState extends State<MTRListScreen> {
 
   void _selectStation(
       String stationName, String stationId, String lineCode) async {
-    // 檢查是否有選擇的線路
-    if (currentLineCode == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('請先選擇線路'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      return;
+    // 如果沒有選擇的線路，使用傳入的線路代碼
+    var selectedLineCode = currentLineCode ?? lineCode;
+
+    // 更新當前線路代碼
+    if (currentLineCode != lineCode) {
+      setState(() {
+        currentLineCode = lineCode;
+      });
     }
 
     // 獲取完整的車站資料
@@ -327,13 +267,13 @@ class _MTRListScreenState extends State<MTRListScreen> {
     // 打印車站詳細信息
     print('=== 車站選擇信息 ===');
     print('車站ID: $stationId');
-    print('當前線路: $currentLineCode');
+    print('當前線路: $selectedLineCode');
 
     if (stationData != null) {
       // 調用MTR API獲取時刻表
       print('\n=== 調用MTR API ===');
       final response = await MTRScheduleService.getSchedule(
-        lineCode: currentLineCode!,
+        lineCode: selectedLineCode,
         stationId: stationId,
       );
 
@@ -344,7 +284,7 @@ class _MTRListScreenState extends State<MTRListScreen> {
           builder: (context) => MTRScheduleDialog(
             initialResponse: response,
             stationName: stationName,
-            lineCode: currentLineCode!,
+            lineCode: selectedLineCode,
             stationId: stationId,
           ),
         );
@@ -352,7 +292,7 @@ class _MTRListScreenState extends State<MTRListScreen> {
         // 控制台輸出（用於調試）
         print('=== 時刻表數據 ===');
         print('車站: $stationName ($stationId)');
-        print('線路: $currentLineCode');
+        print('線路: $selectedLineCode');
 
         final upTrains = response.getUpTrains();
         final downTrains = response.getDownTrains();
@@ -388,7 +328,7 @@ class _MTRListScreenState extends State<MTRListScreen> {
     setState(() {
       selectedStation = stationName;
       selectedStationId = stationId;
-      selectedLineCode = currentLineCode;
+      selectedLineCode = selectedLineCode;
     });
   }
 
