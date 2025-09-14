@@ -1,4 +1,4 @@
-# MD由 AI-Gen，懶得自己寫咁q鬼多，不過後面會補充返個人感謝。
+# MD由 AI-Gen，懶得自己寫咁q鬼多，不過後面會補充返個人感想。
 
 # 香港交通應用程式 / Hong Kong Transport App
 
