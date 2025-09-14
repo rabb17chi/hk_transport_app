@@ -162,11 +162,7 @@ class _MTRListScreenState extends State<MTRListScreen> {
               selectedLineCode = null;
             });
 
-            // 輸出所選路線的 lineCode
-            print('=== 選擇線路 ===');
-            print('線路代碼: $lineCode');
-            print('線路名稱: ${lineData?['fullNameTc'] ?? lineCode}');
-            print('================');
+            // 線路已選擇
           } else {
             // 當關閉線路時，清除當前線路代碼
             setState(() {
@@ -265,13 +261,8 @@ class _MTRListScreenState extends State<MTRListScreen> {
     final stationData = MTRData.getStationData(stationId);
 
     // 打印車站詳細信息
-    print('=== 車站選擇信息 ===');
-    print('車站ID: $stationId');
-    print('當前線路: $selectedLineCode');
-
     if (stationData != null) {
       // 調用MTR API獲取時刻表
-      print('\n=== 調用MTR API ===');
       final response = await MTRScheduleService.getSchedule(
         lineCode: selectedLineCode,
         stationId: stationId,
@@ -288,24 +279,7 @@ class _MTRListScreenState extends State<MTRListScreen> {
             stationId: stationId,
           ),
         );
-
-        // 控制台輸出（用於調試）
-        print('=== 時刻表數據 ===');
-        print('車站: $stationName ($stationId)');
-        print('線路: $selectedLineCode');
-
-        final upTrains = response.getUpTrains();
-        final downTrains = response.getDownTrains();
-
-        if (upTrains.isNotEmpty) {
-          print('上行方向: ${upTrains.length} 班列車');
-        }
-        if (downTrains.isNotEmpty) {
-          print('下行方向: ${downTrains.length} 班列車');
-        }
-        print('==================');
       } else {
-        print('API調用失敗');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('無法獲取時刻表，請稍後重試'),
@@ -315,7 +289,6 @@ class _MTRListScreenState extends State<MTRListScreen> {
         );
       }
     } else {
-      print('警告: 找不到車站資料');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('找不到車站資料'),

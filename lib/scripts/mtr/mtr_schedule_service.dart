@@ -19,26 +19,15 @@ class MTRScheduleService {
     try {
       final url = Uri.parse('$_baseUrl?line=$lineCode&sta=$stationId');
 
-      print('=== MTR API 調用 ===');
-      print('URL: $url');
-      print('線路: $lineCode');
-      print('車站: $stationId');
-
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        print('API 響應成功');
-        print('響應數據: $data');
-
         return MTRScheduleResponse.fromJson(data);
       } else {
-        print('API 調用失敗: ${response.statusCode}');
-        print('錯誤信息: ${response.body}');
         return null;
       }
     } catch (e) {
-      print('API 調用異常: $e');
       return null;
     }
   }
@@ -58,7 +47,6 @@ class MTRScheduleService {
 
       return difference;
     } catch (e) {
-      print('時間計算錯誤: $e');
       return -1;
     }
   }

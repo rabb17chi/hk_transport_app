@@ -47,7 +47,7 @@ class _MenuScreenState extends State<MenuScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Menu'),
+        title: const Text('菜單'),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
