@@ -15,7 +15,15 @@
   "devLinksDialogTitle": "開發者連結",
   "devLinksDialogContent": "前往 GitHub",
   "back": "返回",
-  "github": "GitHub"
+  "github": "GitHub",
+  "languageSectionTitle": "語言",
+  "languageSystemDefault": "系統預設",
+  "languageEnglish": "英文",
+  "languageChinese": "中文",
+  "themeSectionTitle": "主題",
+  "themeLight": "亮色",
+  "themeDark": "暗色",
+  "themeSystemDefault": "跟隨系統"
 }
 
 

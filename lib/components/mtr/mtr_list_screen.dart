@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import '../../scripts/mtr/mtr_data.dart';
 import '../../scripts/mtr/mtr_schedule_service.dart';
 import '../../scripts/mtr/mtr_station_order.dart';
@@ -21,6 +22,7 @@ class _MTRListScreenState extends State<MTRListScreen> {
   String? selectedStationId;
   String? selectedLineCode;
   String? currentLineCode; // 當前選擇的線路代碼
+  bool _isLoadingSchedule = false;
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +204,10 @@ class _MTRListScreenState extends State<MTRListScreen> {
       Map<String, dynamic> station, String stationKey, String lineCode) {
     final stationNameTc = station['nameTc'] as String;
     final stationNameEn = station['fullName'] as String;
-    final isSelected = selectedStationId == stationNameEn; // 使用 fullName 作為比較
+    final isSelected = selectedStationId == stationKey; // 使用 stationId 作為比較
+    final isChinese = Localizations.localeOf(context).languageCode == 'zh';
+    final displayTitle = isChinese ? stationNameTc : stationNameEn;
+    final displaySubtitle = isChinese ? stationNameEn : stationNameTc;
 
     return ListTile(
       leading: Container(
@@ -224,25 +229,27 @@ class _MTRListScreenState extends State<MTRListScreen> {
         ),
       ),
       title: Text(
-        stationNameTc,
+        displayTitle,
         style: TextStyle(
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           color: isSelected ? _getLineColor(lineCode) : null,
         ),
       ),
-      subtitle: Text(stationNameEn),
+      subtitle: Text(displaySubtitle),
       trailing: isSelected
           ? Icon(
               Icons.check_circle,
               color: _getLineColor(lineCode),
             )
           : null,
-      onTap: () async {
-        // 觸發中等振動
-        await VibrationHelper.mediumVibrate();
+      onTap: _isLoadingSchedule
+          ? null
+          : () async {
+              // 觸發中等振動
+              await VibrationHelper.mediumVibrate();
 
-        _selectStation(stationNameTc, stationKey, lineCode);
-      },
+              _selectStation(displayTitle, stationKey, lineCode);
+            },
       onLongPress: () async {
         await VibrationHelper.mediumVibrate();
         final item = MTRBookmarkItem(
@@ -254,18 +261,6 @@ class _MTRListScreenState extends State<MTRListScreen> {
         final isBookmarked = await MTRBookmarksService.isBookmarked(item);
         if (isBookmarked) {
           await MTRBookmarksService.removeBookmark(item);
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('已從收藏移除')),
-            );
-          }
-        } else {
-          await MTRBookmarksService.addBookmark(item);
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('已加入收藏')),
-            );
-          }
         }
       },
     );

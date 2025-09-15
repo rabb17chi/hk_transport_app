@@ -60,28 +60,28 @@ class AppLocalizationsZh extends AppLocalizations {
   String get github => 'GitHub';
 
   @override
-  String get languageSectionTitle => 'Language';
+  String get languageSectionTitle => '語言';
 
   @override
-  String get languageSystemDefault => 'System Default';
+  String get languageSystemDefault => '系統預設';
 
   @override
-  String get languageEnglish => 'English';
+  String get languageEnglish => '英文';
 
   @override
-  String get languageChinese => 'Chinese';
+  String get languageChinese => '中文';
 
   @override
-  String get themeSectionTitle => 'Theme';
+  String get themeSectionTitle => '主題';
 
   @override
-  String get themeLight => 'Light';
+  String get themeLight => '亮色';
 
   @override
-  String get themeDark => 'Dark';
+  String get themeDark => '暗色';
 
   @override
-  String get themeSystemDefault => 'System Default';
+  String get themeSystemDefault => '跟隨系統';
 }
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).
