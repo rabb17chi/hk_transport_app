@@ -1,0 +1,28 @@
+{
+  "appTitle": "HK Transport App",
+  "menuTitle": "Menu",
+  "menuTheme": "Theme",
+  "menuThemeSubtitle": "Light / Dark (coming soon)",
+  "menuStyle": "Style",
+  "menuStyleSubtitle": "Fonts, colors, sizes (coming soon)",
+  "menuUpdateKMB": "Update KMB Data Manually",
+  "menuRefresh": "Refresh",
+  "menuReset": "Reset App (clear data & preferences)",
+  "menuTerms": "Terms of Service",
+  "menuTermsSubtitle": "View terms and privacy policy (coming soon)",
+  "menuDevLinks": "Developer Links",
+  "menuDevLinksSubtitle": "GitHub Project Page",
+  "devLinksDialogTitle": "Developer Links",
+  "devLinksDialogContent": "Routing to GitHub",
+  "back": "Back",
+  "github": "GitHub",
+  "languageSectionTitle": "Language",
+  "languageSystemDefault": "System Default",
+  "languageEnglish": "English",
+  "languageChinese": "Chinese",
+  "themeSectionTitle": "Theme",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "themeSystemDefault": "System Default"
+}
+

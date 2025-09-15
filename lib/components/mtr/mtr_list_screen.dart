@@ -4,6 +4,7 @@ import '../../scripts/mtr/mtr_schedule_service.dart';
 import '../../scripts/mtr/mtr_station_order.dart';
 import '../../scripts/vibration_helper.dart';
 import 'mtr_schedule_dialog.dart';
+import '../../scripts/mtr/mtr_bookmarks_service.dart';
 
 /// MTR 列表式車站選擇界面
 ///
@@ -241,6 +242,31 @@ class _MTRListScreenState extends State<MTRListScreen> {
         await VibrationHelper.mediumVibrate();
 
         _selectStation(stationNameTc, stationKey, lineCode);
+      },
+      onLongPress: () async {
+        await VibrationHelper.mediumVibrate();
+        final item = MTRBookmarkItem(
+          lineCode: lineCode,
+          stationId: stationKey,
+          stationNameTc: stationNameTc,
+          stationNameEn: stationNameEn,
+        );
+        final isBookmarked = await MTRBookmarksService.isBookmarked(item);
+        if (isBookmarked) {
+          await MTRBookmarksService.removeBookmark(item);
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('已從收藏移除')),
+            );
+          }
+        } else {
+          await MTRBookmarksService.addBookmark(item);
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('已加入收藏')),
+            );
+          }
+        }
       },
     );
   }

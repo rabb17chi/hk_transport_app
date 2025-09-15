@@ -1,0 +1,28 @@
+{
+  "appTitle": "香港交通應用",
+  "menuTitle": "菜單",
+  "menuTheme": "主題",
+  "menuThemeSubtitle": "亮/暗（即將推出）",
+  "menuStyle": "風格",
+  "menuStyleSubtitle": "字體、顏色、大小（即將推出）",
+  "menuUpdateKMB": "手動更新九巴資料",
+  "menuRefresh": "刷新",
+  "menuReset": "重設應用（清除資料與偏好）",
+  "menuTerms": "服務條款",
+  "menuTermsSubtitle": "查看條款與私隱（即將推出）",
+  "menuDevLinks": "開發者連結",
+  "menuDevLinksSubtitle": "GitHub 專案頁",
+  "devLinksDialogTitle": "開發者連結",
+  "devLinksDialogContent": "前往 GitHub",
+  "back": "返回",
+  "github": "GitHub",
+  "languageSectionTitle": "語言",
+  "languageSystemDefault": "系統預設",
+  "languageEnglish": "英文",
+  "languageChinese": "中文",
+  "themeSectionTitle": "主題",
+  "themeLight": "亮色",
+  "themeDark": "暗色",
+  "themeSystemDefault": "跟隨系統"
+}
+

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hk_transport_app/l10n/app_localizations.dart';
 import '../scripts/kmb_cache_service.dart';
+import 'settings/reset_app_tile.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../scripts/locale_service.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -10,19 +14,15 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   bool _isRefreshing = false;
-  Map<String, dynamic> _cacheInfo = {};
+  // Reset UI moved to ResetAppTile
+  bool _langExpanded = false;
+  bool _themeExpanded = false;
+  Key _langKey = UniqueKey();
+  Key _themeKey = UniqueKey();
 
   @override
   void initState() {
     super.initState();
-    _loadCacheInfo();
-  }
-
-  Future<void> _loadCacheInfo() async {
-    final info = await KMBCacheService.getCacheInfo();
-    setState(() {
-      _cacheInfo = info;
-    });
   }
 
   Future<void> _refreshCache() async {
@@ -30,7 +30,6 @@ class _MenuScreenState extends State<MenuScreen> {
       _isRefreshing = true;
     });
     await KMBCacheService.clearCache();
-    await _loadCacheInfo();
     setState(() {
       _isRefreshing = false;
     });
@@ -52,20 +51,31 @@ class _MenuScreenState extends State<MenuScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const ListTile(
-            title: Text('Theme'),
-            subtitle: Text('Light / Dark (coming soon)'),
-            leading: Icon(Icons.color_lens),
-          ),
+          _buildThemeSection(),
           const Divider(),
-          const ListTile(
-            title: Text('Style'),
-            subtitle: Text('Fonts, colors, sizes (coming soon)'),
-            leading: Icon(Icons.format_paint),
+          ListTile(
+            title: Text(AppLocalizations.of(context)!.menuStyle),
+            subtitle: Text(AppLocalizations.of(context)!.menuStyleSubtitle),
+            leading: const Icon(Icons.format_paint),
           ),
           const Divider(),
           ListTile(
-            title: const Text('Update KMB Data Manually'),
+            title: Text(AppLocalizations.of(context)!.menuTerms),
+            subtitle: Text(AppLocalizations.of(context)!.menuTermsSubtitle),
+            leading: const Icon(Icons.description),
+          ),
+          const Divider(),
+          ListTile(
+            title: Text(AppLocalizations.of(context)!.menuDevLinks),
+            subtitle: Text(AppLocalizations.of(context)!.menuDevLinksSubtitle),
+            leading: const Icon(Icons.link),
+            onTap: _routeToGithub,
+          ),
+          const Divider(),
+          _buildLanguageSection(),
+          const Divider(),
+          ListTile(
+            title: Text(AppLocalizations.of(context)!.menuUpdateKMB),
             leading: const Icon(Icons.sync),
             trailing: _isRefreshing
                 ? const SizedBox(
@@ -75,23 +85,167 @@ class _MenuScreenState extends State<MenuScreen> {
                   )
                 : TextButton(
                     onPressed: _refreshCache,
-                    child: const Text('Refresh'),
+                    child: Text(AppLocalizations.of(context)!.menuRefresh),
                   ),
           ),
           const Divider(),
-          const ListTile(
-            title: Text('Terms of Service'),
-            subtitle: Text('View terms and privacy policy (coming soon)'),
-            leading: Icon(Icons.description),
+          const ResetAppTile(),
+        ],
+      ),
+    );
+  }
+
+  // Reset behavior moved to ResetAppTile
+  Future<void> _routeToGithub() async {
+    if (!mounted) return;
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.devLinksDialogTitle),
+        content: Text(AppLocalizations.of(context)!.devLinksDialogContent),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(AppLocalizations.of(context)!.back),
           ),
-          const Divider(),
-          const ListTile(
-            title: Text('Developer Links'),
-            subtitle: Text('GitHub, Website, Contact (coming soon)'),
-            leading: Icon(Icons.link),
+          TextButton(
+            onPressed: () async {
+              final uri =
+                  Uri.parse('https://github.com/rabb17chi/hk_transport_app');
+              await launchUrl(uri, mode: LaunchMode.externalApplication);
+              if (mounted) Navigator.of(ctx).pop();
+            },
+            child: Text(AppLocalizations.of(context)!.github),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildLanguageSection() {
+    final loc = AppLocalizations.of(context)!;
+    return ExpansionTile(
+      key: _langKey,
+      leading: const Icon(Icons.language),
+      title: Text(loc.languageSectionTitle),
+      trailing: const SizedBox.shrink(),
+      shape: const RoundedRectangleBorder(
+        side: BorderSide(color: Colors.transparent, width: 0),
+        borderRadius: BorderRadius.all(Radius.circular(0)),
+      ),
+      collapsedShape: const RoundedRectangleBorder(
+        side: BorderSide(color: Colors.transparent, width: 0),
+        borderRadius: BorderRadius.all(Radius.circular(0)),
+      ),
+      initiallyExpanded: _langExpanded,
+      onExpansionChanged: (expanded) {
+        setState(() {
+          _langExpanded = expanded;
+          if (expanded) {
+            _themeExpanded = false;
+            _themeKey = UniqueKey();
+          }
+        });
+      },
+      childrenPadding:
+          const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: TextButton(
+                onPressed: () async {
+                  await LocaleService.setLocale(const Locale('en'));
+                },
+                child: Text(loc.languageEnglish),
+              ),
+            ),
+            Expanded(
+              child: TextButton(
+                onPressed: () async {
+                  await LocaleService.setLocale(const Locale('zh', 'HK'));
+                },
+                child: Text(loc.languageChinese),
+              ),
+            ),
+            Expanded(
+              child: TextButton(
+                onPressed: () async {
+                  await LocaleService.setLocale(null);
+                },
+                child: Text(loc.languageSystemDefault),
+              ),
+            ),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget _buildThemeSection() {
+    final loc = AppLocalizations.of(context)!;
+    return ExpansionTile(
+      key: _themeKey,
+      leading: const Icon(Icons.color_lens),
+      title: Text(loc.themeSectionTitle),
+      trailing: const SizedBox.shrink(),
+      shape: const RoundedRectangleBorder(
+        side: BorderSide(color: Colors.transparent, width: 0),
+        borderRadius: BorderRadius.all(Radius.circular(0)),
+      ),
+      collapsedShape: const RoundedRectangleBorder(
+        side: BorderSide(color: Colors.transparent, width: 0),
+        borderRadius: BorderRadius.all(Radius.circular(0)),
+      ),
+      initiallyExpanded: _themeExpanded,
+      onExpansionChanged: (expanded) {
+        setState(() {
+          _themeExpanded = expanded;
+          if (expanded) {
+            _langExpanded = false;
+            _langKey = UniqueKey();
+          }
+        });
+      },
+      childrenPadding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: TextButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('${loc.themeLight} - coming soon')),
+                  );
+                },
+                child: Text(loc.themeLight),
+              ),
+            ),
+            Expanded(
+              child: TextButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('${loc.themeDark} - coming soon')),
+                  );
+                },
+                child: Text(loc.themeDark),
+              ),
+            ),
+            Expanded(
+              child: TextButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content:
+                            Text('${loc.themeSystemDefault} - coming soon')),
+                  );
+                },
+                child: Text(loc.themeSystemDefault),
+              ),
+            ),
+          ],
+        )
+      ],
     );
   }
 }

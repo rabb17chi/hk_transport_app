@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../scripts/bookmarks_service.dart';
+import '../../scripts/kmb_api_service.dart';
+import '../../scripts/mtr/mtr_bookmarks_service.dart';
+import '../../scripts/mtr/mtr_schedule_service.dart';
+import '../mtr/mtr_schedule_dialog.dart';
 
 class BookmarkPage extends StatefulWidget {
   const BookmarkPage({super.key});
@@ -12,21 +16,47 @@ class _BookmarkPageState extends State<BookmarkPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List<BookmarkItem> _kmbBookmarks = [];
-  List<Map<String, dynamic>> _mtrBookmarks =
-      []; // Placeholder for MTR bookmarks
+  List<MTRBookmarkItem> _mtrBookmarks = [];
   bool _isLoading = true;
+  int _kmbTrigger = 0;
+  int _mtrTrigger = 0;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _loadBookmarks();
+    // Listen to both bookmark services for instant updates
+    BookmarksService.refreshTrigger.addListener(_onKMBTrigger);
+    MTRBookmarksService.refreshTrigger.addListener(_onMTRTrigger);
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    BookmarksService.refreshTrigger.removeListener(_onKMBTrigger);
+    MTRBookmarksService.refreshTrigger.removeListener(_onMTRTrigger);
     super.dispose();
+  }
+
+  void _onKMBTrigger() {
+    if (mounted) {
+      final v = BookmarksService.refreshTrigger.value;
+      if (v != _kmbTrigger) {
+        _kmbTrigger = v;
+        _loadBookmarks();
+      }
+    }
+  }
+
+  void _onMTRTrigger() {
+    if (mounted) {
+      final v = MTRBookmarksService.refreshTrigger.value;
+      if (v != _mtrTrigger) {
+        _mtrTrigger = v;
+        _loadBookmarks();
+      }
+    }
   }
 
   Future<void> _loadBookmarks() async {
@@ -35,12 +65,9 @@ class _BookmarkPageState extends State<BookmarkPage>
     });
 
     try {
-      // Load KMB bookmarks
+      // Load KMB and MTR bookmarks
       final kmbBookmarks = await BookmarksService.getBookmarks();
-
-      // For now, MTR bookmarks are empty - this would be implemented later
-      // when MTR bookmark functionality is added
-      final mtrBookmarks = <Map<String, dynamic>>[];
+      final mtrBookmarks = await MTRBookmarksService.getBookmarks();
 
       setState(() {
         _kmbBookmarks = kmbBookmarks;
@@ -151,6 +178,60 @@ class _BookmarkPageState extends State<BookmarkPage>
               icon: const Icon(Icons.delete, color: Colors.red),
               onPressed: () => _removeKMBBookmark(bookmark),
             ),
+            onTap: () async {
+              try {
+                final eta = await KMBApiService.getETA(
+                    bookmark.stopId, bookmark.route, bookmark.serviceType);
+                if (!mounted) return;
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('${bookmark.route} - ${bookmark.stopNameTc}'),
+                      content: SizedBox(
+                        width: 260,
+                        child: eta.isEmpty
+                            ? const Text('暫無到站時間')
+                            : ListView(
+                                shrinkWrap: true,
+                                children: eta.take(6).map((e) {
+                                  return Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 6),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('第 ${e.etaSeq} 班'),
+                                        Text(
+                                          e.arrivalTimeString,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('關閉'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              } catch (e) {
+                if (!mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('載入 ETA 失敗: $e')),
+                );
+              }
+            },
           ),
         );
       },
@@ -182,7 +263,7 @@ class _BookmarkPageState extends State<BookmarkPage>
             ),
             SizedBox(height: 8),
             Text(
-              '港鐵書籤功能即將推出',
+              '長按港鐵車站可加入收藏',
               style: TextStyle(
                 color: Colors.grey,
               ),
@@ -202,14 +283,43 @@ class _BookmarkPageState extends State<BookmarkPage>
           child: ListTile(
             leading: const Icon(Icons.train, color: Colors.blue),
             title: Text(
-              bookmark['nameTc'] ?? '',
+              bookmark.stationNameTc,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: Text(bookmark['fullName'] ?? ''),
+            subtitle: Text(bookmark.stationNameEn),
             trailing: IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),
               onPressed: () => _removeMTRBookmark(bookmark),
             ),
+            onTap: () async {
+              try {
+                final resp = await MTRScheduleService.getSchedule(
+                  lineCode: bookmark.lineCode,
+                  stationId: bookmark.stationId,
+                );
+                if (!mounted) return;
+                if (resp == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('無法獲取時刻表，請稍後重試')),
+                  );
+                  return;
+                }
+                showDialog(
+                  context: context,
+                  builder: (context) => MTRScheduleDialog(
+                    initialResponse: resp,
+                    stationName: bookmark.stationNameTc,
+                    lineCode: bookmark.lineCode,
+                    stationId: bookmark.stationId,
+                  ),
+                );
+              } catch (e) {
+                if (!mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('載入時刻表失敗: $e')),
+                );
+              }
+            },
           ),
         );
       },
@@ -234,16 +344,21 @@ class _BookmarkPageState extends State<BookmarkPage>
     }
   }
 
-  Future<void> _removeMTRBookmark(Map<String, dynamic> bookmark) async {
-    // Placeholder for MTR bookmark removal
-    // This would be implemented when MTR bookmark functionality is added
-    setState(() {
-      _mtrBookmarks.remove(bookmark);
-    });
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('已移除書籤')),
-      );
+  Future<void> _removeMTRBookmark(MTRBookmarkItem bookmark) async {
+    try {
+      await MTRBookmarksService.removeBookmark(bookmark);
+      await _loadBookmarks();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('已移除書籤')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('移除書籤時發生錯誤: $e')),
+        );
+      }
     }
   }
 }

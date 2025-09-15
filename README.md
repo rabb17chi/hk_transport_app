@@ -1,4 +1,4 @@
-# MD由 AI-Gen，懶得自己寫咁q鬼多，不過後面會補充返個人感想。
+# MD 由 AI-Gen，懶得自己寫咁 q 鬼多，不過後面會補充返個人感想。
 
 # 香港交通應用程式 / Hong Kong Transport App
 
@@ -31,10 +31,22 @@ A comprehensive Hong Kong transport information app providing real-time MTR and 
 
 ### ⭐ 書籤系統 / Bookmark System
 
-- **智能收藏** / Smart Bookmarks: 收藏常用的港鐵和九巴路線
+- **智能收藏** / Smart Bookmarks: 收藏常用的港鐵和九巴路線（MTR 長按站點加入/移除；KMB 書籤可點擊查看 ETA）
 - **分類管理** / Categorized Management: 分別管理港鐵和九巴書籤
 - **快速存取** / Quick Access: 一鍵存取收藏的路線和車站
 - **同步儲存** / Sync Storage: 本地儲存，無需網路連線
+
+### 🚀 啟動與體驗 / Startup & UX
+
+- **平台記憶** / Platform Memory: 記住你上次使用的模式（MTR/KMB），下次開啟自動套用
+- **重設功能** / Reset: 在「菜單」頁可一鍵重設（清除書籤、KMB 快取並重新抓取資料）
+- **開發者連結** / Developer Link: 透過對話框打開 GitHub 專案頁（使用手機預設瀏覽器）
+
+### 🌐 多語言 / Localization
+
+- **內建語言包** / Bundled: 使用 Flutter gen-l10n 與 ARB 檔，支援英文與繁體中文（香港）
+- **自動語言對應** / Auto Mapping: 偵測裝置語言，若為中文（中國/台灣/香港/澳門或繁體腳本）自動套用 zh_HK，否則英文
+- **手動切換** / Manual Switch: 在「菜單」頁可切換 English / 繁體中文 / 跟隨系統
 
 ## 技術特色 / Technical Features
 
@@ -100,17 +112,24 @@ flutter run
 
 ```
 lib/
-├── components/           # UI 組件 / UI Components
-│   ├── bookmarks/       # 書籤相關組件 / Bookmark Components
-│   ├── kmb/            # 九巴相關組件 / KMB Components
-│   ├── mtr/            # 港鐵相關組件 / MTR Components
-│   └── bottom_nav_bar.dart  # 底部導航欄 / Bottom Navigation Bar
-├── scripts/            # 服務和工具 / Services & Utilities
-│   ├── bookmarks_service.dart  # 書籤服務 / Bookmark Service
-│   ├── kmb_api_service.dart    # 九巴 API 服務 / KMB API Service
-│   ├── mtr/            # 港鐵相關服務 / MTR Services
-│   └── vibration_helper.dart   # 震動助手 / Vibration Helper
-└── main.dart           # 應用入口 / App Entry Point
+├── components/                    # UI 組件 / UI Components
+│   ├── bookmarks/                # 書籤相關組件 / Bookmark Components
+│   ├── kmb/                     # 九巴相關組件 / KMB Components
+│   ├── mtr/                     # 港鐵相關組件 / MTR Components
+│   ├── settings/reset_app_tile.dart # 重設功能 / Reset tile
+│   ├── bottom_nav_bar.dart      # 底部導航欄 / Bottom Navigation Bar
+├── scripts/                     # 服務和工具 / Services & Utilities
+│   ├── bookmarks_service.dart   # KMB 書籤服務 / KMB Bookmark Service
+│   ├── mtr/mtr_bookmarks_service.dart # MTR 書籤服務 / MTR Bookmark Service
+│   ├── kmb_api_service.dart     # 九巴 API 服務 / KMB API Service
+│   ├── kmb_cache_service.dart   # KMB 快取服務 / KMB Cache Service
+│   ├── locale_service.dart      # 語言設定持久化 / Locale persistence
+│   └── startup_service.dart     # 啟動流程 / Startup bootstrap
+├── l10n/                        # 語言檔 / Localization ARB
+│   ├── app_en.arb
+│   ├── app_zh.arb
+│   └── app_zh_HK.arb
+└── main.dart                    # 應用入口 / App Entry Point
 ```
 
 ## 開發團隊 / Development Team
