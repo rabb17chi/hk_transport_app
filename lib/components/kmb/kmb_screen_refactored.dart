@@ -86,16 +86,9 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('KMB ETA'),
+        title: const Text('KMB班次時間查詢'),
         backgroundColor: Colors.blue[600],
         foregroundColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _refreshCache,
-            tooltip: 'Refresh Cache',
-          ),
-        ],
       ),
       body: _isLoading && _routes.isEmpty && _stops.isEmpty
           ? const Center(child: CircularProgressIndicator())
@@ -135,6 +128,7 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
               : SingleChildScrollView(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Route Input and Selector
@@ -150,8 +144,10 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                       const BookmarkedRouteWithStation(),
 
                       // const SizedBox(height: 16),
+                      // const Spacer(),
+                      const Divider(),
 
-                      // InputKeyboard()
+                      // const InputKeyboard(),
                     ],
                   ),
                 ),

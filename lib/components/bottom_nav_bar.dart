@@ -49,8 +49,8 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
       ),
       child: SafeArea(
         child: Container(
-          height: 70,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          height: 80,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -86,14 +86,12 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
     return GestureDetector(
       onTap: () => widget.onTap(index),
       child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: isSelected ? 16 : 12,
-          vertical: isSelected ? 8 : 6,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 8,
+          vertical: 4,
         ),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Theme.of(context).primaryColor.withOpacity(0.1)
-              : Colors.transparent,
+          color: Colors.transparent,
           borderRadius: BorderRadius.circular(25),
         ),
         child: Column(
@@ -103,18 +101,17 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
               icon,
               color: isSelected
                   ? Theme.of(context).primaryColor
-                  : Colors.grey[600],
-              size: isSelected ? 26 : 22,
+                  : Colors.grey[400],
+              size: 20,
             ),
-            const SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(
                 color: isSelected
                     ? Theme.of(context).primaryColor
                     : Colors.grey[600],
-                fontSize: isSelected ? 13 : 11,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                fontSize: 16,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
               ),
             ),
           ],
@@ -132,20 +129,18 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
       behavior: HitTestBehavior.opaque, // Make the entire area tappable
       child: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: isSelected ? 16 : 12,
-          vertical: isSelected ? 8 : 6,
+          horizontal: 8,
+          vertical: isSelected ? 8 : 0,
         ),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Theme.of(context).primaryColor.withOpacity(0.1)
-              : Colors.transparent,
+          color: Colors.transparent,
           borderRadius: BorderRadius.circular(25),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: EdgeInsets.all(isSelected ? 10 : 8),
+              padding: const EdgeInsets.all(0),
               decoration: BoxDecoration(
                 color: widget.isMTRMode ? Colors.blue : Colors.orange,
                 borderRadius: BorderRadius.circular(20),
@@ -160,33 +155,9 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
                   Icon(
                     widget.isMTRMode ? Icons.train : Icons.directions_bus,
                     color: Colors.white,
-                    size: isSelected ? 24 : 20,
-                  ),
-                  // Small indicator for hold-tap functionality
-                  Positioned(
-                    top: 1,
-                    right: 1,
-                    child: Container(
-                      width: 4,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.7),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
+                    size: isSelected ? 52 : 40,
                   ),
                 ],
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              widget.isMTRMode ? '港鐵' : '巴士',
-              style: TextStyle(
-                color: isSelected
-                    ? Theme.of(context).primaryColor
-                    : Colors.grey[600],
-                fontSize: isSelected ? 13 : 11,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
           ],

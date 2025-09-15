@@ -65,10 +65,7 @@ class _MenuScreenState extends State<MenuScreen> {
           ),
           const Divider(),
           ListTile(
-            title: const Text('Update KMB Data Cache'),
-            subtitle: Text(_cacheInfo.isEmpty
-                ? 'Loading cache info...'
-                : 'Routes: ${_cacheInfo['routesCached'] == true ? 'Cached' : 'Not cached'}, Stops: ${_cacheInfo['stopsCached'] == true ? 'Cached' : 'Not cached'}'),
+            title: const Text('Update KMB Data Manually'),
             leading: const Icon(Icons.sync),
             trailing: _isRefreshing
                 ? const SizedBox(
