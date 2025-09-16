@@ -105,8 +105,6 @@ class _RouteSelectorState extends State<RouteSelector> {
                     itemCount: _filteredRoutes.length,
                     itemBuilder: (context, index) {
                       final route = _filteredRoutes[index];
-                      final direction =
-                          route.bound == 'I' ? 'Inbound' : 'Outbound';
                       final routeKey =
                           '${route.route}_${route.bound}'; // Create unique key
                       final isSelected = widget.selectedRouteKey == routeKey;
@@ -115,13 +113,6 @@ class _RouteSelectorState extends State<RouteSelector> {
                         route: route,
                         isSelected: isSelected,
                         onTap: () {
-                          // Print detailed route data
-                          print('=== Selected Route Data ===');
-                          print('Route: ${route.route}');
-                          print('Direction: $direction (${route.bound})');
-                          print('Origin (TC): ${route.origTc}');
-                          print('Destination (TC): ${route.destTc}');
-                          print('========================');
 
                           // Navigate to route stations screen
                           Navigator.push(

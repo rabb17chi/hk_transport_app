@@ -62,9 +62,9 @@ class _SplashScreenState extends State<SplashScreen> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: Column(
+        child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Icon(Icons.directions_transit, size: 72, color: Colors.black54),
             SizedBox(height: 16),
             Text(
@@ -72,7 +72,6 @@ class _SplashScreenState extends State<SplashScreen> {
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 24),
-            CircularProgressIndicator(),
           ],
         ),
       ),
