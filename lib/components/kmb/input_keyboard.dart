@@ -31,20 +31,16 @@ class _InputKeyboardState extends State<InputKeyboard> {
     // Add vibration feedback
     _vibrate();
 
+    _isProcessing = true; // set without rebuild
     setState(() {
-      _isProcessing = true;
       _currentText += key;
     });
 
     widget.onTextChanged(_currentText);
 
-    // Reset processing flag after a short delay
+    // Reset processing flag after a short delay (no rebuild needed)
     Future.delayed(const Duration(milliseconds: 100), () {
-      if (mounted) {
-        setState(() {
-          _isProcessing = false;
-        });
-      }
+      _isProcessing = false;
     });
   }
 
@@ -54,20 +50,16 @@ class _InputKeyboardState extends State<InputKeyboard> {
     // Add vibration feedback
     _vibrate();
 
+    _isProcessing = true; // set without rebuild
     setState(() {
-      _isProcessing = true;
       _currentText = _currentText.substring(0, _currentText.length - 1);
     });
 
     widget.onTextChanged(_currentText);
 
-    // Reset processing flag after a short delay
+    // Reset processing flag after a short delay (no rebuild needed)
     Future.delayed(const Duration(milliseconds: 100), () {
-      if (mounted) {
-        setState(() {
-          _isProcessing = false;
-        });
-      }
+      _isProcessing = false;
     });
   }
 
@@ -95,50 +87,46 @@ class _InputKeyboardState extends State<InputKeyboard> {
   }
 
   void _vibrate() {
-    // Light vibration feedback using VibrationHelper
     VibrationHelper.lightVibrate();
   }
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
         ),
-        child: Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).padding.bottom,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Divider(height: 1),
-              // Keyboard content
-              Container(
-                height: 260, // Limit keyboard height
-                padding: const EdgeInsets.all(8),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 8,
-                      child: _buildNumberKeyboard(),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      flex: 2,
-                      child: _buildLetterKeyboard(),
-                    ),
-                  ],
-                ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).padding.bottom,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Divider(height: 1),
+            // Keyboard content
+            Container(
+              height: 260, // Limit keyboard height
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 8,
+                    child: _buildNumberKeyboard(),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    flex: 2,
+                    child: _buildLetterKeyboard(),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -246,19 +234,22 @@ class _InputKeyboardState extends State<InputKeyboard> {
         style: ElevatedButton.styleFrom(
           backgroundColor:
               _getKeyBackgroundColor(isDisabled, isAvailable, isNumber),
-          foregroundColor: _getKeyTextColor(isDisabled, isAvailable, isNumber),
           elevation: isDisabled ? 0 : 2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
           padding: const EdgeInsets.symmetric(vertical: 16),
+        ).copyWith(
+          overlayColor: const MaterialStatePropertyAll(Colors.transparent),
+          splashFactory: NoSplash.splashFactory,
+          animationDuration: const Duration(milliseconds: 0),
         ),
         child: Text(
           text,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: _getKeyTextColor(isDisabled, isAvailable, isNumber),
+            color: isDisabled ? Colors.grey[400] : Colors.black,
           ),
         ),
       ),

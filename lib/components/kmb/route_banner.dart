@@ -54,7 +54,9 @@ class RouteBanner extends StatelessWidget {
                   children: [
                     // Traditional Chinese (top)
                     Text(
-                      route.destTc,
+                      route.serviceType == '2' || route.serviceType == '5'
+                          ? '${route.destTc} (特別班次)'
+                          : route.destTc,
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

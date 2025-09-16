@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../scripts/vibration_helper.dart';
+import '../l10n/app_localizations.dart';
 
 class AppBottomNavBar extends StatefulWidget {
   final int currentIndex;
@@ -57,7 +58,7 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
               _buildNavItem(
                 context,
                 icon: Icons.bookmark,
-                label: '收藏',
+                label: AppLocalizations.of(context)!.navBookmarks,
                 index: 0,
                 isSelected: widget.currentIndex == 0,
               ),
@@ -65,7 +66,7 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
               _buildNavItem(
                 context,
                 icon: Icons.menu,
-                label: '設定',
+                label: AppLocalizations.of(context)!.navSettings,
                 index: 2,
                 isSelected: widget.currentIndex == 2,
               ),

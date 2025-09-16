@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hk_transport_app/components/kmb/InputKeyboard.dart';
+import 'package:hk_transport_app/components/kmb/input_keyboard.dart';
 import '../../scripts/kmb_api_service.dart';
 import 'route_banner.dart';
 import 'route_stations_screen.dart';
@@ -19,6 +19,7 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
   bool _isLoading = false;
   String _errorMessage = '';
   String _selectedRouteKey = ''; // Changed to store routeKey (route + bound)
+  bool _showSpecialRoutes = false; // serviceType 2/5 visibility
 
   // Text controller for keyboard communication
   final TextEditingController _searchController = TextEditingController();
@@ -48,9 +49,9 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
       final stops = await KMBApiService.getAllStops();
 
       setState(() {
-        _routes = routes;
+        _routes = routes; // keep all service types
         _stops = stops;
-        _filteredRoutes = List.from(routes);
+        _filteredRoutes = _applyServiceTypeFilter(routes);
         _isLoading = false;
       });
     } catch (e) {
@@ -72,15 +73,24 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
 
     setState(() {
       if (query.isEmpty) {
-        _filteredRoutes = _routes;
+        _filteredRoutes = _applyServiceTypeFilter(_routes);
       } else {
-        _filteredRoutes = _routes
+        _filteredRoutes = _applyServiceTypeFilter(_routes)
             .where((route) =>
                 route.route.toUpperCase().startsWith(query) ||
                 route.route.toUpperCase() == query)
             .toList();
       }
     });
+  }
+
+  List<KMBRoute> _applyServiceTypeFilter(List<KMBRoute> src) {
+    if (_showSpecialRoutes) {
+      // show main + special
+      return src;
+    }
+    // default: only main service type == '1'
+    return src.where((r) => r.serviceType == '1').toList();
   }
 
   void _onKeyboardTextChanged(String text) {
@@ -107,8 +117,12 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
     // Debug: Print available characters for debugging
     if (currentInput.isNotEmpty) {
       print('Input: "$currentInput" -> Available next chars: $availableChars');
-      print(
-          'Matching routes: ${_routes.where((route) => route.route.toUpperCase().startsWith(currentInput.toUpperCase())).map((r) => r.route).toList()}');
+      final matches = _routes
+          .where((route) =>
+              route.route.toUpperCase().startsWith(currentInput.toUpperCase()))
+          .map((r) => '${r.route}(${r.serviceType})')
+          .toList();
+      print('Matching routes: $matches');
     }
 
     return availableChars;

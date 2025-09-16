@@ -19,7 +19,7 @@ class _ResetAppTileState extends State<ResetAppTile> {
     return Column(
       children: [
         ListTile(
-          title: const Text('Reset App (clear data & preferences)'),
+          title: const Text('Reset App'),
           leading: const Icon(Icons.delete_forever, color: Colors.red),
           trailing: _isResetting
               ? const SizedBox(
@@ -45,9 +45,9 @@ class _ResetAppTileState extends State<ResetAppTile> {
           context: context,
           builder: (ctx) {
             return AlertDialog(
-              title: const Text('Reset App?'),
+              title: const Text('Reset App'),
               content: const Text(
-                  'This will clear caches, bookmarks and preferences. Continue?'),
+                  'This will clear caches, bookmarks and preferences.'),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(ctx).pop(false),
@@ -55,7 +55,8 @@ class _ResetAppTileState extends State<ResetAppTile> {
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(ctx).pop(true),
-                  child: const Text('Reset', style: TextStyle(color: Colors.red)),
+                  child:
+                      const Text('Reset', style: TextStyle(color: Colors.red)),
                 ),
               ],
             );
@@ -95,9 +96,6 @@ class _ResetAppTileState extends State<ResetAppTile> {
       } catch (_) {}
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('App reset complete. Restarting...')),
-      );
 
       // Restart to splash
       Navigator.of(context).pushAndRemoveUntil(
@@ -120,5 +118,3 @@ class _ResetAppTileState extends State<ResetAppTile> {
     }
   }
 }
-
-

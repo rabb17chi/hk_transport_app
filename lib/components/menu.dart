@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hk_transport_app/l10n/app_localizations.dart';
 import '../scripts/kmb_cache_service.dart';
+import '../../scripts/kmb_api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'menu/data_operations_section.dart';
 import 'settings/reset_app_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../scripts/locale_service.dart';
@@ -19,10 +22,12 @@ class _MenuScreenState extends State<MenuScreen> {
   bool _themeExpanded = false;
   Key _langKey = UniqueKey();
   Key _themeKey = UniqueKey();
+  bool _showSpecialRoutes = false; // Toggle for special KMB routes (2/5)
 
   @override
   void initState() {
     super.initState();
+    _loadShowSpecialPref();
   }
 
   Future<void> _refreshCache() async {
@@ -30,27 +35,36 @@ class _MenuScreenState extends State<MenuScreen> {
       _isRefreshing = true;
     });
     await KMBCacheService.clearCache();
+    // Immediately fetch fresh data to warm cache and make data available now
+    try {
+      await KMBApiService.getAllRoutes();
+      await KMBApiService.getAllStops();
+    } catch (_) {}
     setState(() {
       _isRefreshing = false;
     });
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text(
-                'KMB cache cleared. Fresh data will be fetched automatically.')),
-      );
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('菜單'),
+        title: const Text('設定'),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         children: [
+          DataOperationsSection(
+            showSpecialRoutes: _showSpecialRoutes,
+            onToggleSpecialRoutes: (v) async {
+              setState(() {
+                _showSpecialRoutes = v;
+              });
+              await _setShowSpecialRoutes(v);
+            },
+            onRefreshKMB: _refreshCache,
+          ),
+          const Divider(),
           _buildThemeSection(),
           const Divider(),
           ListTile(
@@ -74,25 +88,14 @@ class _MenuScreenState extends State<MenuScreen> {
           const Divider(),
           _buildLanguageSection(),
           const Divider(),
-          ListTile(
-            title: Text(AppLocalizations.of(context)!.menuUpdateKMB),
-            leading: const Icon(Icons.sync),
-            trailing: _isRefreshing
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : TextButton(
-                    onPressed: _refreshCache,
-                    child: Text(AppLocalizations.of(context)!.menuRefresh),
-                  ),
-          ),
-          const Divider(),
           const ResetAppTile(),
         ],
       ),
     );
+  }
+
+  Future<void> _setShowSpecialRoutes(bool value) async {
+    await setShowSpecialRoutes(context, value);
   }
 
   // Reset behavior moved to ResetAppTile
@@ -120,6 +123,18 @@ class _MenuScreenState extends State<MenuScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _loadShowSpecialPref() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final value = prefs.getBool('showSpecialRoutes') ?? false;
+      if (mounted) {
+        setState(() {
+          _showSpecialRoutes = value;
+        });
+      }
+    } catch (_) {}
   }
 
   Widget _buildLanguageSection() {
@@ -157,7 +172,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 onPressed: () async {
                   await LocaleService.setLocale(const Locale('en'));
                 },
-                child: Text(loc.languageEnglish),
+                child: const Text('English'),
               ),
             ),
             Expanded(
@@ -165,7 +180,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 onPressed: () async {
                   await LocaleService.setLocale(const Locale('zh', 'HK'));
                 },
-                child: Text(loc.languageChinese),
+                child: const Text('繁體中文'),
               ),
             ),
             Expanded(

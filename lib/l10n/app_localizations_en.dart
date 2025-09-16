@@ -48,6 +48,81 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuDevLinksSubtitle => 'GitHub Project Page';
 
   @override
+  String get menuDataOpsTitle => 'Data Operations';
+
+  @override
+  String get dataOpsSpecialToggle => 'Show special KMB routes';
+
+  @override
+  String get dataOpsRefreshKMB => 'Refresh KMB Data';
+
+  @override
+  String get dataOpsRefreshNow => 'Refresh Now';
+
+  @override
+  String get menuTutorial => 'App Tutorial';
+
+  @override
+  String get navBookmarks => 'Bookmarks';
+
+  @override
+  String get navSettings => 'Settings';
+
+  @override
+  String get tabBus => 'Bus';
+
+  @override
+  String get tabMTR => 'MTR';
+
+  @override
+  String get kmbEmptyTitle => 'No bookmarked routes yet';
+
+  @override
+  String get kmbEmptyInstructionPrefix => 'In the bus route page';
+
+  @override
+  String get kmbEmptyInstructionAction => 'Long press the stopname';
+
+  @override
+  String get kmbEmptyInstructionSuffix => 'to add to bookmarks';
+
+  @override
+  String get toWord => 'to';
+
+  @override
+  String get etaEmpty => 'No ETA available';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get errorLoadBookmarks => 'Error loading bookmarks';
+
+  @override
+  String get etaLoadFailed => 'Failed to load ETA';
+
+  @override
+  String get mtrEmptyTitle => 'No MTR bookmarks';
+
+  @override
+  String get mtrEmptySubtitle => 'Long press an MTR station to add';
+
+  @override
+  String get timetableUnavailable => 'Unable to fetch timetable, please try again later';
+
+  @override
+  String get removeBookmarkSuccess => 'Bookmark removed';
+
+  @override
+  String get removeBookmarkError => 'Error removing bookmark';
+
+  @override
+  String get etaSeqPrefix => 'Trip ';
+
+  @override
+  String get etaSeqSuffix => '';
+
+  @override
   String get devLinksDialogTitle => 'Developer Links';
 
   @override

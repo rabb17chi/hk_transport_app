@@ -174,6 +174,156 @@ abstract class AppLocalizations {
   /// **'GitHub Project Page'**
   String get menuDevLinksSubtitle;
 
+  /// No description provided for @menuDataOpsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Operations'**
+  String get menuDataOpsTitle;
+
+  /// No description provided for @dataOpsSpecialToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Show special KMB routes'**
+  String get dataOpsSpecialToggle;
+
+  /// No description provided for @dataOpsRefreshKMB.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh KMB Data'**
+  String get dataOpsRefreshKMB;
+
+  /// No description provided for @dataOpsRefreshNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Now'**
+  String get dataOpsRefreshNow;
+
+  /// No description provided for @menuTutorial.
+  ///
+  /// In en, this message translates to:
+  /// **'App Tutorial'**
+  String get menuTutorial;
+
+  /// No description provided for @navBookmarks.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmarks'**
+  String get navBookmarks;
+
+  /// No description provided for @navSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get navSettings;
+
+  /// No description provided for @tabBus.
+  ///
+  /// In en, this message translates to:
+  /// **'Bus'**
+  String get tabBus;
+
+  /// No description provided for @tabMTR.
+  ///
+  /// In en, this message translates to:
+  /// **'MTR'**
+  String get tabMTR;
+
+  /// No description provided for @kmbEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No bookmarked routes yet'**
+  String get kmbEmptyTitle;
+
+  /// No description provided for @kmbEmptyInstructionPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'In the bus route page'**
+  String get kmbEmptyInstructionPrefix;
+
+  /// No description provided for @kmbEmptyInstructionAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Long press the stopname'**
+  String get kmbEmptyInstructionAction;
+
+  /// No description provided for @kmbEmptyInstructionSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'to add to bookmarks'**
+  String get kmbEmptyInstructionSuffix;
+
+  /// No description provided for @toWord.
+  ///
+  /// In en, this message translates to:
+  /// **'to'**
+  String get toWord;
+
+  /// No description provided for @etaEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No ETA available'**
+  String get etaEmpty;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @errorLoadBookmarks.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading bookmarks'**
+  String get errorLoadBookmarks;
+
+  /// No description provided for @etaLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load ETA'**
+  String get etaLoadFailed;
+
+  /// No description provided for @mtrEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No MTR bookmarks'**
+  String get mtrEmptyTitle;
+
+  /// No description provided for @mtrEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Long press an MTR station to add'**
+  String get mtrEmptySubtitle;
+
+  /// No description provided for @timetableUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to fetch timetable, please try again later'**
+  String get timetableUnavailable;
+
+  /// No description provided for @removeBookmarkSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmark removed'**
+  String get removeBookmarkSuccess;
+
+  /// No description provided for @removeBookmarkError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error removing bookmark'**
+  String get removeBookmarkError;
+
+  /// No description provided for @etaSeqPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip '**
+  String get etaSeqPrefix;
+
+  /// No description provided for @etaSeqSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **''**
+  String get etaSeqSuffix;
+
   /// No description provided for @devLinksDialogTitle.
   ///
   /// In en, this message translates to:

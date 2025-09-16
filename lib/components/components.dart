@@ -10,7 +10,7 @@ export 'kmb/route_stations_screen.dart';
 
 // General Components
 export 'kmb/bookmarked_route_n_station.dart';
-export 'kmb/InputKeyboard.dart';
+export 'kmb/input_keyboard.dart';
 
 // Bookmark Components
 export 'bookmarks/bookmark_page.dart';

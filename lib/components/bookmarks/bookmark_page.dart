@@ -4,6 +4,7 @@ import '../../scripts/kmb_api_service.dart';
 import '../../scripts/mtr/mtr_bookmarks_service.dart';
 import '../../scripts/mtr/mtr_schedule_service.dart';
 import '../mtr/mtr_schedule_dialog.dart';
+import '../../l10n/app_localizations.dart';
 
 class BookmarkPage extends StatefulWidget {
   const BookmarkPage({super.key});
@@ -79,8 +80,9 @@ class _BookmarkPageState extends State<BookmarkPage>
         _isLoading = false;
       });
       if (mounted) {
+        final loc = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('載入書籤時發生錯誤: $e')),
+          SnackBar(content: Text('${loc.errorLoadBookmarks}: $e')),
         );
       }
     }
@@ -88,63 +90,95 @@ class _BookmarkPageState extends State<BookmarkPage>
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('書籤'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(
-              icon: Icon(Icons.directions_bus),
-              text: '巴士',
+      body: SafeArea(
+        child: Column(
+          children: [
+            TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(
+                  icon: const Icon(Icons.directions_bus),
+                  text: loc.tabBus,
+                ),
+                Tab(
+                  icon: const Icon(Icons.train),
+                  text: loc.tabMTR,
+                ),
+              ],
             ),
-            Tab(
-              icon: Icon(Icons.train),
-              text: '港鐵',
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildKMBBookmarks(),
+                  _buildMTRBookmarks(),
+                ],
+              ),
             ),
           ],
         ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildKMBBookmarks(),
-          _buildMTRBookmarks(),
-        ],
       ),
     );
   }
 
   Widget _buildKMBBookmarks() {
+    final loc = AppLocalizations.of(context)!;
+    final isChinese = Localizations.localeOf(context).languageCode == 'zh';
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
     if (_kmbBookmarks.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.bookmark_border,
               size: 64,
               color: Colors.grey,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
-              '沒有巴士書籤',
-              style: TextStyle(
+              loc.kmbEmptyTitle,
+              style: const TextStyle(
                 fontSize: 18,
                 color: Colors.grey,
               ),
             ),
-            SizedBox(height: 8),
-            Text(
-              '在巴士路線頁面添加書籤',
-              style: TextStyle(
-                color: Colors.grey,
-              ),
-            ),
+            const SizedBox(height: 8),
+            isChinese
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(loc.kmbEmptyInstructionPrefix,
+                          style: const TextStyle(color: Colors.grey)),
+                      const SizedBox(width: 4),
+                      Text(loc.kmbEmptyInstructionAction,
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20)),
+                      const SizedBox(width: 4),
+                      Text(loc.kmbEmptyInstructionSuffix,
+                          style: const TextStyle(color: Colors.grey)),
+                    ],
+                  )
+                : Column(
+                    children: [
+                      Text(loc.kmbEmptyInstructionPrefix,
+                          style: const TextStyle(color: Colors.grey)),
+                      Text(loc.kmbEmptyInstructionAction,
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16)),
+                      Text(loc.kmbEmptyInstructionSuffix,
+                          style: const TextStyle(color: Colors.grey)),
+                    ],
+                  )
           ],
         ),
       );
@@ -160,7 +194,7 @@ class _BookmarkPageState extends State<BookmarkPage>
           child: ListTile(
             leading: const Icon(Icons.directions_bus, color: Colors.orange),
             title: Text(
-              '${bookmark.route} 往 ${bookmark.bound}',
+              '${bookmark.route} ${loc.toWord} ${bookmark.bound}',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitle: Column(
@@ -191,7 +225,7 @@ class _BookmarkPageState extends State<BookmarkPage>
                       content: SizedBox(
                         width: 260,
                         child: eta.isEmpty
-                            ? const Text('暫無到站時間')
+                            ? Text(loc.etaEmpty)
                             : ListView(
                                 shrinkWrap: true,
                                 children: eta.take(6).map((e) {
@@ -202,7 +236,8 @@ class _BookmarkPageState extends State<BookmarkPage>
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text('第 ${e.etaSeq} 班'),
+                                        Text(
+                                            '${loc.etaSeqPrefix}${e.etaSeq}${loc.etaSeqSuffix}'),
                                         Text(
                                           e.arrivalTimeString,
                                           style: const TextStyle(
@@ -219,7 +254,7 @@ class _BookmarkPageState extends State<BookmarkPage>
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('關閉'),
+                          child: Text(loc.close),
                         ),
                       ],
                     );
@@ -228,7 +263,7 @@ class _BookmarkPageState extends State<BookmarkPage>
               } catch (e) {
                 if (!mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('載入 ETA 失敗: $e')),
+                  SnackBar(content: Text('${loc.etaLoadFailed}: $e')),
                 );
               }
             },
@@ -239,32 +274,33 @@ class _BookmarkPageState extends State<BookmarkPage>
   }
 
   Widget _buildMTRBookmarks() {
+    final loc = AppLocalizations.of(context)!;
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
     if (_mtrBookmarks.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.bookmark_border,
               size: 64,
               color: Colors.grey,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
-              '沒有港鐵書籤',
-              style: TextStyle(
+              loc.mtrEmptyTitle,
+              style: const TextStyle(
                 fontSize: 18,
                 color: Colors.grey,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
-              '長按港鐵車站可加入收藏',
-              style: TextStyle(
+              loc.mtrEmptySubtitle,
+              style: const TextStyle(
                 color: Colors.grey,
               ),
             ),
@@ -300,7 +336,7 @@ class _BookmarkPageState extends State<BookmarkPage>
                 if (!mounted) return;
                 if (resp == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('無法獲取時刻表，請稍後重試')),
+                    SnackBar(content: Text(loc.timetableUnavailable)),
                   );
                   return;
                 }
@@ -316,7 +352,7 @@ class _BookmarkPageState extends State<BookmarkPage>
               } catch (e) {
                 if (!mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('載入時刻表失敗: $e')),
+                  SnackBar(content: Text('${loc.errorLoadBookmarks}: $e')),
                 );
               }
             },
@@ -327,36 +363,38 @@ class _BookmarkPageState extends State<BookmarkPage>
   }
 
   Future<void> _removeKMBBookmark(BookmarkItem bookmark) async {
+    final loc = AppLocalizations.of(context)!;
     try {
       await BookmarksService.removeBookmark(bookmark);
       await _loadBookmarks();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('已移除書籤')),
+          SnackBar(content: Text(loc.removeBookmarkSuccess)),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('移除書籤時發生錯誤: $e')),
+          SnackBar(content: Text('${loc.removeBookmarkError}: $e')),
         );
       }
     }
   }
 
   Future<void> _removeMTRBookmark(MTRBookmarkItem bookmark) async {
+    final loc = AppLocalizations.of(context)!;
     try {
       await MTRBookmarksService.removeBookmark(bookmark);
       await _loadBookmarks();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('已移除書籤')),
+          SnackBar(content: Text(loc.removeBookmarkSuccess)),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('移除書籤時發生錯誤: $e')),
+          SnackBar(content: Text('${loc.removeBookmarkError}: $e')),
         );
       }
     }

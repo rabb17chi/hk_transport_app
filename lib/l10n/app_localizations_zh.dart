@@ -48,6 +48,81 @@ class AppLocalizationsZh extends AppLocalizations {
   String get menuDevLinksSubtitle => 'GitHub 專案頁';
 
   @override
+  String get menuDataOpsTitle => 'Data Operations';
+
+  @override
+  String get dataOpsSpecialToggle => 'Show special KMB routes';
+
+  @override
+  String get dataOpsRefreshKMB => 'Refresh KMB Data';
+
+  @override
+  String get dataOpsRefreshNow => 'Refresh Now';
+
+  @override
+  String get menuTutorial => 'App Tutorial';
+
+  @override
+  String get navBookmarks => '收藏';
+
+  @override
+  String get navSettings => '設定';
+
+  @override
+  String get tabBus => '巴士';
+
+  @override
+  String get tabMTR => '港鐵';
+
+  @override
+  String get kmbEmptyTitle => '暫未有收藏的路線';
+
+  @override
+  String get kmbEmptyInstructionPrefix => '在巴士路線頁面';
+
+  @override
+  String get kmbEmptyInstructionAction => '長按站名';
+
+  @override
+  String get kmbEmptyInstructionSuffix => '以加入收藏';
+
+  @override
+  String get toWord => '往';
+
+  @override
+  String get etaEmpty => '暫無到站時間';
+
+  @override
+  String get close => '關閉';
+
+  @override
+  String get errorLoadBookmarks => '載入書籤時發生錯誤';
+
+  @override
+  String get etaLoadFailed => '載入 ETA 失敗';
+
+  @override
+  String get mtrEmptyTitle => '沒有港鐵書籤';
+
+  @override
+  String get mtrEmptySubtitle => '長按港鐵車站可加入收藏';
+
+  @override
+  String get timetableUnavailable => '無法獲取時刻表，請稍後重試';
+
+  @override
+  String get removeBookmarkSuccess => '已移除書籤';
+
+  @override
+  String get removeBookmarkError => '移除書籤時發生錯誤';
+
+  @override
+  String get etaSeqPrefix => '第 ';
+
+  @override
+  String get etaSeqSuffix => ' 班';
+
+  @override
   String get devLinksDialogTitle => '開發者連結';
 
   @override
@@ -126,6 +201,81 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
 
   @override
   String get menuDevLinksSubtitle => 'GitHub 專案頁';
+
+  @override
+  String get menuDataOpsTitle => '更多資料操作';
+
+  @override
+  String get dataOpsSpecialToggle => '顯示特別班次';
+
+  @override
+  String get dataOpsRefreshKMB => '手動更新九巴資料';
+
+  @override
+  String get dataOpsRefreshNow => '立即更新';
+
+  @override
+  String get menuTutorial => 'APP使用教程';
+
+  @override
+  String get navBookmarks => '收藏';
+
+  @override
+  String get navSettings => '設定';
+
+  @override
+  String get tabBus => '巴士';
+
+  @override
+  String get tabMTR => '港鐵';
+
+  @override
+  String get kmbEmptyTitle => '暫未有收藏的路線';
+
+  @override
+  String get kmbEmptyInstructionPrefix => '在巴士路線頁面';
+
+  @override
+  String get kmbEmptyInstructionAction => '長按站名';
+
+  @override
+  String get kmbEmptyInstructionSuffix => '以加入收藏';
+
+  @override
+  String get toWord => '往';
+
+  @override
+  String get etaEmpty => '暫無到站時間';
+
+  @override
+  String get close => '關閉';
+
+  @override
+  String get errorLoadBookmarks => '載入書籤時發生錯誤';
+
+  @override
+  String get etaLoadFailed => '載入 ETA 失敗';
+
+  @override
+  String get mtrEmptyTitle => '沒有港鐵書籤';
+
+  @override
+  String get mtrEmptySubtitle => '長按港鐵車站可加入收藏';
+
+  @override
+  String get timetableUnavailable => '無法獲取時刻表，請稍後重試';
+
+  @override
+  String get removeBookmarkSuccess => '已移除書籤';
+
+  @override
+  String get removeBookmarkError => '移除書籤時發生錯誤';
+
+  @override
+  String get etaSeqPrefix => '第 ';
+
+  @override
+  String get etaSeqSuffix => ' 班';
 
   @override
   String get devLinksDialogTitle => '開發者連結';
