@@ -5,6 +5,7 @@ import '../../scripts/mtr/mtr_bookmarks_service.dart';
 import '../../scripts/mtr/mtr_schedule_service.dart';
 import '../mtr/mtr_schedule_dialog.dart';
 import '../../l10n/app_localizations.dart';
+import '../../l10n/locale_utils.dart';
 
 class BookmarkPage extends StatefulWidget {
   const BookmarkPage({super.key});
@@ -125,7 +126,7 @@ class _BookmarkPageState extends State<BookmarkPage>
 
   Widget _buildKMBBookmarks() {
     final loc = AppLocalizations.of(context)!;
-    final isChinese = Localizations.localeOf(context).languageCode == 'zh';
+    final isChinese = LocaleUtils.isChinese(context);
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }

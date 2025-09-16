@@ -63,6 +63,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get menuTutorial => 'App Tutorial';
 
   @override
+  String get dataOpsMtrReverse => '反轉港鐵站序';
+
+  @override
   String get navBookmarks => '收藏';
 
   @override
@@ -216,6 +219,9 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
 
   @override
   String get menuTutorial => 'APP使用教程';
+
+  @override
+  String get dataOpsMtrReverse => '反轉港鐵站序';
 
   @override
   String get navBookmarks => '收藏';

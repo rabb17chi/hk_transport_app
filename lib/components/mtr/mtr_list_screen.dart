@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
 import '../../scripts/mtr/mtr_data.dart';
 import '../../scripts/mtr/mtr_schedule_service.dart';
 import '../../scripts/mtr/mtr_station_order.dart';
 import '../../scripts/vibration_helper.dart';
 import 'mtr_schedule_dialog.dart';
 import '../../scripts/mtr/mtr_bookmarks_service.dart';
+import '../../l10n/locale_utils.dart';
+import '../../scripts/settings_service.dart';
 
 /// MTR 列表式車站選擇界面
 ///
@@ -23,13 +24,38 @@ class _MTRListScreenState extends State<MTRListScreen> {
   String? selectedLineCode;
   String? currentLineCode; // 當前選擇的線路代碼
   bool _isLoadingSchedule = false;
+  bool _reverseStations = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Load persisted settings and listen for changes
+    SettingsService.load();
+    _reverseStations = SettingsService.mtrReverseStationsNotifier.value;
+    SettingsService.mtrReverseStationsNotifier.addListener(_onReverseChanged);
+  }
+
+  @override
+  void dispose() {
+    SettingsService.mtrReverseStationsNotifier
+        .removeListener(_onReverseChanged);
+    super.dispose();
+  }
+
+  void _onReverseChanged() {
+    setState(() {
+      _reverseStations = SettingsService.mtrReverseStationsNotifier.value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('港鐵 MTR'),
-        backgroundColor: Colors.blue[600],
+        title: const Text('港鐵班次查詢'),
+        backgroundColor: currentLineCode != null
+            ? _getLineColor(currentLineCode!)
+            : Colors.blue[600],
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -105,6 +131,7 @@ class _MTRListScreenState extends State<MTRListScreen> {
       ),
       child: ExpansionTile(
         initiallyExpanded: false,
+        trailing: const SizedBox.shrink(),
         title: Row(
           children: [
             Container(
@@ -117,38 +144,26 @@ class _MTRListScreenState extends State<MTRListScreen> {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    lineNameTc,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: isLineSelected ? lineColor : null,
-                    ),
-                  ),
-                  Text(
-                    lineNameEn,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
+              child: Text(
+                LocaleUtils.isChinese(context) ? lineNameTc : lineNameEn,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: isLineSelected ? lineColor : null,
+                ),
               ),
             ),
-            Row(
-              children: [
-                Text(
-                  '${stations.length} 站',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
+            // Row(
+            //   children: [
+            //     Text(
+            //       '${stations.length}',
+            //       style: TextStyle(
+            //         fontSize: 12,
+            //         color: Colors.grey[600],
+            //       ),
+            //     ),
+            //   ],
+            // ),
           ],
         ),
         onExpansionChanged: (isExpanded) async {
@@ -180,8 +195,12 @@ class _MTRListScreenState extends State<MTRListScreen> {
         },
         children: () {
           // 使用新的排序邏輯
-          final sortedStations =
+          List<Map<String, dynamic>> sortedStations =
               MTRStationOrder.sortStationsByLine(lineCode, stations);
+          if (_reverseStations) {
+            sortedStations =
+                List<Map<String, dynamic>>.from(sortedStations.reversed);
+          }
 
           // 轉換為 Widget
           return sortedStations.map((station) {
@@ -204,8 +223,8 @@ class _MTRListScreenState extends State<MTRListScreen> {
       Map<String, dynamic> station, String stationKey, String lineCode) {
     final stationNameTc = station['nameTc'] as String;
     final stationNameEn = station['fullName'] as String;
-    final isSelected = selectedStationId == stationKey; // 使用 stationId 作為比較
-    final isChinese = Localizations.localeOf(context).languageCode == 'zh';
+    // Removed selection visuals; no checked state for station buttons
+    final isChinese = LocaleUtils.isChinese(context);
     final displayTitle = isChinese ? stationNameTc : stationNameEn;
     final displaySubtitle = isChinese ? stationNameEn : stationNameTc;
 
@@ -214,14 +233,14 @@ class _MTRListScreenState extends State<MTRListScreen> {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: isSelected ? _getLineColor(lineCode) : Colors.grey[300],
+          color: Colors.grey[300],
           borderRadius: BorderRadius.circular(20),
         ),
         child: Center(
           child: Text(
             stationKey,
-            style: TextStyle(
-              color: isSelected ? Colors.white : Colors.black87,
+            style: const TextStyle(
+              color: Colors.black87,
               fontWeight: FontWeight.bold,
               fontSize: 12,
             ),
@@ -230,18 +249,10 @@ class _MTRListScreenState extends State<MTRListScreen> {
       ),
       title: Text(
         displayTitle,
-        style: TextStyle(
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          color: isSelected ? _getLineColor(lineCode) : null,
-        ),
+        style: const TextStyle(fontWeight: FontWeight.normal),
       ),
       subtitle: Text(displaySubtitle),
-      trailing: isSelected
-          ? Icon(
-              Icons.check_circle,
-              color: _getLineColor(lineCode),
-            )
-          : null,
+      trailing: null,
       onTap: _isLoadingSchedule
           ? null
           : () async {
@@ -261,6 +272,8 @@ class _MTRListScreenState extends State<MTRListScreen> {
         final isBookmarked = await MTRBookmarksService.isBookmarked(item);
         if (isBookmarked) {
           await MTRBookmarksService.removeBookmark(item);
+        } else {
+          await MTRBookmarksService.addBookmark(item);
         }
       },
     );

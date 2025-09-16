@@ -204,6 +204,12 @@ abstract class AppLocalizations {
   /// **'App Tutorial'**
   String get menuTutorial;
 
+  /// No description provided for @dataOpsMtrReverse.
+  ///
+  /// In en, this message translates to:
+  /// **'Reverse MTR stations order'**
+  String get dataOpsMtrReverse;
+
   /// No description provided for @navBookmarks.
   ///
   /// In en, this message translates to:

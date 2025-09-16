@@ -32,6 +32,7 @@
   "removeBookmarkError": "移除書籤時發生錯誤",
   "etaSeqPrefix": "第 ",
   "etaSeqSuffix": " 班",
+  "dataOpsMtrReverse": "反轉港鐵站序",
   "devLinksDialogTitle": "開發者連結",
   "devLinksDialogContent": "前往 GitHub",
   "back": "返回",

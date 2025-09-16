@@ -2,6 +2,7 @@ import 'package:hk_transport_app/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 // removed duplicate import
+import '../../scripts/settings_service.dart';
 
 class DataOperationsSection extends StatelessWidget {
   final bool showSpecialRoutes;
@@ -36,6 +37,16 @@ class DataOperationsSection extends StatelessWidget {
             title: Text(AppLocalizations.of(context)!.dataOpsSpecialToggle),
             value: showSpecialRoutes,
             onChanged: onToggleSpecialRoutes,
+          ),
+          const SizedBox(height: 4),
+          ValueListenableBuilder<bool>(
+            valueListenable: SettingsService.mtrReverseStationsNotifier,
+            builder: (context, value, _) => SwitchListTile(
+              secondary: const Icon(Icons.swap_vert),
+              title: Text(AppLocalizations.of(context)!.dataOpsMtrReverse),
+              value: value,
+              onChanged: (v) => SettingsService.setMtrReverseStations(v),
+            ),
           ),
           const SizedBox(height: 4),
           ListTile(

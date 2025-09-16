@@ -132,7 +132,7 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('KMB班次時間查詢'),
+        title: const Text('KMB,LWB班次查詢'),
         backgroundColor: Colors.blue[600],
         foregroundColor: Colors.white,
       ),

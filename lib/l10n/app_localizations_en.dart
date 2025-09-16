@@ -63,6 +63,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuTutorial => 'App Tutorial';
 
   @override
+  String get dataOpsMtrReverse => 'Reverse MTR stations order';
+
+  @override
   String get navBookmarks => 'Bookmarks';
 
   @override
