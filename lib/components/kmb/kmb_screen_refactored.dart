@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hk_transport_app/components/kmb/bookmarked_route_n_station.dart';
 import 'package:hk_transport_app/components/kmb/InputKeyboard.dart';
 import '../../scripts/kmb_api_service.dart';
 import 'route_banner.dart';
@@ -85,8 +84,34 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
   }
 
   void _onKeyboardTextChanged(String text) {
-    _searchController.text = text;
-    _filterRoutes();
+    setState(() {
+      _searchController.text = text;
+      _filterRoutes();
+    });
+  }
+
+  Set<String> _getAvailableNextCharacters(String currentInput) {
+    if (currentInput.length >= 4) return <String>{};
+
+    final availableChars = <String>{};
+
+    for (final route in _routes) {
+      final routeStr = route.route.toUpperCase();
+      if (routeStr.startsWith(currentInput.toUpperCase()) &&
+          routeStr.length > currentInput.length) {
+        final nextChar = routeStr[currentInput.length];
+        availableChars.add(nextChar);
+      }
+    }
+
+    // Debug: Print available characters for debugging
+    if (currentInput.isNotEmpty) {
+      print('Input: "$currentInput" -> Available next chars: $availableChars');
+      print(
+          'Matching routes: ${_routes.where((route) => route.route.toUpperCase().startsWith(currentInput.toUpperCase())).map((r) => r.route).toList()}');
+    }
+
+    return availableChars;
   }
 
   @override
@@ -148,17 +173,18 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                                 controller: _searchController,
                                 decoration: const InputDecoration(
                                   hintText: '請輸入路線號碼',
+                                  counterText: "",
                                   border: OutlineInputBorder(),
                                   prefixIcon: Icon(Icons.search),
                                 ),
                                 textCapitalization:
                                     TextCapitalization.characters,
                                 readOnly: true, // Disable virtual keyboard
+                                maxLength: 4,
                               ),
                               const SizedBox(height: 8),
                               if (_searchController.text.isNotEmpty) ...[
                                 if (_filteredRoutes.isNotEmpty) ...[
-                                  const SizedBox(height: 12),
                                   Expanded(
                                     child: ListView.builder(
                                       itemCount: _filteredRoutes.length,
@@ -254,8 +280,15 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                     // ),
                     const Spacer(),
                     // Custom Keyboard - Fixed at bottom
-                    InputKeyboard(
-                      onTextChanged: _onKeyboardTextChanged,
+                    ValueListenableBuilder<TextEditingValue>(
+                      valueListenable: _searchController,
+                      builder: (context, value, child) {
+                        return InputKeyboard(
+                          onTextChanged: _onKeyboardTextChanged,
+                          availableCharacters:
+                              _getAvailableNextCharacters(value.text),
+                        );
+                      },
                     ),
                   ],
                 ),

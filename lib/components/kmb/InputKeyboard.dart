@@ -6,10 +6,12 @@ import '../../scripts/vibration_helper.dart';
 /// A custom keyboard widget for input with 0-9 numbers and A-Z letters
 class InputKeyboard extends StatefulWidget {
   final Function(String) onTextChanged;
+  final Set<String> availableCharacters;
 
   const InputKeyboard({
     super.key,
     required this.onTextChanged,
+    this.availableCharacters = const <String>{},
   });
 
   @override
@@ -22,6 +24,9 @@ class _InputKeyboardState extends State<InputKeyboard> {
 
   void _onKeyPressed(String key) {
     if (_isProcessing) return; // Prevent double input
+
+    // Check if adding this key would exceed 4 character limit
+    if (_currentText.length >= 4) return;
 
     // Add vibration feedback
     _vibrate();
@@ -178,18 +183,48 @@ class _InputKeyboardState extends State<InputKeyboard> {
   }
 
   Widget _buildLetterKeyboard() {
+    // Filter letters to only show available ones, but keep them in original order
+    final allLetters = [
+      'A',
+      'B',
+      'C',
+      'D',
+      'E',
+      'F',
+      'G',
+      'H',
+      'I',
+      'J',
+      'K',
+      'L',
+      'M',
+      'N',
+      'O',
+      'P',
+      'Q',
+      'R',
+      'S',
+      'T',
+      'U',
+      'V',
+      'W',
+      'X',
+      'Y',
+      'Z'
+    ];
+
+    // Filter to only available letters, maintaining original order
+    final availableLetters = allLetters
+        .where((letter) => widget.availableCharacters.contains(letter))
+        .toList();
+
     return SingleChildScrollView(
       child: Column(
-        children: [
-          // Letters in single column
-          'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-          'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-          'U', 'V', 'W', 'X', 'Y', 'Z'
-        ]
+        children: availableLetters
             .map(
               (letter) => Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 6),
-                child: _buildKey(letter),
+                child: _buildKey(letter), // Use the regular _buildKey method
               ),
             )
             .toList(),
@@ -198,14 +233,21 @@ class _InputKeyboardState extends State<InputKeyboard> {
   }
 
   Widget _buildKey(String text) {
+    final isLengthLimit = _currentText.length >= 4;
+    final isAvailable = widget.availableCharacters.isNotEmpty &&
+        widget.availableCharacters.contains(text);
+    final isNumber = RegExp(r'[0-9]').hasMatch(text);
+    final isDisabled = isLengthLimit || !isAvailable;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: ElevatedButton(
-        onPressed: () => _onKeyPressed(text),
+        onPressed: isDisabled ? null : () => _onKeyPressed(text),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.grey[200],
-          foregroundColor: Colors.black,
-          elevation: 2,
+          backgroundColor:
+              _getKeyBackgroundColor(isDisabled, isAvailable, isNumber),
+          foregroundColor: _getKeyTextColor(isDisabled, isAvailable, isNumber),
+          elevation: isDisabled ? 0 : 2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
@@ -213,10 +255,31 @@ class _InputKeyboardState extends State<InputKeyboard> {
         ),
         child: Text(
           text,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: _getKeyTextColor(isDisabled, isAvailable, isNumber),
+          ),
         ),
       ),
     );
+  }
+
+  Color? _getKeyBackgroundColor(
+      bool isDisabled, bool isAvailable, bool isNumber) {
+    if (isDisabled) {
+      return Colors.grey[100]; // All disabled keys - light grey
+    } else {
+      return Colors.grey[200]; // Available keys - normal grey
+    }
+  }
+
+  Color? _getKeyTextColor(bool isDisabled, bool isAvailable, bool isNumber) {
+    if (isDisabled) {
+      return Colors.grey[400]; // All disabled keys - grey text
+    } else {
+      return Colors.black; // Available keys - normal black
+    }
   }
 
   Widget _buildClearKey() {
