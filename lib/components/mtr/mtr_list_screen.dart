@@ -63,13 +63,6 @@ class _MTRListScreenState extends State<MTRListScreen> {
             onPressed: () async {
               // 觸發中等振動
               await VibrationHelper.mediumVibrate();
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('模式切換'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
             },
             tooltip: '模式切換',
           )

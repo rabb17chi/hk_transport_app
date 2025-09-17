@@ -374,11 +374,6 @@ class _BookmarkPageState extends State<BookmarkPage>
     try {
       await BookmarksService.removeBookmark(bookmark);
       await _loadBookmarks();
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(loc.removeBookmarkSuccess)),
-        );
-      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -393,11 +388,6 @@ class _BookmarkPageState extends State<BookmarkPage>
     try {
       await MTRBookmarksService.removeBookmark(bookmark);
       await _loadBookmarks();
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(loc.removeBookmarkSuccess)),
-        );
-      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

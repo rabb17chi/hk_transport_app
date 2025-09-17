@@ -134,10 +134,11 @@ class ThemeService {
         iconColor: Color(0xFFEBEBEB),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: Color(0xFF282828),
+        backgroundColor: Color(0xFF505050), // rgb(80,80,80) - lighter grey
         selectedItemColor: Color(
             0xFF90CAF9), // Use lighter primary color for better visibility
-        unselectedItemColor: Color(0xFF9E9E9E),
+        unselectedItemColor:
+            Color(0xFF787878), // rgb(120,120,120) - darker grey
       ),
       dividerTheme: const DividerThemeData(
         color: Color(0xFF555555),

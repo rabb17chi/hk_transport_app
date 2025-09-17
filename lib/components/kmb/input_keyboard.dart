@@ -107,10 +107,9 @@ class _InputKeyboardState extends State<InputKeyboard> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Divider(height: 1),
             // Keyboard content
             Container(
-              height: 260, // Limit keyboard height
+              height: 280, // Limit keyboard height
               padding: const EdgeInsets.all(8),
               child: Row(
                 children: [

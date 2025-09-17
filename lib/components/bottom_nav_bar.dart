@@ -22,13 +22,12 @@ class AppBottomNavBar extends StatefulWidget {
 }
 
 class _AppBottomNavBarState extends State<AppBottomNavBar> {
-  void _handleModeToggleTap() {
-    // Single tap - navigate to current mode
+  void _handleModeToggleTap() async {
+    await VibrationHelper.lightVibrate();
     widget.onTap(1);
   }
 
   void _handleModeToggleLongPress() async {
-    // Long press - change mode
     widget.onModeToggle?.call();
 
     // Provide heavy vibration feedback for mode change
@@ -86,7 +85,10 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
     required bool isSelected,
   }) {
     return GestureDetector(
-      onTap: () => widget.onTap(index),
+      onTap: () async {
+        await VibrationHelper.lightVibrate();
+        widget.onTap(index);
+      },
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: 8,

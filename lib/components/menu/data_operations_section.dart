@@ -67,8 +67,4 @@ class DataOperationsSection extends StatelessWidget {
 Future<void> setShowSpecialRoutes(BuildContext context, bool value) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.setBool('showSpecialRoutes', value);
-  if (!context.mounted) return;
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text(value ? '已啟用特別班次顯示' : '已隱藏特別班次')),
-  );
 }

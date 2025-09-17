@@ -51,16 +51,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
           response = newResponse;
         });
 
-        // 顯示成功消息
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('已更新 ${widget.stationName} 時刻表'),
-              duration: const Duration(seconds: 2),
-              backgroundColor: Colors.green,
-            ),
-          );
-        }
+        // Success - no snackbar needed
       } else {
         // 顯示錯誤消息
         if (mounted) {

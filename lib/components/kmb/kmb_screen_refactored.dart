@@ -284,16 +284,8 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                         ),
                       ),
                     ),
-
-                    // Bookmarked Stop Selector - Takes remaining space
-                    // const Expanded(
-                    //   child: Padding(
-                    //     padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    //     child: BookmarkedRouteWithStation(),
-                    //   ),
-                    // ),
-                    const Spacer(),
                     // Custom Keyboard - Fixed at bottom
+                    const Spacer(),
                     ValueListenableBuilder<TextEditingValue>(
                       valueListenable: _searchController,
                       builder: (context, value, child) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
 import '../../scripts/bookmarks/bookmarks_service.dart';
+import '../../scripts/utils/vibration_helper.dart';
 
 /// Route Stations Screen
 ///
@@ -34,11 +35,59 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
   bool _isLoadingETA = false;
   String? _selectedStopId; // Track which station is selected
   int? _selectedStationSeq; // Track the sequence number of selected station
+  List<KMBRoute> _availableBounds = []; // Available bounds for this route
 
   @override
   void initState() {
     super.initState();
     _loadRouteStops();
+    _findAvailableBounds();
+  }
+
+  /// Find other bounds available for this route
+  Future<void> _findAvailableBounds() async {
+    try {
+      final allRoutes = await KMBApiService.getAllRoutes();
+      final sameRouteRoutes = allRoutes
+          .where((route) => route.route == widget.routeNumber)
+          .toList();
+
+      setState(() {
+        _availableBounds = sameRouteRoutes;
+      });
+    } catch (e) {
+      print('Error finding available bounds: $e');
+    }
+  }
+
+  /// Switch to another bound of the same route
+  void _switchToOtherBound() async {
+    if (_availableBounds.length <= 1) return;
+
+    // Provide vibration feedback
+    await VibrationHelper.lightVibrate();
+
+    if (!mounted) return;
+
+    // Find the other bound (not the current one)
+    final otherBound = _availableBounds.firstWhere(
+      (route) => route.bound != widget.bound,
+      orElse: () => _availableBounds.first,
+    );
+
+    // Navigate to the other bound
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RouteStationsScreen(
+          routeKey: '${otherBound.route}_${otherBound.bound}',
+          routeNumber: otherBound.route,
+          bound: otherBound.bound,
+          destinationTc: otherBound.destTc,
+          destinationEn: otherBound.destEn,
+        ),
+      ),
+    );
   }
 
   Future<void> _loadRouteStops() async {
@@ -106,6 +155,15 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
         title: Text('${widget.routeNumber} 往 ${widget.destinationTc}'),
         backgroundColor: const Color(0xFF323232),
         foregroundColor: const Color(0xFFF7A925),
+        actions: _availableBounds.length > 1
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.swap_horiz),
+                  onPressed: _switchToOtherBound,
+                  tooltip: 'Switch to other bound',
+                ),
+              ]
+            : null,
       ),
       body: _isLoading
           ? const Center(
@@ -191,21 +249,9 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                       await BookmarksService.removeBookmark(
                                           item);
                                       if (!mounted) return;
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                'Removed bookmark: ${widget.routeNumber} - ${stop.stopNameTc}')),
-                                      );
                                     } else {
                                       await BookmarksService.addBookmark(item);
                                       if (!mounted) return;
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                'Bookmarked ${widget.routeNumber} - ${stop.stopNameTc}')),
-                                      );
                                     }
                                     if (mounted) setState(() {});
                                   },
