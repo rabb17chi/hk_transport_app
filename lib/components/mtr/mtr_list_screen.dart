@@ -237,11 +237,35 @@ class _MTRListScreenState extends State<MTRListScreen> {
                 ),
               ),
             ),
-            title: Text(
-              displayTitle,
-              style: const TextStyle(fontWeight: FontWeight.normal),
+            title: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    displayTitle,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Builder(
+                  builder: (_) {
+                    final lines =
+                        (station['line'] as List<dynamic>?)?.cast<String>() ??
+                            <String>[];
+                    final otherLines =
+                        lines.where((c) => c != lineCode).toList();
+                    if (otherLines.isEmpty) return const SizedBox.shrink();
+                    return Wrap(
+                      spacing: 6,
+                      runSpacing: 4,
+                      children:
+                          otherLines.map((c) => _buildLineBadge(c)).toList(),
+                    );
+                  },
+                ),
+              ],
             ),
-            subtitle: Text(displaySubtitle),
+            subtitle: Text(displaySubtitle,
+                style: const TextStyle(fontWeight: FontWeight.w500)),
             trailing: null,
             onTap: _isLoadingSchedule
                 ? null
@@ -359,5 +383,24 @@ class _MTRListScreenState extends State<MTRListScreen> {
     };
 
     return lineColors[lineCode] ?? const Color(0xFF000000);
+  }
+
+  Widget _buildLineBadge(String code) {
+    final color = _getLineColor(code);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        code,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
   }
 }

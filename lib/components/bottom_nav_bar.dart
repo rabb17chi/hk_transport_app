@@ -132,22 +132,18 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
       onLongPress: _handleModeToggleLongPress,
       behavior: HitTestBehavior.opaque, // Make the entire area tappable
       child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: isSelected ? 8 : 0,
-        ),
         decoration: BoxDecoration(
           color: Colors.transparent,
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.all(0),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
                 color: widget.isMTRMode ? Colors.blue : Colors.orange,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: Colors.white.withOpacity(0.3),
                   width: 1,
@@ -159,7 +155,7 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
                   Icon(
                     widget.isMTRMode ? Icons.train : Icons.directions_bus,
                     color: Colors.white,
-                    size: isSelected ? 52 : 40,
+                    size: 40,
                   ),
                 ],
               ),

@@ -264,13 +264,13 @@ class _InputKeyboardState extends State<InputKeyboard> {
     }
   }
 
-  Color? _getKeyTextColor(bool isDisabled, bool isAvailable, bool isNumber) {
-    if (isDisabled) {
-      return Colors.grey[400]; // All disabled keys - grey text
-    } else {
-      return Colors.black; // Available keys - normal black
-    }
-  }
+  // Color? _getKeyTextColor(bool isDisabled, bool isAvailable, bool isNumber) {
+  //   if (isDisabled) {
+  //     return Colors.grey[400]; // All disabled keys - grey text
+  //   } else {
+  //     return Colors.black; // Available keys - normal black
+  //   }
+  // }
 
   Widget _buildClearKey() {
     return Padding(

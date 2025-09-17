@@ -46,7 +46,7 @@ class MTRData {
       'fullNameEn': 'East Rail Line',
       'shortName': 'EAL',
       'color': '#53B7E8',
-      'defaultDest': 'LOW', // 落馬洲（完整路線終點站）
+      'defaultDest': 'LOW' // 落馬洲（完整路線終點站）
     },
     'TML': {
       'fullNameTc': '屯馬線',

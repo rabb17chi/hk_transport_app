@@ -3,9 +3,11 @@
 /// 顯示列車時刻表的彈出對話框，包含上行和下行方向的列車信息
 
 import 'package:flutter/material.dart';
+import 'dart:async';
 import '../../scripts/mtr/mtr_schedule_service.dart';
 import '../../scripts/mtr/mtr_data.dart';
 import '../../scripts/utils/vibration_helper.dart';
+import '../../scripts/utils/settings_service.dart';
 
 class MTRScheduleDialog extends StatefulWidget {
   final MTRScheduleResponse initialResponse;
@@ -28,11 +30,16 @@ class MTRScheduleDialog extends StatefulWidget {
 class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
   late MTRScheduleResponse response;
   bool isLoading = false;
+  final Map<String, MTRScheduleResponse> _additionalResponses = {};
+  String? _addingLineCode;
+  Timer? _countdownTimer;
+  int _secondsLeft = 15;
 
   @override
   void initState() {
     super.initState();
     response = widget.initialResponse;
+    _startCountdown();
   }
 
   Future<void> updateByRefresh() async {
@@ -84,19 +91,64 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
     }
   }
 
+  Future<void> _refreshAllActiveLines() async {
+    final List<String> refreshed = [];
+
+    // refresh main line
+    final main = await MTRScheduleService.getSchedule(
+      lineCode: widget.lineCode,
+      stationId: widget.stationId,
+    );
+    if (main != null) {
+      if (mounted) setState(() => response = main);
+      refreshed.add(widget.lineCode);
+    }
+
+    // refresh additional lines
+    if (_additionalResponses.isNotEmpty) {
+      final entries = List<String>.from(_additionalResponses.keys);
+      for (final code in entries) {
+        final resp = await MTRScheduleService.getSchedule(
+          lineCode: code,
+          stationId: widget.stationId,
+        );
+        if (resp != null) {
+          if (mounted) {
+            setState(() {
+              _additionalResponses[code] = resp;
+            });
+          }
+          refreshed.add(code);
+        }
+      }
+    }
+
+    if (refreshed.isNotEmpty) {
+      // Haptic feedback and log
+      await VibrationHelper.lightVibrate();
+      // ignore: avoid_print
+      print('Re-fetched of lines: ${refreshed.join(', ')}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final upTrains = response.getUpTrains();
     final downTrains = response.getDownTrains();
-    final lineColor = _getLineColor(widget.lineCode);
+    final stationData = MTRData.getStationData(widget.stationId);
+    final allLines =
+        (stationData?['line'] as List<dynamic>?)?.cast<String>() ?? <String>[];
+    final selectableOtherLines = allLines
+        .where(
+            (c) => c != widget.lineCode && !_additionalResponses.containsKey(c))
+        .toList();
 
     return AlertDialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(28),
       ),
       elevation: 8,
       backgroundColor: Colors.white,
-      shadowColor: lineColor.withOpacity(0.8),
       title: Row(
         children: [
           Container(
@@ -127,6 +179,18 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
               ],
             ),
           ),
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              '刷新 ${_secondsLeft}s',
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+            ),
+          ),
         ],
       ),
       content: SizedBox(
@@ -149,35 +213,106 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 上行方向
-                    if (upTrains.isNotEmpty) ...[
-                      _buildDirectionSection('上行方向', upTrains, Colors.green),
+                    // 當前線路區塊（以線路顏色作為淡色背景）
+                    Container(
+                      width: double.maxFinite,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 4, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: _getLineColor(widget.lineCode)
+                            .withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (upTrains.isNotEmpty) ...[
+                            _buildDirectionSection(
+                                '上行方向', upTrains, Colors.green),
+                          ],
+                          if (upTrains.isNotEmpty && downTrains.isNotEmpty)
+                            const SizedBox(height: 8),
+                          if (downTrains.isNotEmpty) ...[
+                            _buildDirectionSection(
+                                '下行方向', downTrains, Colors.orange),
+                          ],
+                          if (upTrains.isEmpty && downTrains.isEmpty)
+                            _buildEmptyBox(),
+                        ],
+                      ),
+                    ),
+
+                    // 追加線路的時刻表（每個線路一個區塊，前置分隔線）
+                    for (final entry in _additionalResponses.entries) ...[
                       const SizedBox(height: 12),
-                    ],
-
-                    // 下行方向
-                    if (downTrains.isNotEmpty) ...[
-                      _buildDirectionSection('下行方向', downTrains, Colors.orange),
-                    ],
-
-                    // 無數據提示
-                    if (upTrains.isEmpty && downTrains.isEmpty)
+                      const Divider(height: 1),
+                      const SizedBox(height: 12),
                       Container(
-                        padding: const EdgeInsets.all(20),
+                        width: double.maxFinite,
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.grey[100],
+                          color:
+                              _getLineColor(entry.key).withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Center(
-                          child: Text(
-                            '暫無列車信息',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey,
-                            ),
-                          ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: _buildSectionsForResponse(entry.value),
                         ),
                       ),
+                    ],
+
+                    // 其他線路按鈕
+                    if (selectableOtherLines.isNotEmpty) ...[
+                      const SizedBox(height: 12),
+                      const Divider(height: 1),
+                      const SizedBox(height: 4),
+                      Text(
+                        '其他線路',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[700],
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: selectableOtherLines.map((code) {
+                          final isAdding = _addingLineCode == code;
+                          return OutlinedButton(
+                            onPressed:
+                                isAdding ? null : () => _handleAddLine(code),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: _getLineColor(code),
+                              side: BorderSide(color: _getLineColor(code)),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 6),
+                            ),
+                            child: isAdding
+                                ? const SizedBox(
+                                    width: 14,
+                                    height: 14,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
+                                    ),
+                                  )
+                                : Text(
+                                    code,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 4),
+                    ],
                   ],
                 ),
               ),
@@ -197,7 +332,10 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
               : () async {
                   // 觸發中等振動
                   await VibrationHelper.mediumVibrate();
-                  updateByRefresh();
+                  await updateByRefresh();
+                  if (mounted) {
+                    setState(() => _secondsLeft = 15);
+                  }
                 },
           child: isLoading
               ? const SizedBox(
@@ -220,7 +358,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
     String destInfo = '';
     if (filteredTrains.isNotEmpty) {
       final firstTrain = filteredTrains.first;
-      final destName = firstTrain.destNameTc ?? firstTrain.dest ?? '未知';
+      final destName = firstTrain.destNameTc ?? firstTrain.dest ?? '--';
       destInfo = destName;
     }
 
@@ -238,7 +376,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
             Expanded(
               child: Text(
                 '往 $destInfo',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -252,8 +390,92 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
     );
   }
 
+  List<Widget> _buildSectionsForResponse(MTRScheduleResponse resp) {
+    final up = resp.getUpTrains();
+    final down = resp.getDownTrains();
+    final widgets = <Widget>[];
+    if (up.isNotEmpty) {
+      widgets.add(_buildDirectionSection('上行方向', up, Colors.green));
+      widgets.add(const SizedBox(height: 12));
+    }
+    if (down.isNotEmpty) {
+      widgets.add(_buildDirectionSection('下行方向', down, Colors.orange));
+    }
+    if (up.isEmpty && down.isEmpty) {
+      widgets.add(_buildEmptyBox());
+    }
+    return widgets;
+  }
+
+  // _buildLineHeader removed: section background now conveys line identity
+
+  Widget _buildEmptyBox() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: const Center(
+        child: Text(
+          '暫無列車信息',
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.grey,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleAddLine(String code) async {
+    if (_addingLineCode != null) return;
+    setState(() => _addingLineCode = code);
+    try {
+      await VibrationHelper.lightVibrate();
+      final resp = await MTRScheduleService.getSchedule(
+        lineCode: code,
+        stationId: widget.stationId,
+      );
+      if (resp != null) {
+        setState(() {
+          _additionalResponses[code] = resp;
+        });
+      }
+    } finally {
+      if (mounted) setState(() => _addingLineCode = null);
+    }
+  }
+
+  void _startCountdown() {
+    _countdownTimer?.cancel();
+    _secondsLeft = 15;
+    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (t) async {
+      if (!mounted) {
+        // Ensure timer stops if dialog is gone
+        t.cancel();
+        return;
+      }
+      if (_secondsLeft <= 1) {
+        setState(() => _secondsLeft = 15);
+        // auto refresh all active lines (if enabled)
+        if (SettingsService.mtrAutoRefreshNotifier.value) {
+          await _refreshAllActiveLines();
+        }
+      } else {
+        setState(() => _secondsLeft -= 1);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _countdownTimer?.cancel();
+    super.dispose();
+  }
+
   Widget _buildTrainTile(TrainInfo train, Color color) {
-    final destName = train.destNameTc ?? train.dest ?? '未知/資料未更新';
+    final destName = train.destNameTc ?? train.dest ?? '--';
     final isArrivingSoon = train.isArrivingSoon;
 
     return Container(

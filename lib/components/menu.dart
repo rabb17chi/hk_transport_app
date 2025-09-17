@@ -17,8 +17,8 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
+  // ignore: unused_field
   bool _isRefreshing = false;
-  // Reset UI moved to ResetAppTile
   bool _langExpanded = false;
   bool _themeExpanded = false;
   Key _langKey = UniqueKey();
