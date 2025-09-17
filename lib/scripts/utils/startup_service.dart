@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'locale_service.dart';
+import '../locale/locale_service.dart';
 
 class StartupService {
   static Future<bool> loadInitialPlatformIsMTR() async {

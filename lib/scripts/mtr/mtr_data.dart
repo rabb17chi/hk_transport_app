@@ -31,7 +31,7 @@ class MTRData {
       'fullNameTc': '將軍澳線',
       'fullNameEn': 'Tseung Kwan O Line',
       'shortName': 'TKL',
-      'color': '#8B4513',
+      'color': '#6B208B',
       'defaultDest': 'POA', // 寶琳
     },
     'TCL': {
@@ -46,7 +46,7 @@ class MTRData {
       'fullNameEn': 'East Rail Line',
       'shortName': 'EAL',
       'color': '#53B7E8',
-      'defaultDest': 'LMC', // 落馬洲（完整路線終點站）
+      'defaultDest': 'LOW', // 落馬洲（完整路線終點站）
     },
     'TML': {
       'fullNameTc': '屯馬線',

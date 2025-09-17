@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../scripts/kmb_cache_service.dart';
+import '../../scripts/kmb/kmb_cache_service.dart';
 import '../splash_screen.dart';
-import '../../scripts/kmb_api_service.dart';
+import '../../scripts/kmb/kmb_api_service.dart';
 
 class ResetAppTile extends StatefulWidget {
   const ResetAppTile({super.key});

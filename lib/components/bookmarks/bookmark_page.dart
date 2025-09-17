@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../scripts/bookmarks_service.dart';
-import '../../scripts/kmb_api_service.dart';
-import '../../scripts/mtr/mtr_bookmarks_service.dart';
+import '../../scripts/bookmarks/bookmarks_service.dart';
+import '../../scripts/kmb/kmb_api_service.dart';
+import '../../scripts/bookmarks/mtr_bookmarks_service.dart';
 import '../../scripts/mtr/mtr_schedule_service.dart';
 import '../mtr/mtr_schedule_dialog.dart';
 import '../../l10n/app_localizations.dart';
 import '../../l10n/locale_utils.dart';
+import '../../theme/app_color_scheme.dart';
 
 class BookmarkPage extends StatefulWidget {
   const BookmarkPage({super.key});
@@ -28,7 +29,6 @@ class _BookmarkPageState extends State<BookmarkPage>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _loadBookmarks();
-    // Listen to both bookmark services for instant updates
     BookmarksService.refreshTrigger.addListener(_onKMBTrigger);
     MTRBookmarksService.refreshTrigger.addListener(_onMTRTrigger);
   }
@@ -139,14 +139,14 @@ class _BookmarkPageState extends State<BookmarkPage>
             const Icon(
               Icons.bookmark_border,
               size: 64,
-              color: Colors.grey,
+              color: AppColorScheme.textMutedColor,
             ),
             const SizedBox(height: 16),
             Text(
               loc.kmbEmptyTitle,
               style: const TextStyle(
                 fontSize: 18,
-                color: Colors.grey,
+                color: AppColorScheme.textMutedColor,
               ),
             ),
             const SizedBox(height: 8),
@@ -155,29 +155,33 @@ class _BookmarkPageState extends State<BookmarkPage>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(loc.kmbEmptyInstructionPrefix,
-                          style: const TextStyle(color: Colors.grey)),
+                          style: const TextStyle(
+                              color: AppColorScheme.textMutedColor)),
                       const SizedBox(width: 4),
                       Text(loc.kmbEmptyInstructionAction,
-                          style: const TextStyle(
-                              color: Colors.black,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontWeight: FontWeight.bold,
                               fontSize: 20)),
                       const SizedBox(width: 4),
                       Text(loc.kmbEmptyInstructionSuffix,
-                          style: const TextStyle(color: Colors.grey)),
+                          style: const TextStyle(
+                              color: AppColorScheme.textMutedColor)),
                     ],
                   )
                 : Column(
                     children: [
                       Text(loc.kmbEmptyInstructionPrefix,
-                          style: const TextStyle(color: Colors.grey)),
+                          style: const TextStyle(
+                              color: AppColorScheme.textMutedColor)),
                       Text(loc.kmbEmptyInstructionAction,
                           style: const TextStyle(
-                              color: Colors.black,
+                              color: AppColorScheme.textMainColor,
                               fontWeight: FontWeight.bold,
                               fontSize: 16)),
                       Text(loc.kmbEmptyInstructionSuffix,
-                          style: const TextStyle(color: Colors.grey)),
+                          style: const TextStyle(
+                              color: AppColorScheme.textMutedColor)),
                     ],
                   )
           ],
@@ -193,7 +197,8 @@ class _BookmarkPageState extends State<BookmarkPage>
         return Card(
           margin: const EdgeInsets.only(bottom: 8),
           child: ListTile(
-            leading: const Icon(Icons.directions_bus, color: Colors.orange),
+            leading: const Icon(Icons.directions_bus,
+                color: AppColorScheme.kmbColor),
             title: Text(
               '${bookmark.route} ${loc.toWord} ${bookmark.bound}',
               style: const TextStyle(fontWeight: FontWeight.bold),
@@ -205,12 +210,13 @@ class _BookmarkPageState extends State<BookmarkPage>
                 if (bookmark.stopNameEn.isNotEmpty)
                   Text(
                     bookmark.stopNameEn,
-                    style: const TextStyle(color: Colors.grey),
+                    style:
+                        const TextStyle(color: AppColorScheme.textMutedColor),
                   ),
               ],
             ),
             trailing: IconButton(
-              icon: const Icon(Icons.delete, color: Colors.red),
+              icon: const Icon(Icons.delete, color: AppColorScheme.dangerColor),
               onPressed: () => _removeKMBBookmark(bookmark),
             ),
             onTap: () async {
@@ -288,21 +294,21 @@ class _BookmarkPageState extends State<BookmarkPage>
             const Icon(
               Icons.bookmark_border,
               size: 64,
-              color: Colors.grey,
+              color: AppColorScheme.textMutedColor,
             ),
             const SizedBox(height: 16),
             Text(
               loc.mtrEmptyTitle,
               style: const TextStyle(
                 fontSize: 18,
-                color: Colors.grey,
+                color: AppColorScheme.textMutedColor,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               loc.mtrEmptySubtitle,
               style: const TextStyle(
-                color: Colors.grey,
+                color: AppColorScheme.textMutedColor,
               ),
             ),
           ],
@@ -318,14 +324,14 @@ class _BookmarkPageState extends State<BookmarkPage>
         return Card(
           margin: const EdgeInsets.only(bottom: 8),
           child: ListTile(
-            leading: const Icon(Icons.train, color: Colors.blue),
+            leading: const Icon(Icons.train, color: AppColorScheme.mtrColor),
             title: Text(
               bookmark.stationNameTc,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitle: Text(bookmark.stationNameEn),
             trailing: IconButton(
-              icon: const Icon(Icons.delete, color: Colors.red),
+              icon: const Icon(Icons.delete, color: AppColorScheme.dangerColor),
               onPressed: () => _removeMTRBookmark(bookmark),
             ),
             onTap: () async {

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import '../../scripts/mtr/mtr_data.dart';
 import '../../scripts/mtr/mtr_schedule_service.dart';
 import '../../scripts/mtr/mtr_station_order.dart';
-import '../../scripts/vibration_helper.dart';
+import '../../scripts/utils/vibration_helper.dart';
 import 'mtr_schedule_dialog.dart';
-import '../../scripts/mtr/mtr_bookmarks_service.dart';
+import '../../scripts/bookmarks/mtr_bookmarks_service.dart';
 import '../../l10n/locale_utils.dart';
-import '../../scripts/settings_service.dart';
+import '../../scripts/utils/settings_service.dart';
 
 /// MTR 列表式車站選擇界面
 ///
@@ -153,17 +153,6 @@ class _MTRListScreenState extends State<MTRListScreen> {
                 ),
               ),
             ),
-            // Row(
-            //   children: [
-            //     Text(
-            //       '${stations.length}',
-            //       style: TextStyle(
-            //         fontSize: 12,
-            //         color: Colors.grey[600],
-            //       ),
-            //     ),
-            //   ],
-            // ),
           ],
         ),
         onExpansionChanged: (isExpanded) async {
@@ -228,55 +217,79 @@ class _MTRListScreenState extends State<MTRListScreen> {
     final displayTitle = isChinese ? stationNameTc : stationNameEn;
     final displaySubtitle = isChinese ? stationNameEn : stationNameTc;
 
-    return ListTile(
-      leading: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Center(
-          child: Text(
-            stationKey,
-            style: const TextStyle(
-              color: Colors.black87,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
-          ),
-        ),
-      ),
-      title: Text(
-        displayTitle,
-        style: const TextStyle(fontWeight: FontWeight.normal),
-      ),
-      subtitle: Text(displaySubtitle),
-      trailing: null,
-      onTap: _isLoadingSchedule
-          ? null
-          : () async {
-              // 觸發中等振動
-              await VibrationHelper.mediumVibrate();
+    return FutureBuilder<bool>(
+      future: _isStationBookmarked(
+          stationKey, lineCode, stationNameTc, stationNameEn),
+      builder: (context, snapshot) {
+        final isBookmarked = snapshot.data ?? false;
 
-              _selectStation(displayTitle, stationKey, lineCode);
+        return Container(
+          color: isBookmarked ? Colors.pink[50] : null,
+          child: ListTile(
+            leading: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Center(
+                child: Text(
+                  stationKey,
+                  style: const TextStyle(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ),
+            title: Text(
+              displayTitle,
+              style: const TextStyle(fontWeight: FontWeight.normal),
+            ),
+            subtitle: Text(displaySubtitle),
+            trailing: null,
+            onTap: _isLoadingSchedule
+                ? null
+                : () async {
+                    // 觸發中等振動
+                    await VibrationHelper.mediumVibrate();
+
+                    _selectStation(displayTitle, stationKey, lineCode);
+                  },
+            onLongPress: () async {
+              await VibrationHelper.mediumVibrate();
+              final item = MTRBookmarkItem(
+                lineCode: lineCode,
+                stationId: stationKey,
+                stationNameTc: stationNameTc,
+                stationNameEn: stationNameEn,
+              );
+              final isBookmarked = await MTRBookmarksService.isBookmarked(item);
+              if (isBookmarked) {
+                await MTRBookmarksService.removeBookmark(item);
+              } else {
+                await MTRBookmarksService.addBookmark(item);
+              }
+              // Refresh the UI to show updated bookmark status
+              setState(() {});
             },
-      onLongPress: () async {
-        await VibrationHelper.mediumVibrate();
-        final item = MTRBookmarkItem(
-          lineCode: lineCode,
-          stationId: stationKey,
-          stationNameTc: stationNameTc,
-          stationNameEn: stationNameEn,
+          ),
         );
-        final isBookmarked = await MTRBookmarksService.isBookmarked(item);
-        if (isBookmarked) {
-          await MTRBookmarksService.removeBookmark(item);
-        } else {
-          await MTRBookmarksService.addBookmark(item);
-        }
       },
     );
+  }
+
+  Future<bool> _isStationBookmarked(String stationKey, String lineCode,
+      String stationNameTc, String stationNameEn) async {
+    final item = MTRBookmarkItem(
+      lineCode: lineCode,
+      stationId: stationKey,
+      stationNameTc: stationNameTc,
+      stationNameEn: stationNameEn,
+    );
+    return await MTRBookmarksService.isBookmarked(item);
   }
 
   void _selectStation(
@@ -344,7 +357,7 @@ class _MTRListScreenState extends State<MTRListScreen> {
       'TWL': Color(0xFFE2231A), // 荃灣線 - 紅色
       'KTL': Color(0xFF00B04F), // 觀塘線 - 綠色
       'ISL': Color(0xFF0066CC), // 港島線 - 藍色
-      'TKL': Color(0xFF8B4513), // 將軍澳線 - 棕色
+      'TKL': Color(0xFF6B208B), // 將軍澳線 - 棕色
       'TCL': Color(0xFFFE7F1D), // 東涌線 - 橙色
       'AEL': Color(0xFF1C7670), // 機場快線 - 深綠色
       'EAL': Color(0xFF53B7E8), // 東鐵線 - 淺藍色

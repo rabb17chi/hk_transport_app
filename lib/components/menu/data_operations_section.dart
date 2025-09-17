@@ -2,7 +2,7 @@ import 'package:hk_transport_app/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 // removed duplicate import
-import '../../scripts/settings_service.dart';
+import '../../scripts/utils/settings_service.dart';
 
 class DataOperationsSection extends StatelessWidget {
   final bool showSpecialRoutes;

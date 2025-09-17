@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hk_transport_app/components/kmb/input_keyboard.dart';
-import '../../scripts/kmb_api_service.dart';
+import '../../scripts/kmb/kmb_api_service.dart';
 import 'route_banner.dart';
 import 'route_stations_screen.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../scripts/vibration_helper.dart';
+import '../../scripts/utils/vibration_helper.dart';
 
 /// InputKeyboard Widget
 ///

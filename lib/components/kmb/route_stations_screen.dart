@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../scripts/kmb_api_service.dart';
-import '../../scripts/bookmarks_service.dart';
+import '../../scripts/kmb/kmb_api_service.dart';
+import '../../scripts/bookmarks/bookmarks_service.dart';
 
 /// Route Stations Screen
 ///

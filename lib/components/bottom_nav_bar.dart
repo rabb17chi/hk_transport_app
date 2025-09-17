@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../scripts/vibration_helper.dart';
+import '../scripts/utils/vibration_helper.dart';
 import '../l10n/app_localizations.dart';
+import '../theme/app_color_scheme.dart';
 
 class AppBottomNavBar extends StatefulWidget {
   final int currentIndex;
@@ -102,7 +103,7 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
               icon,
               color: isSelected
                   ? Theme.of(context).primaryColor
-                  : Colors.grey[400],
+                  : AppColorScheme.getUnselectedColor(context),
               size: 20,
             ),
             Text(
@@ -110,7 +111,7 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
               style: TextStyle(
                 color: isSelected
                     ? Theme.of(context).primaryColor
-                    : Colors.grey[600],
+                    : AppColorScheme.getUnselectedColor(context),
                 fontSize: 16,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
               ),

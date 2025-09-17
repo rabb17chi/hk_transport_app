@@ -5,7 +5,7 @@
 import 'package:flutter/material.dart';
 import '../../scripts/mtr/mtr_schedule_service.dart';
 import '../../scripts/mtr/mtr_data.dart';
-import '../../scripts/vibration_helper.dart';
+import '../../scripts/utils/vibration_helper.dart';
 
 class MTRScheduleDialog extends StatefulWidget {
   final MTRScheduleResponse initialResponse;
