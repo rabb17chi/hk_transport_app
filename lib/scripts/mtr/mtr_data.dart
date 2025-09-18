@@ -7,69 +7,87 @@ import 'package:flutter/material.dart';
 
 class MTRData {
   // 港鐵線路資料
-  static const Map<String, Map<String, String>> mtrLines = {
+  static const Map<String, Map<String, dynamic>> mtrLines = {
     'ISL': {
       'fullNameTc': '港島線',
       'fullNameEn': 'Island Line',
       'shortName': 'ISL',
       'color': '#0066CC',
-      'defaultDest': 'ADM', // 金鐘
+      'defaultDest': [], // 空數組
+      'upDefaultDest': ['KET'], // 堅尼地城 (上行終點)
+      'downDefaultDest': ['CHW'], // 柴灣 (下行終點)
     },
     'TWL': {
       'fullNameTc': '荃灣線',
       'fullNameEn': 'Tsuen Wan Line',
       'shortName': 'TWL',
       'color': '#E2231A',
-      'defaultDest': 'TWH', // 荃灣
+      'defaultDest': [], // 空數組
+      'upDefaultDest': ['TWH'], // 荃灣 (上行終點)
+      'downDefaultDest': ['CEN'], // 中環 (下行終點)
     },
     'KTL': {
       'fullNameTc': '觀塘線',
       'fullNameEn': 'Kwun Tong Line',
       'shortName': 'KTL',
       'color': '#00B04F',
-      'defaultDest': 'TIK', // 調景嶺
+      'defaultDest': [], // 空數組
+      'upDefaultDest': ['TIK'], // 調景嶺 (上行終點)
+      'downDefaultDest': ['WHA'], // 黃埔 (下行終點)
     },
     'TKL': {
       'fullNameTc': '將軍澳線',
       'fullNameEn': 'Tseung Kwan O Line',
       'shortName': 'TKL',
       'color': '#6B208B',
-      'defaultDest': 'POA', // 寶琳
+      'defaultDest': [], // 空數組
+      'upDefaultDest': ['POA'], // 寶琳 (上行終點)
+      'downDefaultDest': ['NOP'], // 北角 (下行終點)
     },
     'TCL': {
       'fullNameTc': '東涌線',
       'fullNameEn': 'Tung Chung Line',
       'shortName': 'TCL',
       'color': '#FE7F1D',
-      'defaultDest': 'TUC', // 東涌
+      'defaultDest': [], // 空數組
+      'upDefaultDest': ['TUC'], // 東涌 (上行終點)
+      'downDefaultDest': ['HOK'], // 香港 (下行終點)
     },
     'EAL': {
       'fullNameTc': '東鐵線',
       'fullNameEn': 'East Rail Line',
       'shortName': 'EAL',
       'color': '#53B7E8',
-      'defaultDest': 'LOW' // 落馬洲（完整路線終點站）
+      'defaultDest': [], // 空數組
+      'upDefaultDest': ['LOW'], // 羅湖 (上行終點)
+      'downDefaultDest': ['ADM'], // 金鐘 (下行終點)
     },
     'TML': {
       'fullNameTc': '屯馬線',
       'fullNameEn': 'Tuen Ma Line',
       'shortName': 'TML',
       'color': '#9A3B26',
-      'defaultDest': 'TUM', // 屯門（完整路線終點站）
+      'defaultDest': [], // 空數組
+      'upDefaultDest': ['TUM'], // 屯門 (上行終點)
+      'downDefaultDest': ['WKS'], // 烏溪沙 (下行終點)
     },
     'SIL': {
       'fullNameTc': '南港島線',
       'fullNameEn': 'South Island Line',
       'shortName': 'SIL',
       'color': '#B5BD00',
-      'defaultDest': 'SOH', // 海怡半島
+      'defaultDest': [], // 空數組
+      'upDefaultDest': ['SOH'], // 海怡半島 (上行終點)
+      'downDefaultDest': ['ADM'], // 金鐘 (下行終點)
     },
     'AEL': {
       'fullNameTc': '機場快線',
       'fullNameEn': 'Airport Express',
       'shortName': 'AEL',
       'color': '#1C7670',
-      'defaultDest': 'AWE', // 機場
+      'defaultDest': [], // 空數組
+      'upDefaultDest': ['AWE'], // 機場 (上行終點)
+      'downDefaultDest': ['HOK'], // 香港 (下行終點)
     },
   };
 
@@ -580,7 +598,7 @@ class MTRData {
   };
 
   /// 獲取線路資料
-  static Map<String, String>? getLineData(String lineCode) {
+  static Map<String, dynamic>? getLineData(String lineCode) {
     return mtrLines[lineCode];
   }
 
@@ -615,7 +633,7 @@ class MTRData {
   }
 
   /// 搜尋線路
-  static List<Map<String, String>> searchLines(String query) {
+  static List<Map<String, dynamic>> searchLines(String query) {
     final lowerQuery = query.toLowerCase();
     return mtrLines.values
         .where((line) =>

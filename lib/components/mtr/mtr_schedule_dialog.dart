@@ -241,7 +241,8 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                             _buildDirectionSection(
                                 AppLocalizations.of(context)!.mtrUpDirection,
                                 upTrains,
-                                Colors.green),
+                                Colors.green,
+                                widget.lineCode),
                           ],
                           if (upTrains.isNotEmpty && downTrains.isNotEmpty)
                             const SizedBox(height: 8),
@@ -249,7 +250,8 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                             _buildDirectionSection(
                                 AppLocalizations.of(context)!.mtrDownDirection,
                                 downTrains,
-                                Colors.orange),
+                                Colors.orange,
+                                widget.lineCode),
                           ],
                           if (upTrains.isEmpty && downTrains.isEmpty)
                             _buildEmptyBox(),
@@ -368,20 +370,39 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
   }
 
   Widget _buildDirectionSection(
-      String title, List<TrainInfo> trains, Color color) {
+      String title, List<TrainInfo> trains, Color color, String lineCode) {
     // 顯示所有列車，不過濾任何終點站
     final filteredTrains = trains;
 
     // 獲取終點站信息
     String destInfo = '';
     String toPrefix = '';
-    if (filteredTrains.isNotEmpty) {
-      final firstTrain = filteredTrains.first;
-      final isChinese = LocaleUtils.isChinese(context);
-      destInfo = isChinese
-          ? (firstTrain.destNameTc ?? firstTrain.dest ?? '--')
-          : (firstTrain.destNameEn ?? firstTrain.dest ?? '--');
-      toPrefix = isChinese ? '往 ' : 'To ';
+
+    // Get line data to determine default destinations (use section's lineCode)
+    final lineData = MTRData.getLineData(lineCode);
+    final upDefaultDest = lineData?['upDefaultDest'] as List<String>? ?? [];
+    final downDefaultDest = lineData?['downDefaultDest'] as List<String>? ?? [];
+
+    // Determine if this is up or down direction based on title
+    final isChinese = LocaleUtils.isChinese(context);
+    final isUpDirection = title == AppLocalizations.of(context)!.mtrUpDirection;
+
+    // Get the appropriate default destination for this direction
+    final defaultDestCodes = isUpDirection ? upDefaultDest : downDefaultDest;
+
+    if (defaultDestCodes.isNotEmpty) {
+      // Get the first default destination and its localized name
+      final destCode = defaultDestCodes.first;
+      final stationData = MTRData.getStationData(destCode);
+
+      if (stationData != null) {
+        final destName = isChinese
+            ? (stationData['nameTc'] ?? stationData['fullName'] ?? destCode)
+            : (stationData['fullName'] ?? stationData['nameTc'] ?? destCode);
+
+        destInfo = destName;
+        toPrefix = isChinese ? '往 ' : 'To ';
+      }
     }
 
     return Column(
@@ -407,7 +428,8 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
           ],
         ),
         const SizedBox(height: 8),
-        ...filteredTrains.map((train) => _buildTrainTile(train, color)),
+        ...filteredTrains
+            .map((train) => _buildTrainTile(train, color, lineCode)),
       ],
     );
   }
@@ -415,15 +437,22 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
   List<Widget> _buildSectionsForResponse(MTRScheduleResponse resp) {
     final up = resp.getUpTrains();
     final down = resp.getDownTrains();
+    final sectionLineCode = resp.lineCode ?? widget.lineCode;
     final widgets = <Widget>[];
     if (up.isNotEmpty) {
       widgets.add(_buildDirectionSection(
-          AppLocalizations.of(context)!.mtrUpDirection, up, Colors.green));
+          AppLocalizations.of(context)!.mtrUpDirection,
+          up,
+          Colors.green,
+          sectionLineCode));
       widgets.add(const SizedBox(height: 12));
     }
     if (down.isNotEmpty) {
       widgets.add(_buildDirectionSection(
-          AppLocalizations.of(context)!.mtrDownDirection, down, Colors.orange));
+          AppLocalizations.of(context)!.mtrDownDirection,
+          down,
+          Colors.orange,
+          sectionLineCode));
     }
     if (up.isEmpty && down.isEmpty) {
       widgets.add(_buildEmptyBox());
@@ -504,12 +533,26 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
     super.dispose();
   }
 
-  Widget _buildTrainTile(TrainInfo train, Color color) {
+  Widget _buildTrainTile(TrainInfo train, Color color, String lineCode) {
     final isChinese = LocaleUtils.isChinese(context);
     final destName = isChinese
         ? (train.destNameTc ?? train.dest ?? '--')
         : (train.destNameEn ?? train.dest ?? '--');
     final isArrivingSoon = train.isArrivingSoon;
+
+    // Get line data to check default destinations (use section's lineCode)
+    final lineData = MTRData.getLineData(lineCode);
+    final upDefaultDest = lineData?['upDefaultDest'] as List<String>? ?? [];
+    final downDefaultDest = lineData?['downDefaultDest'] as List<String>? ?? [];
+
+    // Check if destination matches default destinations
+    final destCode = train.dest;
+    final isDefaultDest = destCode != null &&
+        (upDefaultDest.contains(destCode) ||
+            downDefaultDest.contains(destCode));
+
+    // Format destination display
+    final displayDestName = isDefaultDest ? '' : '($destName)';
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -528,7 +571,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
           Expanded(
             flex: 2,
             child: Text(
-              destName,
+              displayDestName,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
