@@ -133,6 +133,12 @@ class _MTRListScreenState extends State<MTRListScreen> {
       child: ExpansionTile(
         initiallyExpanded: false,
         trailing: const SizedBox.shrink(),
+        shape: const RoundedRectangleBorder(
+          side: BorderSide.none,
+        ),
+        collapsedShape: const RoundedRectangleBorder(
+          side: BorderSide.none,
+        ),
         title: Row(
           children: [
             Container(

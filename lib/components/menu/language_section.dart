@@ -33,7 +33,7 @@ class LanguageSection extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(0)),
         ),
         initiallyExpanded: langExpanded,
-        onExpansionChanged: null, // Use centralized onTap logic
+        onExpansionChanged: null,
         tilePadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 4,
