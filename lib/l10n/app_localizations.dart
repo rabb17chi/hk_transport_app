@@ -210,6 +210,12 @@ abstract class AppLocalizations {
   /// **'Reverse MTR stations order'**
   String get dataOpsMtrReverse;
 
+  /// No description provided for @dataOpsMtrAutoRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto Refresh Trains Data'**
+  String get dataOpsMtrAutoRefresh;
+
   /// No description provided for @navBookmarks.
   ///
   /// In en, this message translates to:
@@ -401,6 +407,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'System Default'**
   String get themeSystemDefault;
+
+  /// No description provided for @appUseGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'App Usage Guide'**
+  String get appUseGuide;
+
+  /// No description provided for @appUseGuideSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'View app usage instructions'**
+  String get appUseGuideSubtitle;
+
+  /// No description provided for @imageLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading image...'**
+  String get imageLoading;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

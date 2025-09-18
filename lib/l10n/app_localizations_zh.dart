@@ -48,22 +48,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get menuDevLinksSubtitle => 'GitHub 專案頁';
 
   @override
-  String get menuDataOpsTitle => 'Data Operations';
+  String get menuDataOpsTitle => '更多資料操作';
 
   @override
-  String get dataOpsSpecialToggle => 'Show special KMB routes';
+  String get dataOpsSpecialToggle => '（九巴）顯示特別班次';
 
   @override
-  String get dataOpsRefreshKMB => 'Refresh KMB Data';
+  String get dataOpsRefreshKMB => '手動更新九巴資料';
 
   @override
-  String get dataOpsRefreshNow => 'Refresh Now';
+  String get dataOpsRefreshNow => '立即更新';
 
   @override
-  String get menuTutorial => 'App Tutorial';
+  String get menuTutorial => 'APP使用教程';
 
   @override
   String get dataOpsMtrReverse => '反轉港鐵站序';
+
+  @override
+  String get dataOpsMtrAutoRefresh => '自動更新港鐵班次時間';
 
   @override
   String get navBookmarks => '收藏';
@@ -160,11 +163,20 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get themeSystemDefault => '跟隨系統';
+
+  @override
+  String get appUseGuide => 'App使用指南';
+
+  @override
+  String get appUseGuideSubtitle => '查看應用程式使用說明';
+
+  @override
+  String get imageLoading => '圖片載入中...';
 }
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).
 class AppLocalizationsZhHk extends AppLocalizationsZh {
-  AppLocalizationsZhHk(): super('zh_HK');
+  AppLocalizationsZhHk() : super('zh_HK');
 
   @override
   String get appTitle => '香港交通應用';
@@ -209,7 +221,7 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
   String get menuDataOpsTitle => '更多資料操作';
 
   @override
-  String get dataOpsSpecialToggle => '顯示特別班次';
+  String get dataOpsSpecialToggle => '（九巴）顯示特別班次';
 
   @override
   String get dataOpsRefreshKMB => '手動更新九巴資料';
@@ -222,6 +234,9 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
 
   @override
   String get dataOpsMtrReverse => '反轉港鐵站序';
+
+  @override
+  String get dataOpsMtrAutoRefresh => '自動更新港鐵班次時間';
 
   @override
   String get navBookmarks => '收藏';
@@ -318,4 +333,13 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
 
   @override
   String get themeSystemDefault => '跟隨系統';
+
+  @override
+  String get appUseGuide => 'App使用指南';
+
+  @override
+  String get appUseGuideSubtitle => '查看應用程式使用說明';
+
+  @override
+  String get imageLoading => '圖片載入中...';
 }

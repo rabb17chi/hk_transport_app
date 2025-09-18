@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'components/kmb/kmb_screen_refactored.dart';
 import 'components/menu.dart';
-import 'components/bottom_nav_bar.dart';
+import 'components/ui/bottom_nav_bar.dart';
 import 'components/mtr/mtr_list_screen.dart';
 import 'components/bookmarks/bookmark_page.dart';
-import 'components/splash_screen.dart';
+import 'components/ui/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hk_transport_app/l10n/app_localizations.dart';

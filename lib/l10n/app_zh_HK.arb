@@ -13,11 +13,12 @@
   "menuDevLinks": "開發者連結",
   "menuDevLinksSubtitle": "GitHub 專案頁",
   "menuDataOpsTitle": "更多資料操作",
-  "dataOpsSpecialToggle": "顯示特別班次",
+  "dataOpsSpecialToggle": "（九巴）顯示特別班次",
   "dataOpsRefreshKMB": "手動更新九巴資料",
   "dataOpsRefreshNow": "立即更新",
   "menuTutorial": "APP使用教程",
   "dataOpsMtrReverse": "反轉港鐵站序",
+  "dataOpsMtrAutoRefresh": "自動更新港鐵班次時間",
   "navBookmarks": "收藏",
   "navSettings": "設定",
   "tabBus": "巴士",
@@ -49,6 +50,9 @@
   "themeSectionTitle": "主題",
   "themeLight": "亮色",
   "themeDark": "暗色",
-  "themeSystemDefault": "跟隨系統"
+  "themeSystemDefault": "跟隨系統",
+  "appUseGuide": "App使用指南",
+  "appUseGuideSubtitle": "查看應用程式使用說明",
+  "imageLoading": "圖片載入中..."
 }
 

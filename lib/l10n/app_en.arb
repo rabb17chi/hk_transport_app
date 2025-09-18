@@ -18,6 +18,7 @@
   "dataOpsRefreshNow": "Refresh Now",
   "menuTutorial": "App Tutorial",
   "dataOpsMtrReverse": "Reverse MTR stations order",
+  "dataOpsMtrAutoRefresh": "Auto Refresh Trains Data",
   "navBookmarks": "Bookmarks",
   "navSettings": "Settings",
   "tabBus": "Bus",
@@ -49,6 +50,9 @@
   "themeSectionTitle": "Theme",
   "themeLight": "Light",
   "themeDark": "Dark",
-  "themeSystemDefault": "System Default"
+  "themeSystemDefault": "System Default",
+  "appUseGuide": "App Usage Guide",
+  "appUseGuideSubtitle": "View app usage instructions",
+  "imageLoading": "Loading image..."
 }
 

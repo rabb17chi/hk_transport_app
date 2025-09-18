@@ -53,7 +53,7 @@ class DataOperationsSection extends StatelessWidget {
             valueListenable: SettingsService.mtrAutoRefreshNotifier,
             builder: (context, value, _) => SwitchListTile(
               secondary: const Icon(Icons.autorenew),
-              title: const Text('自動更新港鐵時間'),
+              title: Text(AppLocalizations.of(context)!.dataOpsMtrAutoRefresh),
               value: value,
               onChanged: (v) => SettingsService.setMtrAutoRefresh(v),
             ),

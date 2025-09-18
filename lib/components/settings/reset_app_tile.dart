@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../scripts/kmb/kmb_cache_service.dart';
-import '../splash_screen.dart';
+import '../ui/splash_screen.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
 
 class ResetAppTile extends StatefulWidget {

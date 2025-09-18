@@ -66,6 +66,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dataOpsMtrReverse => 'Reverse MTR stations order';
 
   @override
+  String get dataOpsMtrAutoRefresh => 'Auto Refresh Trains Data';
+
+  @override
   String get navBookmarks => 'Bookmarks';
 
   @override
@@ -160,4 +163,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get themeSystemDefault => 'System Default';
+
+  @override
+  String get appUseGuide => 'App Usage Guide';
+
+  @override
+  String get appUseGuideSubtitle => 'View app usage instructions';
+
+  @override
+  String get imageLoading => 'Loading image...';
 }

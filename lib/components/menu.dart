@@ -4,10 +4,11 @@ import '../scripts/kmb/kmb_cache_service.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'menu/data_operations_section.dart';
+import 'menu/app_use_guide_dialog.dart';
+import 'menu/language_section.dart';
+import 'menu/theme_section.dart';
+import 'menu/developer_links_dialog.dart';
 import 'settings/reset_app_tile.dart';
-import 'package:url_launcher/url_launcher.dart';
-import '../scripts/locale/locale_service.dart';
-import '../scripts/theme/theme_service.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -23,7 +24,7 @@ class _MenuScreenState extends State<MenuScreen> {
   bool _themeExpanded = false;
   Key _langKey = UniqueKey();
   Key _themeKey = UniqueKey();
-  bool _showSpecialRoutes = false; // Toggle for special KMB routes (2/5)
+  bool _showSpecialRoutes = false;
 
   // Index-based expansion system
   int? _selectedIndex;
@@ -69,13 +70,15 @@ class _MenuScreenState extends State<MenuScreen> {
         children: [
           _buildDataOperationsSection(),
           const Divider(),
+          _buildAppUseGuide(),
+          const Divider(),
           _buildThemeSection(),
           const Divider(),
           _buildStyleTile(),
           const Divider(),
-          _buildTermsTile(),
-          const Divider(),
           _buildDevLinksTile(),
+          const Divider(),
+          _buildTermsTile(),
           const Divider(),
           _buildLanguageSection(),
           const Divider(),
@@ -92,17 +95,13 @@ class _MenuScreenState extends State<MenuScreen> {
   void _onItemTap(int index) {
     setState(() {
       if (_selectedIndex == index) {
-        // If clicking the same item, close it
         _selectedIndex = null;
         _langExpanded = false;
         _themeExpanded = false;
       } else {
-        // Open the selected item and close all others
         _selectedIndex = index;
-        // Reset all expansion states first
         _langExpanded = false;
         _themeExpanded = false;
-        // Then set the correct expansion state
         if (index == _languageIndex) {
           _langExpanded = true;
         } else if (index == _themeIndex) {
@@ -153,7 +152,7 @@ class _MenuScreenState extends State<MenuScreen> {
       leading: const Icon(Icons.code),
       onTap: () {
         _onItemTap(_devLinksIndex);
-        _routeToGithub();
+        DeveloperLinksDialog.show(context);
       },
     );
   }
@@ -162,33 +161,6 @@ class _MenuScreenState extends State<MenuScreen> {
     return GestureDetector(
       onTap: () => _onItemTap(_resetIndex),
       child: const ResetAppTile(),
-    );
-  }
-
-  // Reset behavior moved to ResetAppTile
-  Future<void> _routeToGithub() async {
-    if (!mounted) return;
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.devLinksDialogTitle),
-        content: Text(AppLocalizations.of(context)!.devLinksDialogContent),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(AppLocalizations.of(context)!.back),
-          ),
-          TextButton(
-            onPressed: () async {
-              final uri =
-                  Uri.parse('https://github.com/rabb17chi/hk_transport_app');
-              await launchUrl(uri, mode: LaunchMode.externalApplication);
-              if (mounted) Navigator.of(ctx).pop();
-            },
-            child: Text(AppLocalizations.of(context)!.github),
-          ),
-        ],
-      ),
     );
   }
 
@@ -205,119 +177,35 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   Widget _buildLanguageSection() {
-    final loc = AppLocalizations.of(context)!;
-    return GestureDetector(
+    return LanguageSection(
+      langKey: _langKey,
+      langExpanded: _langExpanded,
       onTap: () => _onItemTap(_languageIndex),
-      child: ExpansionTile(
-        key: _langKey,
-        leading: const Icon(Icons.language),
-        title: Text(loc.languageSectionTitle),
-        trailing: const SizedBox.shrink(),
-        shape: const RoundedRectangleBorder(
-          side: BorderSide(color: Colors.transparent, width: 0),
-          borderRadius: BorderRadius.all(Radius.circular(0)),
-        ),
-        collapsedShape: const RoundedRectangleBorder(
-          side: BorderSide(color: Colors.transparent, width: 0),
-          borderRadius: BorderRadius.all(Radius.circular(0)),
-        ),
-        initiallyExpanded: _langExpanded,
-        onExpansionChanged: null, // Use centralized _onItemTap logic
-        tilePadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 4,
-        ),
-        childrenPadding:
-            const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: TextButton(
-                  onPressed: () async {
-                    await LocaleService.setLocale(const Locale('en'));
-                  },
-                  child: const Text('English'),
-                ),
-              ),
-              Expanded(
-                child: TextButton(
-                  onPressed: () async {
-                    await LocaleService.setLocale(const Locale('zh', 'HK'));
-                  },
-                  child: const Text('繁體中文'),
-                ),
-              ),
-              Expanded(
-                child: TextButton(
-                  onPressed: () async {
-                    await LocaleService.setLocale(null);
-                  },
-                  child: Text(loc.languageSystemDefault),
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
     );
   }
 
   Widget _buildThemeSection() {
-    final loc = AppLocalizations.of(context)!;
-    return GestureDetector(
+    return ThemeSection(
+      themeKey: _themeKey,
+      themeExpanded: _themeExpanded,
       onTap: () => _onItemTap(_themeIndex),
-      child: ExpansionTile(
-        key: _themeKey,
-        leading: const Icon(Icons.color_lens),
-        title: Text(loc.themeSectionTitle),
-        trailing: const SizedBox.shrink(),
-        shape: const RoundedRectangleBorder(
-          side: BorderSide(color: Colors.transparent, width: 0),
-          borderRadius: BorderRadius.all(Radius.circular(0)),
-        ),
-        collapsedShape: const RoundedRectangleBorder(
-          side: BorderSide(color: Colors.transparent, width: 0),
-          borderRadius: BorderRadius.all(Radius.circular(0)),
-        ),
-        initiallyExpanded: _themeExpanded,
-        onExpansionChanged: null, // Use centralized _onItemTap logic
-        tilePadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 4,
-        ),
-        childrenPadding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: TextButton(
-                  onPressed: () async {
-                    await ThemeService.setTheme(ThemeMode.light);
-                  },
-                  child: Text(loc.themeLight),
-                ),
-              ),
-              Expanded(
-                child: TextButton(
-                  onPressed: () async {
-                    await ThemeService.setTheme(ThemeMode.dark);
-                  },
-                  child: Text(loc.themeDark),
-                ),
-              ),
-              Expanded(
-                child: TextButton(
-                  onPressed: () async {
-                    await ThemeService.setTheme(ThemeMode.system);
-                  },
-                  child: Text(loc.themeSystemDefault),
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
+    );
+  }
+
+  Widget _buildAppUseGuide() {
+    final loc = AppLocalizations.of(context)!;
+    return ListTile(
+      leading: const Icon(Icons.help_outline),
+      title: Text(loc.appUseGuide),
+      subtitle: Text(loc.appUseGuideSubtitle),
+      onTap: () => _showAppUseGuideDialog(),
+    );
+  }
+
+  void _showAppUseGuideDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => const AppUseGuideDialog(),
     );
   }
 }

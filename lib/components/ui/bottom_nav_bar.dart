@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../scripts/utils/vibration_helper.dart';
-import '../l10n/app_localizations.dart';
-import '../theme/app_color_scheme.dart';
+import '../../scripts/utils/vibration_helper.dart';
+import '../../l10n/app_localizations.dart';
+import '../../theme/app_color_scheme.dart';
 
 class AppBottomNavBar extends StatefulWidget {
   final int currentIndex;
@@ -125,8 +125,6 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
   }
 
   Widget _buildModeToggleButton() {
-    final isSelected = widget.currentIndex == 1;
-
     return GestureDetector(
       onTap: _handleModeToggleTap,
       onLongPress: _handleModeToggleLongPress,

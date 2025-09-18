@@ -39,7 +39,17 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
   void initState() {
     super.initState();
     response = widget.initialResponse;
-    _startCountdown();
+    _startCountdownIfEnabled();
+
+    // Listen to auto-refresh setting changes
+    SettingsService.mtrAutoRefreshNotifier
+        .addListener(_onAutoRefreshSettingChanged);
+  }
+
+  void _onAutoRefreshSettingChanged() {
+    if (mounted) {
+      _startCountdownIfEnabled();
+    }
   }
 
   Future<void> updateByRefresh() async {
@@ -126,8 +136,6 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
     if (refreshed.isNotEmpty) {
       // Haptic feedback and log
       await VibrationHelper.lightVibrate();
-      // ignore: avoid_print
-      print('Re-fetched of lines: ${refreshed.join(', ')}');
     }
   }
 
@@ -180,16 +188,23 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
             ),
           ),
           const SizedBox(width: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              '刷新 ${_secondsLeft}s',
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-            ),
+          ValueListenableBuilder<bool>(
+            valueListenable: SettingsService.mtrAutoRefreshNotifier,
+            builder: (context, isAutoRefreshEnabled, child) {
+              if (!isAutoRefreshEnabled) return const SizedBox.shrink();
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '刷新 ${_secondsLeft}s',
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.w600),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -334,7 +349,10 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                   await VibrationHelper.mediumVibrate();
                   await updateByRefresh();
                   if (mounted) {
-                    setState(() => _secondsLeft = 15);
+                    // Only reset countdown if auto-refresh is enabled
+                    if (SettingsService.mtrAutoRefreshNotifier.value) {
+                      setState(() => _secondsLeft = 15);
+                    }
                   }
                 },
           child: isLoading
@@ -447,30 +465,36 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
     }
   }
 
-  void _startCountdown() {
+  void _startCountdownIfEnabled() {
     _countdownTimer?.cancel();
     _secondsLeft = 15;
-    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (t) async {
-      if (!mounted) {
-        // Ensure timer stops if dialog is gone
-        t.cancel();
-        return;
-      }
-      if (_secondsLeft <= 1) {
-        setState(() => _secondsLeft = 15);
-        // auto refresh all active lines (if enabled)
-        if (SettingsService.mtrAutoRefreshNotifier.value) {
-          await _refreshAllActiveLines();
+
+    // Only start timer if auto-refresh is enabled
+    if (SettingsService.mtrAutoRefreshNotifier.value) {
+      _countdownTimer = Timer.periodic(const Duration(seconds: 1), (t) async {
+        if (!mounted) {
+          // Ensure timer stops if dialog is gone
+          t.cancel();
+          return;
         }
-      } else {
-        setState(() => _secondsLeft -= 1);
-      }
-    });
+        if (_secondsLeft <= 1) {
+          setState(() => _secondsLeft = 15);
+          // auto refresh all active lines (if still enabled)
+          if (SettingsService.mtrAutoRefreshNotifier.value) {
+            await _refreshAllActiveLines();
+          }
+        } else {
+          setState(() => _secondsLeft -= 1);
+        }
+      });
+    }
   }
 
   @override
   void dispose() {
     _countdownTimer?.cancel();
+    SettingsService.mtrAutoRefreshNotifier
+        .removeListener(_onAutoRefreshSettingChanged);
     super.dispose();
   }
 
