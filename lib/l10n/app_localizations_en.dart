@@ -151,6 +151,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mtrUnknownLine => 'Unknown line';
 
   @override
+  String get mtrTimeError => 'Time error';
+
+  @override
+  String get mtrArrivingSoon => 'Arriving soon';
+
+  @override
+  String get mtrMinutes => 'mins';
+
+  @override
+  String get mtrHours => 'hrs';
+
+  @override
+  String mtrHoursMinutes(int hours, int minutes) => 'hrs $minutes mins';
+
+  @override
   String get timetableUnavailable =>
       'Unable to fetch timetable, please try again later';
 

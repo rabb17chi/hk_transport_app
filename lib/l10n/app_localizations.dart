@@ -381,6 +381,36 @@ abstract class AppLocalizations {
   /// **'Unknown line'**
   String get mtrUnknownLine;
 
+  /// No description provided for @mtrTimeError.
+  ///
+  /// In en, this message translates to:
+  /// **'Time error'**
+  String get mtrTimeError;
+
+  /// No description provided for @mtrArrivingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Arriving soon'**
+  String get mtrArrivingSoon;
+
+  /// No description provided for @mtrMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'mins'**
+  String get mtrMinutes;
+
+  /// No description provided for @mtrHours.
+  ///
+  /// In en, this message translates to:
+  /// **'hrs'**
+  String get mtrHours;
+
+  /// No description provided for @mtrHoursMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'hrs {minutes} mins'**
+  String mtrHoursMinutes(int hours, int minutes);
+
   /// No description provided for @timetableUnavailable.
   ///
   /// In en, this message translates to:

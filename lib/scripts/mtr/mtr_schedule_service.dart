@@ -5,7 +5,9 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
 import 'mtr_data.dart';
+import '../../l10n/app_localizations.dart';
 
 class MTRScheduleService {
   static const String _baseUrl =
@@ -52,18 +54,20 @@ class MTRScheduleService {
   }
 
   /// 格式化時間差顯示
-  static String formatTimeDifference(int minutes) {
-    if (minutes < 0) return '時間錯誤';
-    if (minutes == 0) return '即將到達';
-    if (minutes < 60) return '${minutes}分鐘';
+  static String formatTimeDifference(int minutes, BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
+    if (minutes < 0) return loc.mtrTimeError;
+    if (minutes == 0) return loc.mtrArrivingSoon;
+    if (minutes < 60) return '${minutes}${loc.mtrMinutes}';
 
     final hours = minutes ~/ 60;
     final remainingMinutes = minutes % 60;
 
     if (remainingMinutes == 0) {
-      return '${hours}小時';
+      return '${hours}${loc.mtrHours}';
     } else {
-      return '${hours}小時${remainingMinutes}分鐘';
+      return loc.mtrHoursMinutes(hours, remainingMinutes);
     }
   }
 
@@ -158,7 +162,6 @@ class TrainInfo {
   final String? dest;
   final String? time;
   final int? timeDifference; // 計算出的時間差（分鐘）
-  final String? formattedTimeDifference; // 格式化的時間差顯示
   final String? destNameTc; // 終點站中文名稱
   final String? destNameEn; // 終點站英文名稱
 
@@ -166,7 +169,6 @@ class TrainInfo {
     this.dest,
     this.time,
     this.timeDifference,
-    this.formattedTimeDifference,
     this.destNameTc,
     this.destNameEn,
   });
@@ -193,9 +195,6 @@ class TrainInfo {
       dest: destId,
       time: time,
       timeDifference: timeDifference,
-      formattedTimeDifference: timeDifference >= 0
-          ? MTRScheduleService.formatTimeDifference(timeDifference)
-          : '時間錯誤',
       destNameTc: destNameTc,
       destNameEn: destNameEn,
     );

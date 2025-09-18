@@ -547,7 +547,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                train.formattedTimeDifference ?? '--',
+                _formatTimeDifference(train.timeDifference),
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -560,6 +560,24 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
         ],
       ),
     );
+  }
+
+  String _formatTimeDifference(int? minutes) {
+    if (minutes == null || minutes < 0)
+      return AppLocalizations.of(context)!.mtrTimeError;
+    if (minutes == 0) return AppLocalizations.of(context)!.mtrArrivingSoon;
+    if (minutes < 60)
+      return '${minutes}${AppLocalizations.of(context)!.mtrMinutes}';
+
+    final hours = minutes ~/ 60;
+    final remainingMinutes = minutes % 60;
+
+    if (remainingMinutes == 0) {
+      return '${hours}${AppLocalizations.of(context)!.mtrHours}';
+    } else {
+      return AppLocalizations.of(context)!
+          .mtrHoursMinutes(hours, remainingMinutes);
+    }
   }
 
   Color _getTimeDifferenceColor(int? minutes) {

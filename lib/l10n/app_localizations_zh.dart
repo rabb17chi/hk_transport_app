@@ -150,6 +150,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get mtrUnknownLine => '未知線路';
 
   @override
+  String get mtrTimeError => '時間錯誤';
+
+  @override
+  String get mtrArrivingSoon => '即將到達';
+
+  @override
+  String get mtrMinutes => '分鐘';
+
+  @override
+  String get mtrHours => '小時';
+
+  @override
+  String mtrHoursMinutes(int hours, int minutes) => '${hours}小時${minutes}分鐘';
+
+  @override
   String get timetableUnavailable => '無法獲取時刻表，請稍後重試';
 
   @override
@@ -354,6 +369,21 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
 
   @override
   String get mtrUnknownLine => '未知線路';
+
+  @override
+  String get mtrTimeError => '時間錯誤';
+
+  @override
+  String get mtrArrivingSoon => '即將到達';
+
+  @override
+  String get mtrMinutes => '分鐘';
+
+  @override
+  String get mtrHours => '小時';
+
+  @override
+  String mtrHoursMinutes(int hours, int minutes) => '${hours}小時${minutes}分鐘';
 
   @override
   String get timetableUnavailable => '無法獲取時刻表，請稍後重試';
