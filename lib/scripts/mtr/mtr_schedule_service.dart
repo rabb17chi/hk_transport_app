@@ -5,9 +5,7 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
 import 'mtr_data.dart';
-import '../../l10n/app_localizations.dart';
 
 class MTRScheduleService {
   static const String _baseUrl =
@@ -53,23 +51,7 @@ class MTRScheduleService {
     }
   }
 
-  /// 格式化時間差顯示
-  static String formatTimeDifference(int minutes, BuildContext context) {
-    final loc = AppLocalizations.of(context)!;
-
-    if (minutes < 0) return loc.mtrTimeError;
-    if (minutes == 0) return loc.mtrArrivingSoon;
-    if (minutes < 60) return '${minutes}${loc.mtrMinutes}';
-
-    final hours = minutes ~/ 60;
-    final remainingMinutes = minutes % 60;
-
-    if (remainingMinutes == 0) {
-      return '${hours}${loc.mtrHours}';
-    } else {
-      return loc.mtrHoursMinutes(hours, remainingMinutes);
-    }
-  }
+  // Removed UI formatting from service; time difference is formatted in UI layer
 
   /// 獲取當前GMT+8時間
   static DateTime getCurrentGMT8Time() {

@@ -383,21 +383,7 @@ class _MTRListScreenState extends State<MTRListScreen> {
     });
   }
 
-  Color _getLineColor(String lineCode) {
-    const Map<String, Color> lineColors = {
-      'TWL': Color(0xFFE2231A), // 荃灣線 - 紅色
-      'KTL': Color(0xFF00B04F), // 觀塘線 - 綠色
-      'ISL': Color(0xFF0066CC), // 港島線 - 藍色
-      'TKL': Color(0xFF6B208B), // 將軍澳線 - 棕色
-      'TCL': Color(0xFFFE7F1D), // 東涌線 - 橙色
-      'AEL': Color(0xFF1C7670), // 機場快線 - 深綠色
-      'EAL': Color(0xFF53B7E8), // 東鐵線 - 淺藍色
-      'TML': Color(0xFF9A3B26), // 屯馬線 - 深紅色
-      'SIL': Color(0xFFB5BD00), // 南港島線 - 黃綠色
-    };
-
-    return lineColors[lineCode] ?? const Color(0xFF000000);
-  }
+  Color _getLineColor(String lineCode) => MTRData.getLineColor(lineCode);
 
   Widget _buildLineBadge(String code) {
     final color = _getLineColor(code);

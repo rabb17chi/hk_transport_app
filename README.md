@@ -11,6 +11,8 @@ A comprehensive Hong Kong transport information app providing real-time MTR and 
 ### 🚇 港鐵服務 / MTR Services
 
 - **即時時刻表** / Real-time Schedule: 查看港鐵各線路的列車到達時間
+- **多線車站支援** / Multi-line Station Support: 同站多線可動態新增切換，標題依所選線路正確顯示方向與預設終點
+- **自動更新** / Auto Refresh: 對話框 15s 倒數自動重取（可於「更多資料操作」切換）
 - **路線選擇** / Route Selection: 支援所有港鐵線路（港島線、荃灣線、觀塘線等）
 - **車站資訊** / Station Information: 詳細的車站資料和時刻表
 - **多語言支援** / Multi-language Support: 中文繁體和英文介面
@@ -25,7 +27,7 @@ A comprehensive Hong Kong transport information app providing real-time MTR and 
 ### 📱 用戶介面 / User Interface
 
 - **現代化設計** / Modern Design: 簡潔美觀的 Material Design 3 介面
-- **直觀導航** / Intuitive Navigation: 底部導航欄與模式切換
+- **直觀導航** / Intuitive Navigation: 底部導航欄與模式切換（含輕觸覺回饋）
 - **響應式佈局** / Responsive Layout: 適配不同螢幕尺寸
 - **觸覺反饋** / Haptic Feedback: 提供觸覺回饋增強用戶體驗
 
@@ -61,7 +63,7 @@ A comprehensive Hong Kong transport information app providing real-time MTR and 
 
 - **即時數據** / Real-time Data: 從官方 API 獲取最新交通資訊
 - **離線快取** / Offline Cache: 智能快取機制減少網路請求
-- **錯誤處理** / Error Handling: 完善的錯誤處理和用戶提示
+- **錯誤處理** / Error Handling: 完善的錯誤處理和用戶提示（僅保留錯誤 Snackbar，移除成功提示）
 - **性能優化** / Performance Optimization: 流暢的用戶體驗
 
 ## 安裝與使用 / Installation & Usage
@@ -116,15 +118,22 @@ lib/
 │   ├── bookmarks/                # 書籤相關組件 / Bookmark Components
 │   ├── kmb/                     # 九巴相關組件 / KMB Components
 │   ├── mtr/                     # 港鐵相關組件 / MTR Components
-│   ├── settings/reset_app_tile.dart # 重設功能 / Reset tile
-│   ├── bottom_nav_bar.dart      # 底部導航欄 / Bottom Navigation Bar
+│   ├── menu/                    # 設定與資料操作 / Settings & Data Ops
+│   ├── ui/                      # 共用 UI（含 bottom_nav_bar / splash）
 ├── scripts/                     # 服務和工具 / Services & Utilities
-│   ├── bookmarks_service.dart   # KMB 書籤服務 / KMB Bookmark Service
-│   ├── mtr/mtr_bookmarks_service.dart # MTR 書籤服務 / MTR Bookmark Service
-│   ├── kmb_api_service.dart     # 九巴 API 服務 / KMB API Service
-│   ├── kmb_cache_service.dart   # KMB 快取服務 / KMB Cache Service
-│   ├── locale_service.dart      # 語言設定持久化 / Locale persistence
-│   └── startup_service.dart     # 啟動流程 / Startup bootstrap
+│   ├── bookmarks/              # 書籤服務 / Bookmarks
+│   ├── kmb/                    # 九巴服務 / KMB services
+│   ├── mtr/                    # 港鐵服務 / MTR services（含 mtr_data）
+│   ├── locale/                 # 語言設定持久化 / Locale persistence
+│   ├── theme/                  # 主題 / Themes
+│   └── utils/                  # 工具 / Utilities
+## 技術備註 / Technical Notes
+
+1. **MTR 線路顏色集中管理**：請使用 `MTRData.getLineColor(lineCode)`，不要在組件內重複定義色票。
+2. **MTR 預設終點（方向）**：`mtr_data.dart` 內每條線使用 `upDefaultDest`、`downDefaultDest`（陣列）定義方向預設終點；`defaultDest` 統一為 `[]` 以支援特殊案例。
+3. **時間差格式化**：服務層已移除格式化函式，請於 UI 使用本地化字串（`mtrMinutes`、`mtrHours`、`mtrHoursMinutes`）。
+4. **多線站台對話框**：每個新增線路區塊會傳入自身 `lineCode`，標題「往 / To」與預設終點會依該線正確顯示。
+5. **Snackbar 策略**：只保留錯誤提示，成功操作不再彈出。
 ├── l10n/                        # 語言檔 / Localization ARB
 │   ├── app_en.arb
 │   ├── app_zh.arb
@@ -134,9 +143,9 @@ lib/
 
 ## 開發團隊 / Development Team
 
-- **開發者** / Developer: [Your Name]
-- **版本** / Version: 1.0.0
-- **更新日期** / Last Updated: 2024
+- **開發者** / Developer: rabb17
+- **版本** / Version: 幾時正式 1.0?
+- **更新日期** / Last Updated: 有 commit = 有更新
 
 ## 授權條款 / License
 
@@ -156,7 +165,6 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
 
 For questions or suggestions, please contact:
 
-- **Email** / 電郵: your.email@example.com
 - **GitHub** / GitHub: [@your-username](https://github.com/your-username)
 
 ---
