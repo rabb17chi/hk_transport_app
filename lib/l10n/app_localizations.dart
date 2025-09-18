@@ -62,7 +62,8 @@ import 'app_localizations_zh.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -70,7 +71,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -82,7 +84,8 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -312,6 +315,72 @@ abstract class AppLocalizations {
   /// **'Long Press'**
   String get longPress;
 
+  /// No description provided for @mtrNoTrainInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'No train information'**
+  String get mtrNoTrainInfo;
+
+  /// No description provided for @mtrOtherLines.
+  ///
+  /// In en, this message translates to:
+  /// **'Other lines'**
+  String get mtrOtherLines;
+
+  /// No description provided for @mtrUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to update timetable, please try again later'**
+  String get mtrUpdateFailed;
+
+  /// No description provided for @mtrUpdateError.
+  ///
+  /// In en, this message translates to:
+  /// **'Update failed'**
+  String get mtrUpdateError;
+
+  /// No description provided for @mtrRefreshing.
+  ///
+  /// In en, this message translates to:
+  /// **'Refreshing'**
+  String get mtrRefreshing;
+
+  /// No description provided for @mtrUpDirection.
+  ///
+  /// In en, this message translates to:
+  /// **'Up direction'**
+  String get mtrUpDirection;
+
+  /// No description provided for @mtrDownDirection.
+  ///
+  /// In en, this message translates to:
+  /// **'Down direction'**
+  String get mtrDownDirection;
+
+  /// No description provided for @mtrUpdating.
+  ///
+  /// In en, this message translates to:
+  /// **'Updating timetable...'**
+  String get mtrUpdating;
+
+  /// No description provided for @mtrClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get mtrClose;
+
+  /// No description provided for @mtrRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get mtrRefresh;
+
+  /// No description provided for @mtrUnknownLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown line'**
+  String get mtrUnknownLine;
+
   /// No description provided for @timetableUnavailable.
   ///
   /// In en, this message translates to:
@@ -433,7 +502,8 @@ abstract class AppLocalizations {
   String get imageLoading;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -442,34 +512,37 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en', 'zh'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['en', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
   // Lookup logic when language+country codes are specified.
   switch (locale.languageCode) {
-    case 'zh': {
-  switch (locale.countryCode) {
-    case 'HK': return AppLocalizationsZhHk();
-   }
-  break;
-   }
+    case 'zh':
+      {
+        switch (locale.countryCode) {
+          case 'HK':
+            return AppLocalizationsZhHk();
+        }
+        break;
+      }
   }
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en': return AppLocalizationsEn();
-    case 'zh': return AppLocalizationsZh();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(
-    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
-  );
+      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }

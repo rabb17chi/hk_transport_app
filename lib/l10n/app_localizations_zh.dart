@@ -117,6 +117,39 @@ class AppLocalizationsZh extends AppLocalizations {
   String get longPress => '長按';
 
   @override
+  String get mtrNoTrainInfo => '暫無列車信息';
+
+  @override
+  String get mtrOtherLines => '其他線路';
+
+  @override
+  String get mtrUpdateFailed => '無法更新時刻表，請稍後重試';
+
+  @override
+  String get mtrUpdateError => '更新失敗';
+
+  @override
+  String get mtrRefreshing => '刷新';
+
+  @override
+  String get mtrUpDirection => '上行方向';
+
+  @override
+  String get mtrDownDirection => '下行方向';
+
+  @override
+  String get mtrUpdating => '正在更新時刻表...';
+
+  @override
+  String get mtrClose => '關閉';
+
+  @override
+  String get mtrRefresh => '刷新';
+
+  @override
+  String get mtrUnknownLine => '未知線路';
+
+  @override
   String get timetableUnavailable => '無法獲取時刻表，請稍後重試';
 
   @override
@@ -179,7 +212,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).
 class AppLocalizationsZhHk extends AppLocalizationsZh {
-  AppLocalizationsZhHk(): super('zh_HK');
+  AppLocalizationsZhHk() : super('zh_HK');
 
   @override
   String get appTitle => '香港交通應用';
@@ -288,6 +321,39 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
 
   @override
   String get longPress => '長按';
+
+  @override
+  String get mtrNoTrainInfo => '暫無列車信息';
+
+  @override
+  String get mtrOtherLines => '其他線路';
+
+  @override
+  String get mtrUpdateFailed => '無法更新時刻表，請稍後重試';
+
+  @override
+  String get mtrUpdateError => '更新失敗';
+
+  @override
+  String get mtrRefreshing => '刷新';
+
+  @override
+  String get mtrUpDirection => '上行方向';
+
+  @override
+  String get mtrDownDirection => '下行方向';
+
+  @override
+  String get mtrUpdating => '正在更新時刻表...';
+
+  @override
+  String get mtrClose => '關閉';
+
+  @override
+  String get mtrRefresh => '刷新';
+
+  @override
+  String get mtrUnknownLine => '未知線路';
 
   @override
   String get timetableUnavailable => '無法獲取時刻表，請稍後重試';

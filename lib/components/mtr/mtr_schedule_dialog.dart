@@ -8,6 +8,8 @@ import '../../scripts/mtr/mtr_schedule_service.dart';
 import '../../scripts/mtr/mtr_data.dart';
 import '../../scripts/utils/vibration_helper.dart';
 import '../../scripts/utils/settings_service.dart';
+import '../../l10n/locale_utils.dart';
+import '../../l10n/app_localizations.dart';
 
 class MTRScheduleDialog extends StatefulWidget {
   final MTRScheduleResponse initialResponse;
@@ -73,9 +75,9 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
         // 顯示錯誤消息
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('無法更新時刻表，請稍後重試'),
-              duration: Duration(seconds: 2),
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.mtrUpdateFailed),
+              duration: const Duration(seconds: 2),
               backgroundColor: Colors.red,
             ),
           );
@@ -86,7 +88,8 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('更新失敗: $e'),
+            content:
+                Text('${AppLocalizations.of(context)!.mtrUpdateError}: $e'),
             duration: const Duration(seconds: 2),
             backgroundColor: Colors.red,
           ),
@@ -177,13 +180,6 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  _getLineDisplayName(response.lineCode),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[800],
-                  ),
-                ),
               ],
             ),
           ),
@@ -199,7 +195,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  '刷新 ${_secondsLeft}s',
+                  '${AppLocalizations.of(context)!.mtrRefreshing} ${_secondsLeft}s',
                   style: const TextStyle(
                       fontSize: 12, fontWeight: FontWeight.w600),
                 ),
@@ -211,15 +207,15 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
       content: SizedBox(
         width: double.maxFinite,
         child: isLoading
-            ? const Center(
+            ? Center(
                 child: Padding(
-                  padding: EdgeInsets.all(40),
+                  padding: const EdgeInsets.all(40),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      CircularProgressIndicator(),
-                      SizedBox(height: 16),
-                      Text('正在更新時刻表...'),
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 16),
+                      Text(AppLocalizations.of(context)!.mtrUpdating),
                     ],
                   ),
                 ),
@@ -243,13 +239,17 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                         children: [
                           if (upTrains.isNotEmpty) ...[
                             _buildDirectionSection(
-                                '上行方向', upTrains, Colors.green),
+                                AppLocalizations.of(context)!.mtrUpDirection,
+                                upTrains,
+                                Colors.green),
                           ],
                           if (upTrains.isNotEmpty && downTrains.isNotEmpty)
                             const SizedBox(height: 8),
                           if (downTrains.isNotEmpty) ...[
                             _buildDirectionSection(
-                                '下行方向', downTrains, Colors.orange),
+                                AppLocalizations.of(context)!.mtrDownDirection,
+                                downTrains,
+                                Colors.orange),
                           ],
                           if (upTrains.isEmpty && downTrains.isEmpty)
                             _buildEmptyBox(),
@@ -339,7 +339,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
             await VibrationHelper.mediumVibrate();
             Navigator.of(context).pop();
           },
-          child: const Text('關閉'),
+          child: Text(AppLocalizations.of(context)!.mtrClose),
         ),
         ElevatedButton(
           onPressed: isLoading
@@ -361,7 +361,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                   height: 16,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
-              : const Text('刷新'),
+              : Text(AppLocalizations.of(context)!.mtrRefresh),
         ),
       ],
     );
@@ -374,10 +374,14 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
 
     // 獲取終點站信息
     String destInfo = '';
+    String toPrefix = '';
     if (filteredTrains.isNotEmpty) {
       final firstTrain = filteredTrains.first;
-      final destName = firstTrain.destNameTc ?? firstTrain.dest ?? '--';
-      destInfo = destName;
+      final isChinese = LocaleUtils.isChinese(context);
+      destInfo = isChinese
+          ? (firstTrain.destNameTc ?? firstTrain.dest ?? '--')
+          : (firstTrain.destNameEn ?? firstTrain.dest ?? '--');
+      toPrefix = isChinese ? '往 ' : 'To ';
     }
 
     return Column(
@@ -393,7 +397,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                '往 $destInfo',
+                '$toPrefix$destInfo',
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -413,11 +417,13 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
     final down = resp.getDownTrains();
     final widgets = <Widget>[];
     if (up.isNotEmpty) {
-      widgets.add(_buildDirectionSection('上行方向', up, Colors.green));
+      widgets.add(_buildDirectionSection(
+          AppLocalizations.of(context)!.mtrUpDirection, up, Colors.green));
       widgets.add(const SizedBox(height: 12));
     }
     if (down.isNotEmpty) {
-      widgets.add(_buildDirectionSection('下行方向', down, Colors.orange));
+      widgets.add(_buildDirectionSection(
+          AppLocalizations.of(context)!.mtrDownDirection, down, Colors.orange));
     }
     if (up.isEmpty && down.isEmpty) {
       widgets.add(_buildEmptyBox());
@@ -499,7 +505,10 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
   }
 
   Widget _buildTrainTile(TrainInfo train, Color color) {
-    final destName = train.destNameTc ?? train.dest ?? '--';
+    final isChinese = LocaleUtils.isChinese(context);
+    final destName = isChinese
+        ? (train.destNameTc ?? train.dest ?? '--')
+        : (train.destNameEn ?? train.dest ?? '--');
     final isArrivingSoon = train.isArrivingSoon;
 
     return Container(
@@ -551,19 +560,6 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
         ],
       ),
     );
-  }
-
-  String _getLineDisplayName(String? lineCode) {
-    if (lineCode == null) return '未知線路';
-
-    final lineData = MTRData.getLineData(lineCode);
-    if (lineData != null) {
-      final nameTc = lineData['fullNameTc'] ?? '';
-      final nameEn = lineData['fullNameEn'] ?? '';
-      return '$nameTc ($nameEn)';
-    }
-
-    return lineCode; // 如果找不到資料，返回原始代碼
   }
 
   Color _getTimeDifferenceColor(int? minutes) {

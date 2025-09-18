@@ -117,7 +117,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get longPress => 'Long Press';
 
   @override
-  String get timetableUnavailable => 'Unable to fetch timetable, please try again later';
+  String get mtrNoTrainInfo => 'No train information';
+
+  @override
+  String get mtrOtherLines => 'Other lines';
+
+  @override
+  String get mtrUpdateFailed =>
+      'Unable to update timetable, please try again later';
+
+  @override
+  String get mtrUpdateError => 'Update failed';
+
+  @override
+  String get mtrRefreshing => 'Refreshing';
+
+  @override
+  String get mtrUpDirection => 'Up direction';
+
+  @override
+  String get mtrDownDirection => 'Down direction';
+
+  @override
+  String get mtrUpdating => 'Updating timetable...';
+
+  @override
+  String get mtrClose => 'Close';
+
+  @override
+  String get mtrRefresh => 'Refresh';
+
+  @override
+  String get mtrUnknownLine => 'Unknown line';
+
+  @override
+  String get timetableUnavailable =>
+      'Unable to fetch timetable, please try again later';
 
   @override
   String get removeBookmarkSuccess => 'Bookmark removed';
