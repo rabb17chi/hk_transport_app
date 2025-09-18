@@ -117,20 +117,20 @@ class KMBApiService {
         .toList();
   }
 
-  /// Fetch route stops for a specific route and bound
+  /// Fetch route stops for a specific route, bound and serviceType
   static Future<List<KMBRouteStop>> getRouteStops(
-      String route, String bound) async {
+      String route, String bound, String serviceType) async {
     try {
       // Convert bound to API format (I -> inbound, O -> outbound)
       final boundParam = bound == 'I' ? 'inbound' : 'outbound';
 
-      // Try cached route-stops first (service type fixed to '1' for now)
+      // Try cached route-stops first for the specific serviceType
       // Use the original bound parameter for cache consistency
       final cached =
-          await KMBCacheService.getCachedRouteStops(route, bound, '1');
+          await KMBCacheService.getCachedRouteStops(route, bound, serviceType);
       if (cached != null && cached.isNotEmpty) {
         print(
-            'Using cached route-stops: $route $bound/1 count=${cached.length}');
+            'Using cached route-stops: $route $bound/$serviceType count=${cached.length}');
         // Debug: Print first few cached stops
         for (int i = 0; i < cached.length && i < 3; i++) {
           final stop = cached[i];
@@ -143,7 +143,7 @@ class KMBApiService {
       }
 
       // Use the correct API endpoint format: route-stop/{route}/{bound}/{service_type}
-      final apiUrl = '$baseUrl/route-stop/$route/$boundParam/1';
+      final apiUrl = '$baseUrl/route-stop/$route/$boundParam/$serviceType';
       print('API URL: $apiUrl');
       final response = await http.get(Uri.parse(apiUrl));
 
@@ -193,8 +193,8 @@ class KMBApiService {
               'Stop $i: ${stop.stopNameTc} (${stop.stopNameEn}) - Seq: ${stop.seq}');
         }
 
-        // Cache for future use using the original bound parameter
-        await KMBCacheService.cacheRouteStops(route, bound, '1', stops);
+        // Cache for future use using the original bound parameter and serviceType
+        await KMBCacheService.cacheRouteStops(route, bound, serviceType, stops);
 
         return stops;
       } else {
@@ -421,6 +421,9 @@ class KMBETA {
 
   /// Get formatted arrival time string
   String get arrivalTimeString {
+    if (eta.trim().isEmpty) {
+      return '沒有資料';
+    }
     final minutes = minutesUntilArrival;
     if (minutes > 0) {
       return '$minutes 分鐘';
@@ -433,6 +436,9 @@ class KMBETA {
 
   /// Get formatted arrival time string in English
   String get arrivalTimeStringEn {
+    if (eta.trim().isEmpty) {
+      return 'No Data';
+    }
     final minutes = minutesUntilArrival;
     if (minutes > 0) {
       return '$minutes min';

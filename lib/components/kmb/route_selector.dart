@@ -121,6 +121,7 @@ class _RouteSelectorState extends State<RouteSelector> {
                                 routeKey: routeKey,
                                 routeNumber: route.route,
                                 bound: route.bound,
+                                serviceType: route.serviceType,
                                 destinationTc: route.destTc,
                                 destinationEn: route.destEn,
                               ),

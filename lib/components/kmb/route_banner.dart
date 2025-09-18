@@ -31,7 +31,9 @@ class RouteBanner extends StatelessWidget {
         height: 80,
         margin: const EdgeInsets.symmetric(vertical: 4),
         decoration: BoxDecoration(
-          color: const Color(0xFF323232),
+          color: route.serviceType == '1'
+              ? const Color(0xFF323232)
+              : Colors.grey[700],
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Colors.grey[600]!, width: 3),
           boxShadow: [
@@ -54,9 +56,9 @@ class RouteBanner extends StatelessWidget {
                   children: [
                     // Traditional Chinese (top)
                     Text(
-                      route.serviceType == '2' || route.serviceType == '5'
-                          ? '${route.destTc} (特別班次)'
-                          : route.destTc,
+                      route.serviceType == '1'
+                          ? route.destTc
+                          : '${route.destTc} (特別班次)',
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -82,7 +84,7 @@ class RouteBanner extends StatelessWidget {
                   ],
                 ),
               ),
-              // Right side - Route number
+              // Right side - Route number + special badge if service type 2/5
               Container(
                 width: 60,
                 height: 60,
@@ -91,21 +93,26 @@ class RouteBanner extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
+                      color: route.serviceType == '1'
+                          ? Colors.black.withValues(alpha: 0.3)
+                          : Colors.grey.withValues(alpha: 0.3),
                       blurRadius: 2,
                       offset: const Offset(0, 1),
                     ),
                   ],
                 ),
-                child: Center(
-                  child: Text(
-                    route.route,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFF7A925), // rgb(247,169,37)
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Text(
+                      route.route,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFF7A925), // rgb(247,169,37)
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ],

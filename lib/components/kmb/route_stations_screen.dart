@@ -11,6 +11,8 @@ class RouteStationsScreen extends StatefulWidget {
   final String routeKey; // Format: "route_bound" (e.g., "13_I")
   final String routeNumber;
   final String bound;
+  final String?
+      serviceType; // pass through actual service type (defaults to '1')
   final String destinationTc;
   final String destinationEn;
 
@@ -19,6 +21,7 @@ class RouteStationsScreen extends StatefulWidget {
     required this.routeKey,
     required this.routeNumber,
     required this.bound,
+    this.serviceType,
     required this.destinationTc,
     required this.destinationEn,
   });
@@ -100,6 +103,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
       final routeStops = await KMBApiService.getRouteStops(
         widget.routeNumber,
         widget.bound,
+        widget.serviceType ?? '1',
       );
 
       setState(() {
@@ -123,8 +127,8 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
         _etaData = []; // Clear previous ETA data
       });
 
-      final etaData =
-          await KMBApiService.getETA(stopId, widget.routeNumber, '1');
+      final etaData = await KMBApiService.getETA(
+          stopId, widget.routeNumber, widget.serviceType ?? '1');
 
       for (int i = 0; i < 1; i++) {
         final eta = etaData[i];
@@ -152,10 +156,11 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.routeNumber} 往 ${widget.destinationTc}'),
+        title: Text(
+            '${widget.routeNumber} 往 ${widget.destinationTc} ${widget.serviceType == '1' ? '' : '| 特別班次'}'),
         backgroundColor: const Color(0xFF323232),
         foregroundColor: const Color(0xFFF7A925),
-        actions: _availableBounds.length > 1
+        actions: _availableBounds.length > 1 && widget.serviceType == '1'
             ? [
                 IconButton(
                   icon: const Icon(Icons.swap_horiz),
@@ -221,7 +226,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                               stopId: stop.stop,
                               stopNameTc: stop.stopNameTc,
                               stopNameEn: stop.stopNameEn,
-                              serviceType: '1',
+                              serviceType: widget.serviceType ?? '1',
                               destTc: widget.destinationTc,
                               destEn: widget.destinationEn,
                             );
@@ -242,7 +247,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                       stopId: stop.stop,
                                       stopNameTc: stop.stopNameTc,
                                       stopNameEn: stop.stopNameEn,
-                                      serviceType: '1',
+                                      serviceType: widget.serviceType ?? '1',
                                       destTc: widget.destinationTc,
                                       destEn: widget.destinationEn,
                                     );

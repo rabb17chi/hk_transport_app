@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hk_transport_app/components/kmb/input_keyboard.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'route_banner.dart';
 import 'route_stations_screen.dart';
 
@@ -28,6 +29,7 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
   @override
   void initState() {
     super.initState();
+    _loadSpecialRoutesPref();
     _loadInitialData();
     _searchController.addListener(_filterRoutes);
   }
@@ -59,6 +61,21 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
         _errorMessage = 'Error loading data: $e';
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _loadSpecialRoutesPref() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final value = prefs.getBool('showSpecialRoutes') ?? false;
+      if (mounted) {
+        setState(() {
+          _showSpecialRoutes = value;
+          _filteredRoutes = _applyServiceTypeFilter(_routes);
+        });
+      }
+    } catch (_) {
+      // ignore read failures; default remains false
     }
   }
 
@@ -222,6 +239,8 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                                                   routeKey: routeKey,
                                                   routeNumber: route.route,
                                                   bound: route.bound,
+                                                  serviceType:
+                                                      route.serviceType,
                                                   destinationTc: route.destTc,
                                                   destinationEn: route.destEn,
                                                 ),
