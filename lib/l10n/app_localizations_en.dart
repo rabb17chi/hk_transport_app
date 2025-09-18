@@ -93,7 +93,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get kmbEmptyInstructionSuffix => 'to add to bookmarks';
 
   @override
-  String get toWord => 'to';
+  String get toWord => 'To';
 
   @override
   String get etaEmpty => 'No ETA available';
@@ -111,7 +111,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mtrEmptyTitle => 'No MTR bookmarks';
 
   @override
-  String get mtrEmptySubtitle => 'Long press an MTR station to add';
+  String get mtrEmptySubtitle => 'a MTR station to add';
+
+  @override
+  String get longPress => 'Long Press';
 
   @override
   String get timetableUnavailable => 'Unable to fetch timetable, please try again later';

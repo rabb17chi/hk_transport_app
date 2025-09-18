@@ -9,6 +9,8 @@ class BookmarkItem {
   final String stopNameTc;
   final String stopNameEn;
   final String serviceType;
+  final String destTc;
+  final String destEn;
 
   const BookmarkItem({
     required this.route,
@@ -17,6 +19,8 @@ class BookmarkItem {
     required this.stopNameTc,
     required this.stopNameEn,
     required this.serviceType,
+    required this.destTc,
+    required this.destEn,
   });
 
   Map<String, dynamic> toJson() => {
@@ -26,6 +30,8 @@ class BookmarkItem {
         'stopNameTc': stopNameTc,
         'stopNameEn': stopNameEn,
         'serviceType': serviceType,
+        'destTc': destTc,
+        'destEn': destEn,
       };
 
   static BookmarkItem fromJson(Map<String, dynamic> json) => BookmarkItem(
@@ -35,6 +41,8 @@ class BookmarkItem {
         stopNameTc: json['stopNameTc'] as String? ?? '',
         stopNameEn: json['stopNameEn'] as String? ?? '',
         serviceType: json['serviceType'] as String? ?? '1',
+        destTc: json['destTc'] as String? ?? '',
+        destEn: json['destEn'] as String? ?? '',
       );
 }
 

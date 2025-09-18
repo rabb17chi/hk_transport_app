@@ -42,7 +42,7 @@ class AppColorScheme {
 
   static const Color textSecondaryColor = Color(0xFF757575);
 
-  static const Color textMutedColor = Color(0xFFBDBDBD);
+  static const Color textMutedColor = Color(0xFFA0A0A0);
 
   static const Color textOnLightColor = Color(0xFF424242);
 

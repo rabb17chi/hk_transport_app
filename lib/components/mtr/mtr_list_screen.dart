@@ -33,18 +33,26 @@ class _MTRListScreenState extends State<MTRListScreen> {
     SettingsService.load();
     _reverseStations = SettingsService.mtrReverseStationsNotifier.value;
     SettingsService.mtrReverseStationsNotifier.addListener(_onReverseChanged);
+    MTRBookmarksService.refreshTrigger.addListener(_onBookmarkChanged);
   }
 
   @override
   void dispose() {
     SettingsService.mtrReverseStationsNotifier
         .removeListener(_onReverseChanged);
+    MTRBookmarksService.refreshTrigger.removeListener(_onBookmarkChanged);
     super.dispose();
   }
 
   void _onReverseChanged() {
     setState(() {
       _reverseStations = SettingsService.mtrReverseStationsNotifier.value;
+    });
+  }
+
+  void _onBookmarkChanged() {
+    setState(() {
+      // Trigger rebuild to refresh bookmark status
     });
   }
 

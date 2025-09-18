@@ -267,7 +267,7 @@ abstract class AppLocalizations {
   /// No description provided for @toWord.
   ///
   /// In en, this message translates to:
-  /// **'to'**
+  /// **'To'**
   String get toWord;
 
   /// No description provided for @etaEmpty.
@@ -303,8 +303,14 @@ abstract class AppLocalizations {
   /// No description provided for @mtrEmptySubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Long press an MTR station to add'**
+  /// **'a MTR station to add'**
   String get mtrEmptySubtitle;
+
+  /// No description provided for @longPress.
+  ///
+  /// In en, this message translates to:
+  /// **'Long Press'**
+  String get longPress;
 
   /// No description provided for @timetableUnavailable.
   ///

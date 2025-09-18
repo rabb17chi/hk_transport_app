@@ -111,7 +111,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get mtrEmptyTitle => '沒有港鐵書籤';
 
   @override
-  String get mtrEmptySubtitle => '長按港鐵車站可加入收藏';
+  String get mtrEmptySubtitle => '港鐵車站可加入收藏';
+
+  @override
+  String get longPress => '長按';
 
   @override
   String get timetableUnavailable => '無法獲取時刻表，請稍後重試';
@@ -176,7 +179,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).
 class AppLocalizationsZhHk extends AppLocalizationsZh {
-  AppLocalizationsZhHk() : super('zh_HK');
+  AppLocalizationsZhHk(): super('zh_HK');
 
   @override
   String get appTitle => '香港交通應用';
@@ -281,7 +284,10 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
   String get mtrEmptyTitle => '沒有港鐵書籤';
 
   @override
-  String get mtrEmptySubtitle => '長按港鐵車站可加入收藏';
+  String get mtrEmptySubtitle => '港鐵車站可加入收藏';
+
+  @override
+  String get longPress => '長按';
 
   @override
   String get timetableUnavailable => '無法獲取時刻表，請稍後重試';

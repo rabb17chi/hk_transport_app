@@ -3,6 +3,7 @@ import '../../scripts/bookmarks/bookmarks_service.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
 import '../../scripts/bookmarks/mtr_bookmarks_service.dart';
 import '../../scripts/mtr/mtr_schedule_service.dart';
+import '../../scripts/mtr/mtr_data.dart';
 import '../mtr/mtr_schedule_dialog.dart';
 import '../../l10n/app_localizations.dart';
 import '../../l10n/locale_utils.dart';
@@ -197,23 +198,29 @@ class _BookmarkPageState extends State<BookmarkPage>
         return Card(
           margin: const EdgeInsets.only(bottom: 8),
           child: ListTile(
-            leading: const Icon(Icons.directions_bus,
-                color: AppColorScheme.kmbColor),
+            leading: Container(
+              width: 100,
+              height: 50,
+              child: Center(
+                child: Text(
+                  bookmark.route,
+                  style: const TextStyle(
+                    color: AppColorScheme.kmbColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
+                ),
+              ),
+            ),
             title: Text(
-              '${bookmark.route} ${loc.toWord} ${bookmark.bound}',
+              '${loc.toWord} ${LocaleUtils.isChinese(context) ? bookmark.destTc : bookmark.destEn}',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(bookmark.stopNameTc),
-                if (bookmark.stopNameEn.isNotEmpty)
-                  Text(
-                    bookmark.stopNameEn,
-                    style:
-                        const TextStyle(color: AppColorScheme.textMutedColor),
-                  ),
-              ],
+            subtitle: Text(
+              LocaleUtils.isChinese(context)
+                  ? bookmark.stopNameTc
+                  : bookmark.stopNameEn,
+              style: const TextStyle(color: AppColorScheme.textMutedColor),
             ),
             trailing: IconButton(
               icon: const Icon(Icons.delete, color: AppColorScheme.dangerColor),
@@ -228,7 +235,8 @@ class _BookmarkPageState extends State<BookmarkPage>
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: Text('${bookmark.route} - ${bookmark.stopNameTc}'),
+                      title: Text(
+                          '${bookmark.route} ${loc.toWord} ${LocaleUtils.isChinese(context) ? bookmark.destTc : bookmark.destEn} - ${LocaleUtils.isChinese(context) ? bookmark.stopNameTc : bookmark.stopNameEn}'),
                       content: SizedBox(
                         width: 260,
                         child: eta.isEmpty
@@ -304,7 +312,11 @@ class _BookmarkPageState extends State<BookmarkPage>
                 color: AppColorScheme.textMutedColor,
               ),
             ),
-            const SizedBox(height: 8),
+            Text(loc.longPress,
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16)),
             Text(
               loc.mtrEmptySubtitle,
               style: const TextStyle(
@@ -321,15 +333,69 @@ class _BookmarkPageState extends State<BookmarkPage>
       itemCount: _mtrBookmarks.length,
       itemBuilder: (context, index) {
         final bookmark = _mtrBookmarks[index];
+        final stationLines = MTRData.getStationLines(bookmark.stationId);
         return Card(
           margin: const EdgeInsets.only(bottom: 8),
           child: ListTile(
-            leading: const Icon(Icons.train, color: AppColorScheme.mtrColor),
-            title: Text(
-              bookmark.stationNameTc,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            // leading: Container(
+            //   width: 60,
+            //   height: 40,
+            //   decoration: BoxDecoration(
+            //     color: AppColorScheme.mtrColor,
+            //     borderRadius: BorderRadius.circular(8),
+            //   ),
+            //   child: Center(
+            //     child: Text(
+            //       bookmark.lineCode,
+            //       style: const TextStyle(
+            //         color: Colors.white,
+            //         fontWeight: FontWeight.bold,
+            //         fontSize: 12,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            title: Row(
+              children: [
+                // Station name
+                Expanded(
+                  child: Text(
+                    LocaleUtils.isChinese(context)
+                        ? bookmark.stationNameTc
+                        : bookmark.stationNameEn,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                // Lines badges
+                if (stationLines.isNotEmpty) ...[
+                  const SizedBox(width: 8),
+                  Wrap(
+                    spacing: 4,
+                    runSpacing: 2,
+                    children: stationLines.map((lineCode) {
+                      final lineColor = MTRData.getLineColor(lineCode);
+                      return Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: lineColor.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: lineColor, width: 1),
+                        ),
+                        child: Text(
+                          lineCode,
+                          style: TextStyle(
+                            color: lineColor,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ],
             ),
-            subtitle: Text(bookmark.stationNameEn),
             trailing: IconButton(
               icon: const Icon(Icons.delete, color: AppColorScheme.dangerColor),
               onPressed: () => _removeMTRBookmark(bookmark),

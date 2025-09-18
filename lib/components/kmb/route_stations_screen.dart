@@ -222,6 +222,8 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                               stopNameTc: stop.stopNameTc,
                               stopNameEn: stop.stopNameEn,
                               serviceType: '1',
+                              destTc: widget.destinationTc,
+                              destEn: widget.destinationEn,
                             );
 
                             return Column(
@@ -241,6 +243,8 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                       stopNameTc: stop.stopNameTc,
                                       stopNameEn: stop.stopNameEn,
                                       serviceType: '1',
+                                      destTc: widget.destinationTc,
+                                      destEn: widget.destinationEn,
                                     );
                                     final already =
                                         await BookmarksService.isBookmarked(

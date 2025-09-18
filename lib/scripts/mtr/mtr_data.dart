@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 /// MTR Data Storage
 ///
 /// 儲存港鐵線路和車站的中英文資料
@@ -646,5 +648,16 @@ class MTRData {
       }
     }
     return lineCodes;
+  }
+
+  /// 獲取線路顏色
+  static Color getLineColor(String lineCode) {
+    final lineData = mtrLines[lineCode];
+    if (lineData != null && lineData['color'] != null) {
+      final colorString = lineData['color'] as String;
+      final colorValue = int.parse(colorString.substring(1), radix: 16);
+      return Color(0xFF000000 | colorValue);
+    }
+    return const Color(0xFF000000);
   }
 }
