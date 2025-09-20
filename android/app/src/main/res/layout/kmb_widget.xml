@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:background="@drawable/kmb_widget_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/kmb_widget_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/kmb_widget_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="KMB"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/kmb_widget_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12:34"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/kmb_widget_route"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Route 1A"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="2dp" />
+
+    <TextView
+        android:id="@+id/kmb_widget_destination"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="To Central"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:layout_marginTop="1dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="4dp">
+
+        <TextView
+            android:id="@+id/kmb_widget_eta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Next: 5 mins"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/kmb_widget_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:text="↻"
+            android:textSize="12sp"
+            android:background="@drawable/kmb_widget_button"
+            android:textColor="#FFFFFF"
+            android:minWidth="40dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

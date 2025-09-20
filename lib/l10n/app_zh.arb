@@ -72,7 +72,18 @@
   "themeSystemDefault": "跟隨系統",
   "appUseGuide": "App使用指南",
   "appUseGuideSubtitle": "查看應用程式使用說明",
-  "imageLoading": "圖片載入中..."
+  "imageLoading": "圖片載入中...",
+  "menuWidgetTitle": "桌面小工具",
+  "widgetUpdateKMB": "更新九巴小工具",
+  "widgetUpdateKMBSubtitle": "用收藏的九巴路線更新小工具",
+  "widgetUpdateMTR": "更新港鐵小工具",
+  "widgetUpdateMTRSubtitle": "用港鐵車站資訊更新小工具",
+  "widgetUpdateNow": "立即更新",
+  "widgetUpdated": "小工具更新成功",
+  "widgetClear": "清除小工具",
+  "widgetClearSubtitle": "移除所有小工具資料",
+  "widgetClearNow": "立即清除",
+  "widgetCleared": "小工具清除成功"
 }
 
 

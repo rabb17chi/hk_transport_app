@@ -72,6 +72,17 @@
   "themeSystemDefault": "System Default",
   "appUseGuide": "App Usage Guide",
   "appUseGuideSubtitle": "View app usage instructions",
-  "imageLoading": "Loading image..."
+  "imageLoading": "Loading image...",
+  "menuWidgetTitle": "Desktop Widgets",
+  "widgetUpdateKMB": "Update KMB Widget",
+  "widgetUpdateKMBSubtitle": "Update widget with favorite KMB route",
+  "widgetUpdateMTR": "Update MTR Widget",
+  "widgetUpdateMTRSubtitle": "Update widget with MTR station info",
+  "widgetUpdateNow": "Update Now",
+  "widgetUpdated": "Widget updated successfully",
+  "widgetClear": "Clear Widget",
+  "widgetClearSubtitle": "Remove all widget data",
+  "widgetClearNow": "Clear Now",
+  "widgetCleared": "Widget cleared successfully"
 }
 

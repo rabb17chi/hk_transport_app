@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">rb17_transportT_checker</string>
+    <string name="kmb_widget_description">KMB Route Information Widget</string>
 </resources>
 
 

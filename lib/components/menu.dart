@@ -8,6 +8,7 @@ import 'menu/language_section.dart';
 import 'menu/theme_section.dart';
 import 'menu/developer_links_dialog.dart';
 import 'menu/system_monitor_section.dart';
+import 'menu/widget_settings_section.dart';
 import 'settings/reset_app_tile.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -31,12 +32,13 @@ class _MenuScreenState extends State<MenuScreen> {
   // Menu item indices
   static const int _dataOperationsIndex = 0;
   static const int _systemMonitorIndex = 1;
-  static const int _themeIndex = 2;
-  static const int _styleIndex = 3;
-  static const int _termsIndex = 4;
-  static const int _devLinksIndex = 5;
-  static const int _languageIndex = 6;
-  static const int _resetIndex = 7;
+  static const int _widgetIndex = 2;
+  static const int _themeIndex = 3;
+  static const int _styleIndex = 4;
+  static const int _termsIndex = 5;
+  static const int _devLinksIndex = 6;
+  static const int _languageIndex = 7;
+  static const int _resetIndex = 8;
 
   @override
   void initState() {
@@ -68,6 +70,8 @@ class _MenuScreenState extends State<MenuScreen> {
             _buildDataOperationsSection(),
             const Divider(),
             _buildSystemMonitorSection(),
+            const Divider(),
+            _buildWidgetSection(),
             const Divider(),
             _buildAppUseGuide(),
             const Divider(),
@@ -120,6 +124,13 @@ class _MenuScreenState extends State<MenuScreen> {
     return GestureDetector(
       onTap: () => _onItemTap(_systemMonitorIndex),
       child: const SystemMonitorSection(),
+    );
+  }
+
+  Widget _buildWidgetSection() {
+    return GestureDetector(
+      onTap: () => _onItemTap(_widgetIndex),
+      child: const WidgetSettingsSection(),
     );
   }
 
