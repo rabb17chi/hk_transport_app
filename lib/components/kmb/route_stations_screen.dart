@@ -277,17 +277,27 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                         decoration: BoxDecoration(
                                           color: bookmarked
                                               ? AppColorScheme.bookmarkedColor
-                                                  .withOpacity(0.15)
-                                              : Colors
-                                                  .white, // White background
+                                                  .withOpacity(Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.dark
+                                                      ? 0.85
+                                                      : 0.35)
+                                              : Theme.of(context).brightness ==
+                                                      Brightness.dark
+                                                  ? Colors.grey[900]
+                                                  : Colors.white,
                                           borderRadius:
                                               BorderRadius.circular(8),
                                           border: Border.all(
                                             color: isSelected
                                                 ? AppColorScheme
                                                     .selectedBorderColor
-                                                : Colors
-                                                    .black, // Green when selected, black otherwise
+                                                : Theme.of(context)
+                                                            .brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.white
+                                                    : Colors
+                                                        .black, // Green when selected, black otherwise
                                             width: isSelected
                                                 ? 3
                                                 : 1, // Thicker border when selected
@@ -307,8 +317,12 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                               child: Center(
                                                 child: Text(
                                                   '${index + 1}',
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
+                                                  style: TextStyle(
+                                                    color: Theme.of(context)
+                                                                .brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                        : Colors.black,
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 16,
                                                   ),
@@ -324,12 +338,16 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                 children: [
                                                   Text(
                                                     stop.stopNameTc,
-                                                    style: const TextStyle(
+                                                    style: TextStyle(
                                                       fontSize: 18,
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      color: Colors
-                                                          .black, // Black text
+                                                      color: Theme.of(context)
+                                                                  .brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors
+                                                              .black, // Black text
                                                     ),
                                                   ),
                                                   const SizedBox(height: 4),
@@ -337,8 +355,12 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                     stop.stopNameEn,
                                                     style: TextStyle(
                                                       fontSize: 14,
-                                                      color: AppColorScheme
-                                                          .textMediumColor,
+                                                      color: Theme.of(context)
+                                                                  .brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : AppColorScheme
+                                                              .textMediumColor,
                                                     ),
                                                   ),
                                                 ],
@@ -359,6 +381,10 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                     margin: const EdgeInsets.only(bottom: 16),
                                     padding: const EdgeInsets.all(16),
                                     decoration: BoxDecoration(
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.grey[900]
+                                          : Colors.white,
                                       borderRadius: BorderRadius.circular(12),
                                       border: Border.all(
                                         color:
@@ -396,7 +422,11 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                             padding: const EdgeInsets.all(12),
                                             decoration: BoxDecoration(
                                               border: Border.all(
-                                                color: const Color(0xFF323232),
+                                                color: Theme.of(context)
+                                                            .brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.white
+                                                    : const Color(0xFF323232),
                                                 width: 1,
                                               ),
                                               borderRadius:
@@ -413,9 +443,12 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                   children: [
                                                     Text(
                                                       '第 $displaySeq 班',
-                                                      style: const TextStyle(
-                                                        color:
-                                                            Color(0xFF323232),
+                                                      style: TextStyle(
+                                                        color: Theme.of(context)
+                                                                    .brightness ==
+                                                                Brightness.dark
+                                                            ? Colors.white
+                                                            : Color(0xFF323232),
                                                         fontSize: 20,
                                                         fontWeight:
                                                             FontWeight.w500,
@@ -429,9 +462,12 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                   children: [
                                                     Text(
                                                       eta.arrivalTimeString,
-                                                      style: const TextStyle(
-                                                        color:
-                                                            Color(0xFF323232),
+                                                      style: TextStyle(
+                                                        color: Theme.of(context)
+                                                                    .brightness ==
+                                                                Brightness.dark
+                                                            ? Colors.white
+                                                            : Color(0xFF323232),
                                                         fontSize: 24,
                                                         fontWeight:
                                                             FontWeight.w600,

@@ -61,30 +61,29 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('設定'),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        children: [
-          _buildDataOperationsSection(),
-          const Divider(),
-          _buildSystemMonitorSection(),
-          const Divider(),
-          _buildAppUseGuide(),
-          const Divider(),
-          _buildThemeSection(),
-          const Divider(),
-          _buildStyleTile(),
-          const Divider(),
-          _buildDevLinksTile(),
-          const Divider(),
-          _buildTermsTile(),
-          const Divider(),
-          _buildLanguageSection(),
-          const Divider(),
-          _buildResetTile(),
-        ],
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          children: [
+            _buildDataOperationsSection(),
+            const Divider(),
+            _buildSystemMonitorSection(),
+            const Divider(),
+            _buildAppUseGuide(),
+            const Divider(),
+            _buildThemeSection(),
+            const Divider(),
+            _buildStyleTile(),
+            const Divider(),
+            _buildDevLinksTile(),
+            const Divider(),
+            _buildTermsTile(),
+            const Divider(),
+            _buildLanguageSection(),
+            const Divider(),
+            _buildResetTile(),
+          ],
+        ),
       ),
     );
   }
