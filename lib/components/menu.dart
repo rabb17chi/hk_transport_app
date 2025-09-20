@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hk_transport_app/l10n/app_localizations.dart';
 import '../scripts/kmb/kmb_cache_service.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'menu/data_operations_section.dart';
 import 'menu/app_use_guide_dialog.dart';
 import 'menu/language_section.dart';
 import 'menu/theme_section.dart';
 import 'menu/developer_links_dialog.dart';
+import 'menu/system_monitor_section.dart';
 import 'settings/reset_app_tile.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -24,24 +24,23 @@ class _MenuScreenState extends State<MenuScreen> {
   bool _themeExpanded = false;
   Key _langKey = UniqueKey();
   Key _themeKey = UniqueKey();
-  bool _showSpecialRoutes = false;
 
   // Index-based expansion system
   int? _selectedIndex;
 
   // Menu item indices
   static const int _dataOperationsIndex = 0;
-  static const int _themeIndex = 1;
-  static const int _styleIndex = 2;
-  static const int _termsIndex = 3;
-  static const int _devLinksIndex = 4;
-  static const int _languageIndex = 5;
-  static const int _resetIndex = 6;
+  static const int _systemMonitorIndex = 1;
+  static const int _themeIndex = 2;
+  static const int _styleIndex = 3;
+  static const int _termsIndex = 4;
+  static const int _devLinksIndex = 5;
+  static const int _languageIndex = 6;
+  static const int _resetIndex = 7;
 
   @override
   void initState() {
     super.initState();
-    _loadShowSpecialPref();
   }
 
   Future<void> _refreshCache() async {
@@ -70,6 +69,8 @@ class _MenuScreenState extends State<MenuScreen> {
         children: [
           _buildDataOperationsSection(),
           const Divider(),
+          _buildSystemMonitorSection(),
+          const Divider(),
           _buildAppUseGuide(),
           const Divider(),
           _buildThemeSection(),
@@ -86,10 +87,6 @@ class _MenuScreenState extends State<MenuScreen> {
         ],
       ),
     );
-  }
-
-  Future<void> _setShowSpecialRoutes(bool value) async {
-    await setShowSpecialRoutes(context, value);
   }
 
   void _onItemTap(int index) {
@@ -115,15 +112,15 @@ class _MenuScreenState extends State<MenuScreen> {
     return GestureDetector(
       onTap: () => _onItemTap(_dataOperationsIndex),
       child: DataOperationsSection(
-        showSpecialRoutes: _showSpecialRoutes,
-        onToggleSpecialRoutes: (v) async {
-          setState(() {
-            _showSpecialRoutes = v;
-          });
-          await _setShowSpecialRoutes(v);
-        },
         onRefreshKMB: _refreshCache,
       ),
+    );
+  }
+
+  Widget _buildSystemMonitorSection() {
+    return GestureDetector(
+      onTap: () => _onItemTap(_systemMonitorIndex),
+      child: const SystemMonitorSection(),
     );
   }
 
@@ -162,18 +159,6 @@ class _MenuScreenState extends State<MenuScreen> {
       onTap: () => _onItemTap(_resetIndex),
       child: const ResetAppTile(),
     );
-  }
-
-  Future<void> _loadShowSpecialPref() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final value = prefs.getBool('showSpecialRoutes') ?? false;
-      if (mounted) {
-        setState(() {
-          _showSpecialRoutes = value;
-        });
-      }
-    } catch (_) {}
   }
 
   Widget _buildLanguageSection() {

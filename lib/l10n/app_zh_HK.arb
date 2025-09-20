@@ -16,6 +16,8 @@
   "dataOpsSpecialToggle": "（九巴）顯示特別班次",
   "dataOpsRefreshKMB": "手動更新九巴資料",
   "dataOpsRefreshNow": "立即更新",
+  "dataOpsLastUpdate": "最後更新：{time}",
+  "dataOpsNeverUpdated": "從未更新",
   "menuTutorial": "APP使用教程",
   "dataOpsMtrReverse": "反轉港鐵站序",
   "dataOpsMtrAutoRefresh": "自動更新港鐵班次時間",

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../scripts/utils/vibration_helper.dart';
 import '../../l10n/app_localizations.dart';
+import '../../l10n/locale_utils.dart';
 import '../../theme/app_color_scheme.dart';
 
 class AppBottomNavBar extends StatefulWidget {
@@ -49,9 +50,8 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
         ],
       ),
       child: SafeArea(
-        child: Container(
-          height: 80,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: SizedBox(
+          height: 60,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -84,19 +84,19 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
     required int index,
     required bool isSelected,
   }) {
+    final isChinese = LocaleUtils.isChinese(context);
+
     return GestureDetector(
       onTap: () async {
         await VibrationHelper.lightVibrate();
         widget.onTap(index);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: 4,
+        padding: EdgeInsets.symmetric(
+          horizontal: isChinese ? 12 : 8,
         ),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.transparent,
-          borderRadius: BorderRadius.circular(25),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -106,7 +106,7 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
               color: isSelected
                   ? Theme.of(context).primaryColor
                   : AppColorScheme.getUnselectedColor(context),
-              size: 20,
+              size: 24,
             ),
             Text(
               label,
@@ -115,7 +115,11 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
                     ? Theme.of(context).primaryColor
                     : AppColorScheme.getUnselectedColor(context),
                 fontSize: 16,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
+                fontWeight: isChinese
+                    ? isSelected
+                        ? FontWeight.w600
+                        : FontWeight.normal
+                    : FontWeight.normal,
               ),
             ),
           ],
@@ -125,6 +129,8 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
   }
 
   Widget _buildModeToggleButton() {
+    final isSelected = widget.currentIndex == 1;
+
     return GestureDetector(
       onTap: _handleModeToggleTap,
       onLongPress: _handleModeToggleLongPress,
@@ -138,22 +144,37 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 40),
               decoration: BoxDecoration(
-                color: widget.isMTRMode ? Colors.blue : Colors.orange,
+                color: widget.isMTRMode
+                    ? isSelected
+                        ? Colors.blue
+                        : Colors.blue.withOpacity(0.2)
+                    : isSelected
+                        ? Colors.orange
+                        : Colors.orange.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.3),
+                  color:
+                      isSelected ? Colors.white : Colors.white.withOpacity(0.4),
                   width: 1,
                 ),
               ),
-              child: Stack(
-                alignment: Alignment.center,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
                     widget.isMTRMode ? Icons.train : Icons.directions_bus,
                     color: Colors.white,
-                    size: 40,
+                    size: 28,
+                  ),
+                  Text(
+                    widget.isMTRMode ? 'MTR' : 'BUS',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),

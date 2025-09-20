@@ -59,29 +59,8 @@ class _MTRListScreenState extends State<MTRListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('港鐵班次查詢'),
-        backgroundColor: currentLineCode != null
-            ? _getLineColor(currentLineCode!)
-            : Colors.blue[600],
-        foregroundColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.map_rounded),
-            onPressed: () async {
-              // 觸發中等振動
-              await VibrationHelper.mediumVibrate();
-            },
-            tooltip: '模式切換',
-          )
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: _buildStationList(),
-          ),
-        ],
+      body: SafeArea(
+        child: _buildStationList(),
       ),
     );
   }

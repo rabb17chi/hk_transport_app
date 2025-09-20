@@ -10,10 +10,46 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hk_transport_app/l10n/app_localizations.dart';
 import 'scripts/locale/locale_service.dart';
 import 'scripts/theme/theme_service.dart';
+import 'scripts/utils/settings_service.dart';
+
+// Global system info storage
+class SystemInfo {
+  static double? textScaleFactor;
+  static double? devicePixelRatio;
+  static Size? screenSize;
+  static Brightness? platformBrightness;
+  static EdgeInsets? viewInsets;
+  static EdgeInsets? padding;
+  static bool hasLogged = false;
+
+  static void logSystemInfo(BuildContext context) {
+    if (hasLogged) return;
+
+    final mediaQuery = MediaQuery.of(context);
+    textScaleFactor = mediaQuery.textScaleFactor;
+    devicePixelRatio = mediaQuery.devicePixelRatio;
+    screenSize = mediaQuery.size;
+    platformBrightness = mediaQuery.platformBrightness;
+    viewInsets = mediaQuery.viewInsets;
+    padding = mediaQuery.padding;
+    hasLogged = true;
+
+    print('=== SYSTEM SCALING INFO (ONE-TIME) ===');
+    print('Text Scale Factor: $textScaleFactor');
+    print('Device Pixel Ratio: $devicePixelRatio');
+    print('Screen Size: ${screenSize?.width} x ${screenSize?.height}');
+    print('Screen Density: $devicePixelRatio');
+    print('Platform Brightness: $platformBrightness');
+    print('View Insets: $viewInsets');
+    print('Padding: $padding');
+    print('=====================================');
+  }
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ThemeService.initialize();
+  await SettingsService.load();
   runApp(const MyApp());
 }
 
@@ -31,6 +67,11 @@ class MyApp extends StatelessWidget {
               onGenerateTitle: (context) =>
                   AppLocalizations.of(context)!.appTitle,
               debugShowCheckedModeBanner: false,
+              builder: (context, child) {
+                // Log system info once when app starts
+                SystemInfo.logSystemInfo(context);
+                return child!;
+              },
               theme: ThemeService.getLightTheme(),
               darkTheme: ThemeService.getDarkTheme(),
               themeMode: themeMode,

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hk_transport_app/components/kmb/input_keyboard.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../scripts/utils/settings_service.dart';
+import '../../theme/app_color_scheme.dart';
 import 'route_banner.dart';
 import 'route_stations_screen.dart';
 
@@ -20,7 +21,6 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
   bool _isLoading = false;
   String _errorMessage = '';
   String _selectedRouteKey = ''; // Changed to store routeKey (route + bound)
-  bool _showSpecialRoutes = false; // serviceType 2/5 visibility
 
   // Text controller for keyboard communication
   final TextEditingController _searchController = TextEditingController();
@@ -29,15 +29,27 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
   @override
   void initState() {
     super.initState();
-    _loadSpecialRoutesPref();
     _loadInitialData();
     _searchController.addListener(_filterRoutes);
+    // Listen to special routes changes
+    SettingsService.showSpecialRoutesNotifier
+        .addListener(_onSpecialRoutesChanged);
   }
 
   @override
   void dispose() {
+    SettingsService.showSpecialRoutesNotifier
+        .removeListener(_onSpecialRoutesChanged);
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _onSpecialRoutesChanged() {
+    if (mounted) {
+      setState(() {
+        _filteredRoutes = _applyServiceTypeFilter(_routes);
+      });
+    }
   }
 
   Future<void> _loadInitialData() async {
@@ -64,21 +76,6 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
     }
   }
 
-  Future<void> _loadSpecialRoutesPref() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final value = prefs.getBool('showSpecialRoutes') ?? false;
-      if (mounted) {
-        setState(() {
-          _showSpecialRoutes = value;
-          _filteredRoutes = _applyServiceTypeFilter(_routes);
-        });
-      }
-    } catch (_) {
-      // ignore read failures; default remains false
-    }
-  }
-
   void _onRouteSelected(String routeKey) {
     setState(() {
       _selectedRouteKey = routeKey;
@@ -102,7 +99,7 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
   }
 
   List<KMBRoute> _applyServiceTypeFilter(List<KMBRoute> src) {
-    if (_showSpecialRoutes) {
+    if (SettingsService.showSpecialRoutesNotifier.value) {
       // show main + special
       return src;
     }
@@ -148,175 +145,180 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('KMB,LWB班次查詢'),
-        backgroundColor: Colors.blue[600],
-        foregroundColor: Colors.white,
-      ),
-      body: _isLoading && _routes.isEmpty && _stops.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : _errorMessage.isNotEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        size: 64,
-                        color: Colors.red[300],
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Error Loading Data',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      const SizedBox(height: 8),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 32),
-                        child: Text(
-                          _errorMessage,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyMedium,
+      body: SafeArea(
+        child: _isLoading && _routes.isEmpty && _stops.isEmpty
+            ? const Center(child: CircularProgressIndicator())
+            : _errorMessage.isNotEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          size: 64,
+                          color: AppColorScheme.errorIconColor,
                         ),
-                      ),
-                      const SizedBox(height: 24),
-                      ElevatedButton.icon(
-                        onPressed: _loadInitialData,
-                        icon: const Icon(Icons.refresh),
-                        label: const Text('Retry'),
-                      ),
-                    ],
-                  ),
-                )
-              : Column(
-                  children: [
-                    // Search Field - Fixed height
-                    Container(
-                      height: 400, // Fixed height to prevent overflow
-                      padding: const EdgeInsets.all(16.0),
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextField(
-                                controller: _searchController,
-                                decoration: const InputDecoration(
-                                  hintText: '請輸入路線號碼',
-                                  counterText: "",
-                                  border: OutlineInputBorder(),
-                                  prefixIcon: Icon(Icons.search),
-                                ),
-                                textCapitalization:
-                                    TextCapitalization.characters,
-                                readOnly: true, // Disable virtual keyboard
-                                maxLength: 4,
-                              ),
-                              const SizedBox(height: 8),
-                              if (_searchController.text.isNotEmpty) ...[
-                                if (_filteredRoutes.isNotEmpty) ...[
-                                  Expanded(
-                                    child: ListView.builder(
-                                      itemCount: _filteredRoutes.length,
-                                      itemBuilder: (context, index) {
-                                        final route = _filteredRoutes[index];
-                                        final routeKey =
-                                            '${route.route}_${route.bound}';
-                                        final isSelected =
-                                            _selectedRouteKey == routeKey;
-
-                                        return RouteBanner(
-                                          route: route,
-                                          isSelected: isSelected,
-                                          onTap: () {
-                                            // Navigate to route stations screen
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RouteStationsScreen(
-                                                  routeKey: routeKey,
-                                                  routeNumber: route.route,
-                                                  bound: route.bound,
-                                                  serviceType:
-                                                      route.serviceType,
-                                                  destinationTc: route.destTc,
-                                                  destinationEn: route.destEn,
-                                                ),
-                                              ),
-                                            );
-
-                                            _onRouteSelected(routeKey);
-                                          },
-                                        );
-                                      },
-                                    ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Error Loading Data',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        const SizedBox(height: 8),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 32),
+                          child: Text(
+                            _errorMessage,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        ElevatedButton.icon(
+                          onPressed: _loadInitialData,
+                          icon: const Icon(Icons.refresh),
+                          label: const Text('Retry'),
+                        ),
+                      ],
+                    ),
+                  )
+                : Column(
+                    children: [
+                      // Search Field - Fixed height
+                      Container(
+                        height: 400, // Fixed height to prevent overflow
+                        padding: const EdgeInsets.all(16.0),
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextField(
+                                  controller: _searchController,
+                                  decoration: const InputDecoration(
+                                    hintText: '請輸入路線號碼',
+                                    counterText: "",
+                                    border: OutlineInputBorder(),
+                                    prefixIcon: Icon(Icons.search),
                                   ),
-                                ] else if (_searchController
-                                    .text.isNotEmpty) ...[
+                                  textCapitalization:
+                                      TextCapitalization.characters,
+                                  readOnly: true, // Disable virtual keyboard
+                                  maxLength: 4,
+                                ),
+                                const SizedBox(height: 8),
+                                if (_searchController.text.isNotEmpty) ...[
+                                  if (_filteredRoutes.isNotEmpty) ...[
+                                    Expanded(
+                                      child: ListView.builder(
+                                        itemCount: _filteredRoutes.length,
+                                        itemBuilder: (context, index) {
+                                          final route = _filteredRoutes[index];
+                                          final routeKey =
+                                              '${route.route}_${route.bound}';
+                                          final isSelected =
+                                              _selectedRouteKey == routeKey;
+
+                                          return RouteBanner(
+                                            route: route,
+                                            isSelected: isSelected,
+                                            onTap: () {
+                                              // Navigate to route stations screen
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RouteStationsScreen(
+                                                    routeKey: routeKey,
+                                                    routeNumber: route.route,
+                                                    bound: route.bound,
+                                                    serviceType:
+                                                        route.serviceType,
+                                                    destinationTc: route.destTc,
+                                                    destinationEn: route.destEn,
+                                                  ),
+                                                ),
+                                              );
+
+                                              _onRouteSelected(routeKey);
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ] else if (_searchController
+                                      .text.isNotEmpty) ...[
+                                    const SizedBox(height: 16),
+                                    const Center(
+                                      child: Column(
+                                        children: [
+                                          Icon(Icons.search_off,
+                                              size: 48,
+                                              color: AppColorScheme
+                                                  .searchIconColor),
+                                          SizedBox(height: 8),
+                                          Text(
+                                            '沒有相應路線',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            '請重新檢查路線號碼',
+                                            style: TextStyle(
+                                                color: AppColorScheme
+                                                    .searchTextColor),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ] else ...[
                                   const SizedBox(height: 16),
                                   const Center(
                                     child: Column(
                                       children: [
-                                        Icon(Icons.search_off,
-                                            size: 48, color: Colors.grey),
+                                        Icon(Icons.search,
+                                            size: 48,
+                                            color:
+                                                AppColorScheme.searchIconColor),
                                         SizedBox(height: 8),
                                         Text(
-                                          '沒有相應路線',
+                                          '請輸入路線號碼',
                                           style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          '請重新檢查路線號碼',
-                                          style: TextStyle(color: Colors.grey),
+                                          '例如: 1A',
+                                          style: TextStyle(
+                                              color: AppColorScheme
+                                                  .exampleTextColor),
                                         ),
                                       ],
                                     ),
                                   ),
                                 ],
-                              ] else ...[
-                                const SizedBox(height: 16),
-                                const Center(
-                                  child: Column(
-                                    children: [
-                                      Icon(Icons.search,
-                                          size: 48, color: Colors.grey),
-                                      SizedBox(height: 8),
-                                      Text(
-                                        '請輸入路線號碼',
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        '例如: 1A',
-                                        style: TextStyle(color: Colors.grey),
-                                      ),
-                                    ],
-                                  ),
-                                ),
                               ],
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    // Custom Keyboard - Fixed at bottom
-                    const Spacer(),
-                    ValueListenableBuilder<TextEditingValue>(
-                      valueListenable: _searchController,
-                      builder: (context, value, child) {
-                        return InputKeyboard(
-                          onTextChanged: _onKeyboardTextChanged,
-                          availableCharacters:
-                              _getAvailableNextCharacters(value.text),
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                      // Custom Keyboard - Fixed at bottom
+                      const Spacer(),
+                      ValueListenableBuilder<TextEditingValue>(
+                        valueListenable: _searchController,
+                        builder: (context, value, child) {
+                          return InputKeyboard(
+                            onTextChanged: _onKeyboardTextChanged,
+                            availableCharacters:
+                                _getAvailableNextCharacters(value.text),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+      ),
     );
   }
 }

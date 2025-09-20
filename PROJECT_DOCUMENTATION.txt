@@ -129,6 +129,115 @@ SUCCESS CRITERIA
 - Cross-platform compatibility
 - Offline functionality where possible
 
+DATA OPERATIONS - FIRST APP INSTALLATION
+=========================================
+
+When users first install and launch the app, several data operations are automatically performed to ensure optimal functionality and user experience.
+
+1. SYSTEM INFORMATION CAPTURE
+-----------------------------
+Upon first launch, the app captures and stores critical system information:
+- Text Scale Factor (user's accessibility text scaling setting)
+- Device Pixel Ratio (screen density information)
+- Screen Dimensions (width and height in logical pixels)
+- Platform Brightness (light/dark mode preference)
+- View Insets (keyboard, status bar dimensions)
+- Safe Area Padding (notch, home indicator areas)
+
+This information is stored in the SystemInfo class and used for:
+- UI responsiveness optimization
+- Overflow detection and prevention
+- Accessibility compliance
+- Screen scaling adjustments
+
+2. SETTINGS INITIALIZATION
+--------------------------
+Default settings are applied during first installation:
+- MTR Auto-Refresh: OFF (disabled by default)
+- MTR Reverse Station Order: ON (enabled by default)
+- KMB Special Routes: OFF (disabled by default)
+- Theme Mode: System default
+- Language: System default (English/Chinese)
+
+These settings are stored in SharedPreferences and can be modified by users through the app's settings menu.
+
+3. CACHE PREPARATION
+-------------------
+Initial cache structures are created for:
+- KMB route data caching
+- MTR station information
+- User preferences storage
+- System monitoring data
+
+4. API SERVICE INITIALIZATION
+-----------------------------
+Background services are initialized for:
+- MTR schedule service
+- KMB API service
+- Cache management service
+- Settings service
+- Vibration feedback service
+
+5. LOCALIZATION SETUP
+---------------------
+The app prepares localization data for:
+- English (en)
+- Traditional Chinese - Hong Kong (zh_HK)
+- Traditional Chinese (zh)
+
+Language detection and fallback mechanisms are established.
+
+6. THEME SYSTEM INITIALIZATION
+------------------------------
+Material Design 3 theming is set up with:
+- Light theme configuration
+- Dark theme configuration
+- Custom color schemes (AppColorScheme)
+- Responsive design tokens
+
+7. SYSTEM MONITORING ACTIVATION
+-------------------------------
+A system monitoring section is created in the settings menu that displays:
+- Current scaling information
+- Screen dimensions and available space
+- Scaling status and recommendations
+- System performance metrics
+
+This helps users understand their device's scaling settings and provides recommendations for optimal UI experience.
+
+8. ERROR HANDLING PREPARATION
+-----------------------------
+Initial error handling mechanisms are established for:
+- Network connectivity issues
+- API service failures
+- Data parsing errors
+- User input validation
+
+9. PERFORMANCE OPTIMIZATION
+---------------------------
+First-run optimizations include:
+- Lazy loading of heavy components
+- Efficient memory management
+- Background task scheduling
+- Resource preloading
+
+10. USER EXPERIENCE ENHANCEMENT
+-------------------------------
+Initial UX features are activated:
+- Haptic feedback system
+- Smooth animations and transitions
+- Loading states and progress indicators
+- Accessibility features
+
+IMPORTANT NOTES
+===============
+- All first-installation operations are performed silently in the background
+- No user interaction is required during initialization
+- System information is captured only once at startup
+- Settings can be modified by users at any time
+- Cache data is automatically managed and updated
+- The app gracefully handles initialization failures
+
 FUTURE ENHANCEMENTS
 ===================
 - Additional transport modes (Tram, Ferry, etc.)

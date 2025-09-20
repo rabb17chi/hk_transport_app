@@ -60,6 +60,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dataOpsRefreshNow => 'Refresh Now';
 
   @override
+  String dataOpsLastUpdate(Object time) {
+    return 'Last updated: $time';
+  }
+
+  @override
+  String get dataOpsNeverUpdated => 'Never updated';
+
+  @override
   String get menuTutorial => 'App Tutorial';
 
   @override
@@ -123,8 +131,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mtrOtherLines => 'Other lines';
 
   @override
-  String get mtrUpdateFailed =>
-      'Unable to update timetable, please try again later';
+  String get mtrUpdateFailed => 'Unable to update timetable, please try again later';
 
   @override
   String get mtrUpdateError => 'Update failed';
@@ -163,11 +170,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mtrHours => 'hrs';
 
   @override
-  String mtrHoursMinutes(int hours, int minutes) => 'hrs $minutes mins';
+  String mtrHoursMinutes(Object hours, Object minutes) {
+    return 'hrs $minutes mins';
+  }
 
   @override
-  String get timetableUnavailable =>
-      'Unable to fetch timetable, please try again later';
+  String get timetableUnavailable => 'Unable to fetch timetable, please try again later';
 
   @override
   String get removeBookmarkSuccess => 'Bookmark removed';

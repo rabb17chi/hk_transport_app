@@ -18,7 +18,7 @@ class AppColorScheme {
 
   static const Color unSelectedColor = Color(0xFF9E9E9E);
 
-  static const Color unSelectedColorDark = Color(0xFF757575);
+  static const Color unSelectedColorDark = Color(0xFFB3B3B3);
 
   // ============================================================================
   // BUTTON & INTERACTION COLORS
@@ -131,6 +131,58 @@ class AppColorScheme {
   static const Color shadowColor = Color(0x1A000000);
 
   static const Color shadowLightColor = Color(0x0D000000);
+
+  // ============================================================================
+  // UI STATE COLORS
+  // ============================================================================
+
+  static const Color errorIconColor = Color(0xFFE53E3E);
+
+  static const Color errorBackgroundColor = Color(0xFFFEF2F2);
+
+  static const Color successIconColor = Color(0xFF38A169);
+
+  static const Color successBorderColor = Color(0xFF38A169);
+
+  static const Color selectedBorderColor = Color(0xFF38A169);
+
+  static const Color unselectedBorderColor = Color(0xFF000000);
+
+  static const Color loadingIconColor = Color(0xFF000000);
+
+  static const Color searchIconColor = Color(0xFF9CA3AF);
+
+  static const Color searchTextColor = Color(0xFF9CA3AF);
+
+  static const Color exampleTextColor = Color(0xFF9CA3AF);
+
+  static const Color snackbarErrorColor = Color(0xFFDC2626);
+
+  static const Color dialogBackgroundColor = Color(0xFFFFFFFF);
+
+  static const Color chipBackgroundColor = Color(0xFFF3F4F6);
+
+  static const Color upDirectionColor = Color(0xFF10B981);
+
+  static const Color downDirectionColor = Color(0xFFF59E0B);
+
+  static const Color cardBackgroundColor = Color(0xFFF9FAFB);
+
+  static const Color cardBorderColor = Color(0xFFE5E7EB);
+
+  static const Color textDarkColor = Color(0xFF111827);
+
+  static const Color textMediumColor = Color(0xFF374151);
+
+  static const Color shadowColorDark = Color(0x33000000);
+
+  static const Color shadowColorLight = Color(0x4D000000);
+
+  static const Color specialRouteBackgroundColor = Color(0xFF6B7280);
+
+  static const Color specialRouteBorderColor = Color(0xFF6B7280);
+
+  static const Color specialRouteShadowColor = Color(0x4D6B7280);
 
   // ============================================================================
   // UTILITY METHODS

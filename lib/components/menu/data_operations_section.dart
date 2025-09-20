@@ -1,18 +1,12 @@
 import 'package:hk_transport_app/l10n/app_localizations.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
-// removed duplicate import
 import '../../scripts/utils/settings_service.dart';
 
 class DataOperationsSection extends StatelessWidget {
-  final bool showSpecialRoutes;
-  final ValueChanged<bool> onToggleSpecialRoutes;
   final Future<void> Function() onRefreshKMB;
 
   const DataOperationsSection({
     super.key,
-    required this.showSpecialRoutes,
-    required this.onToggleSpecialRoutes,
     required this.onRefreshKMB,
   });
 
@@ -32,11 +26,14 @@ class DataOperationsSection extends StatelessWidget {
         title: Text(AppLocalizations.of(context)!.menuDataOpsTitle),
         trailing: const SizedBox.shrink(),
         children: [
-          SwitchListTile(
-            secondary: const Icon(Icons.filter_alt),
-            title: Text(AppLocalizations.of(context)!.dataOpsSpecialToggle),
-            value: showSpecialRoutes,
-            onChanged: onToggleSpecialRoutes,
+          ValueListenableBuilder<bool>(
+            valueListenable: SettingsService.showSpecialRoutesNotifier,
+            builder: (context, value, _) => SwitchListTile(
+              secondary: const Icon(Icons.filter_alt),
+              title: Text(AppLocalizations.of(context)!.dataOpsSpecialToggle),
+              value: value,
+              onChanged: (v) => SettingsService.setShowSpecialRoutes(v),
+            ),
           ),
           const SizedBox(height: 4),
           ValueListenableBuilder<bool>(
@@ -71,10 +68,4 @@ class DataOperationsSection extends StatelessWidget {
       ),
     );
   }
-}
-
-/// Persist and notify special-routes toggle
-Future<void> setShowSpecialRoutes(BuildContext context, bool value) async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setBool('showSpecialRoutes', value);
 }

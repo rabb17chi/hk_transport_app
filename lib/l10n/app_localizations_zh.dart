@@ -60,6 +60,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dataOpsRefreshNow => '立即更新';
 
   @override
+  String dataOpsLastUpdate(Object time) {
+    return '最後更新：$time';
+  }
+
+  @override
+  String get dataOpsNeverUpdated => '從未更新';
+
+  @override
   String get menuTutorial => 'APP使用教程';
 
   @override
@@ -162,7 +170,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get mtrHours => '小時';
 
   @override
-  String mtrHoursMinutes(int hours, int minutes) => '${hours}小時${minutes}分鐘';
+  String mtrHoursMinutes(Object hours, Object minutes) {
+    return '$hours小時$minutes分鐘';
+  }
 
   @override
   String get timetableUnavailable => '無法獲取時刻表，請稍後重試';
@@ -227,7 +237,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).
 class AppLocalizationsZhHk extends AppLocalizationsZh {
-  AppLocalizationsZhHk() : super('zh_HK');
+  AppLocalizationsZhHk(): super('zh_HK');
 
   @override
   String get appTitle => '香港交通應用';
@@ -279,6 +289,14 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
 
   @override
   String get dataOpsRefreshNow => '立即更新';
+
+  @override
+  String dataOpsLastUpdate(Object time) {
+    return '最後更新：$time';
+  }
+
+  @override
+  String get dataOpsNeverUpdated => '從未更新';
 
   @override
   String get menuTutorial => 'APP使用教程';
@@ -383,7 +401,9 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
   String get mtrHours => '小時';
 
   @override
-  String mtrHoursMinutes(int hours, int minutes) => '${hours}小時${minutes}分鐘';
+  String mtrHoursMinutes(Object hours, Object minutes) {
+    return '$hours小時$minutes分鐘';
+  }
 
   @override
   String get timetableUnavailable => '無法獲取時刻表，請稍後重試';

@@ -8,6 +8,7 @@ import '../../scripts/mtr/mtr_schedule_service.dart';
 import '../../scripts/mtr/mtr_data.dart';
 import '../../scripts/utils/vibration_helper.dart';
 import '../../scripts/utils/settings_service.dart';
+import '../../theme/app_color_scheme.dart';
 import '../../l10n/locale_utils.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -78,7 +79,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
             SnackBar(
               content: Text(AppLocalizations.of(context)!.mtrUpdateFailed),
               duration: const Duration(seconds: 2),
-              backgroundColor: Colors.red,
+              backgroundColor: AppColorScheme.snackbarErrorColor,
             ),
           );
         }
@@ -91,7 +92,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
             content:
                 Text('${AppLocalizations.of(context)!.mtrUpdateError}: $e'),
             duration: const Duration(seconds: 2),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColorScheme.snackbarErrorColor,
           ),
         );
       }
@@ -159,7 +160,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
         borderRadius: BorderRadius.circular(28),
       ),
       elevation: 8,
-      backgroundColor: Colors.white,
+      backgroundColor: AppColorScheme.dialogBackgroundColor,
       title: Row(
         children: [
           Container(
@@ -191,7 +192,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: AppColorScheme.chipBackgroundColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -241,7 +242,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                             _buildDirectionSection(
                                 AppLocalizations.of(context)!.mtrUpDirection,
                                 upTrains,
-                                Colors.green,
+                                AppColorScheme.upDirectionColor,
                                 widget.lineCode),
                           ],
                           if (upTrains.isNotEmpty && downTrains.isNotEmpty)
@@ -250,7 +251,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                             _buildDirectionSection(
                                 AppLocalizations.of(context)!.mtrDownDirection,
                                 downTrains,
-                                Colors.orange,
+                                AppColorScheme.downDirectionColor,
                                 widget.lineCode),
                           ],
                           if (upTrains.isEmpty && downTrains.isEmpty)
@@ -288,7 +289,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                         '其他線路',
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.grey[700],
+                          color: AppColorScheme.textMediumColor,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -443,7 +444,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
       widgets.add(_buildDirectionSection(
           AppLocalizations.of(context)!.mtrUpDirection,
           up,
-          Colors.green,
+          AppColorScheme.upDirectionColor,
           sectionLineCode));
       widgets.add(const SizedBox(height: 12));
     }
@@ -451,7 +452,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
       widgets.add(_buildDirectionSection(
           AppLocalizations.of(context)!.mtrDownDirection,
           down,
-          Colors.orange,
+          AppColorScheme.downDirectionColor,
           sectionLineCode));
     }
     if (up.isEmpty && down.isEmpty) {
@@ -466,7 +467,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: AppColorScheme.cardBackgroundColor,
         borderRadius: BorderRadius.circular(8),
       ),
       child: const Center(
@@ -474,7 +475,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
           '暫無列車信息',
           style: TextStyle(
             fontSize: 16,
-            color: Colors.grey,
+            color: AppColorScheme.textMutedColor,
           ),
         ),
       ),
@@ -558,9 +559,9 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: AppColorScheme.cardBackgroundColor,
         border: Border.all(
-          color: Colors.grey[300]!,
+          color: AppColorScheme.cardBorderColor,
           width: isArrivingSoon ? 2 : 1,
         ),
         borderRadius: BorderRadius.circular(8),
@@ -575,7 +576,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.grey[900],
+                color: AppColorScheme.textDarkColor,
               ),
             ),
           ),

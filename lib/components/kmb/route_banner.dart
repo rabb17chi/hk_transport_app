@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
+import '../../theme/app_color_scheme.dart';
 
 /// Route Banner Component
 ///
@@ -33,12 +34,13 @@ class RouteBanner extends StatelessWidget {
         decoration: BoxDecoration(
           color: route.serviceType == '1'
               ? const Color(0xFF323232)
-              : Colors.grey[700],
+              : AppColorScheme.specialRouteBackgroundColor,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey[600]!, width: 3),
+          border: Border.all(
+              color: AppColorScheme.specialRouteBorderColor, width: 3),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
+              color: AppColorScheme.shadowColorDark,
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
@@ -94,8 +96,8 @@ class RouteBanner extends StatelessWidget {
                   boxShadow: [
                     BoxShadow(
                       color: route.serviceType == '1'
-                          ? Colors.black.withValues(alpha: 0.3)
-                          : Colors.grey.withValues(alpha: 0.3),
+                          ? AppColorScheme.shadowColorDark
+                          : AppColorScheme.specialRouteShadowColor,
                       blurRadius: 2,
                       offset: const Offset(0, 1),
                     ),

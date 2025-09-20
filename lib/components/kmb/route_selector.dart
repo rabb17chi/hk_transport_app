@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
+import '../../theme/app_color_scheme.dart';
 import 'route_stations_screen.dart';
 import 'route_banner.dart';
 
@@ -139,7 +140,8 @@ class _RouteSelectorState extends State<RouteSelector> {
                 const Center(
                   child: Column(
                     children: [
-                      Icon(Icons.search_off, size: 48, color: Colors.grey),
+                      Icon(Icons.search_off,
+                          size: 48, color: AppColorScheme.searchIconColor),
                       SizedBox(height: 8),
                       Text(
                         '沒有相應路線',
@@ -148,7 +150,7 @@ class _RouteSelectorState extends State<RouteSelector> {
                       ),
                       Text(
                         '請重新檢查路線號碼',
-                        style: TextStyle(color: Colors.grey),
+                        style: TextStyle(color: AppColorScheme.searchTextColor),
                       ),
                     ],
                   ),
@@ -159,7 +161,8 @@ class _RouteSelectorState extends State<RouteSelector> {
               const Center(
                 child: Column(
                   children: [
-                    Icon(Icons.search, size: 48, color: Colors.grey),
+                    Icon(Icons.search,
+                        size: 48, color: AppColorScheme.searchIconColor),
                     SizedBox(height: 8),
                     Text(
                       '請輸入路線號碼',
@@ -168,7 +171,7 @@ class _RouteSelectorState extends State<RouteSelector> {
                     ),
                     Text(
                       '例如: 1A',
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyle(color: AppColorScheme.exampleTextColor),
                     ),
                   ],
                 ),

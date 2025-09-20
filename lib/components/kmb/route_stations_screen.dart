@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
 import '../../scripts/bookmarks/bookmarks_service.dart';
 import '../../scripts/utils/vibration_helper.dart';
+import '../../theme/app_color_scheme.dart';
 
 /// Route Stations Screen
 ///
@@ -184,7 +185,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                       const Icon(
                         Icons.error_outline,
                         size: 64,
-                        color: Colors.red,
+                        color: AppColorScheme.errorIconColor,
                       ),
                       const SizedBox(height: 16),
                       Text(
@@ -275,14 +276,16 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                         padding: const EdgeInsets.all(16),
                                         decoration: BoxDecoration(
                                           color: bookmarked
-                                              ? Colors.pink.withOpacity(0.15)
+                                              ? AppColorScheme.bookmarkedColor
+                                                  .withOpacity(0.15)
                                               : Colors
                                                   .white, // White background
                                           borderRadius:
                                               BorderRadius.circular(8),
                                           border: Border.all(
                                             color: isSelected
-                                                ? Colors.green
+                                                ? AppColorScheme
+                                                    .selectedBorderColor
                                                 : Colors
                                                     .black, // Green when selected, black otherwise
                                             width: isSelected
@@ -334,8 +337,8 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                     stop.stopNameEn,
                                                     style: TextStyle(
                                                       fontSize: 14,
-                                                      color: Colors.grey[
-                                                          700], // Darker grey for better contrast
+                                                      color: AppColorScheme
+                                                          .textMediumColor,
                                                     ),
                                                   ),
                                                 ],
@@ -358,7 +361,8 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12),
                                       border: Border.all(
-                                        color: Colors.green,
+                                        color:
+                                            AppColorScheme.successBorderColor,
                                         width: 3,
                                       ),
                                     ),
@@ -452,7 +456,8 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                       // color: const Color(0xFF1E1E1E),
                                       borderRadius: BorderRadius.circular(12),
                                       border: Border.all(
-                                        color: Colors.black,
+                                        color: AppColorScheme
+                                            .unselectedBorderColor,
                                         width: 2,
                                       ),
                                     ),
@@ -461,7 +466,8 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                           MainAxisAlignment.center,
                                       children: [
                                         CircularProgressIndicator(
-                                          color: Colors.black,
+                                          color:
+                                              AppColorScheme.loadingIconColor,
                                           strokeWidth: 2,
                                         ),
                                         SizedBox(width: 16),

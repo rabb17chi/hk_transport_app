@@ -16,6 +16,8 @@
   "dataOpsSpecialToggle": "Show special KMB routes",
   "dataOpsRefreshKMB": "Refresh KMB Data",
   "dataOpsRefreshNow": "Refresh Now",
+  "dataOpsLastUpdate": "Last updated: {time}",
+  "dataOpsNeverUpdated": "Never updated",
   "menuTutorial": "App Tutorial",
   "dataOpsMtrReverse": "Reverse MTR stations order",
   "dataOpsMtrAutoRefresh": "Auto Refresh Trains Data",
