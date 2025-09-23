@@ -42,7 +42,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuTermsSubtitle => 'View terms and privacy policy (coming soon)';
 
   @override
-  String get menuDevLinks => 'Developer Links';
+  String get menuDevLinks => 'Project\'s GitHub Repo';
 
   @override
   String get menuDevLinksSubtitle => 'GitHub Project Page';
@@ -77,10 +77,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dataOpsMtrAutoRefresh => 'Auto Refresh Trains Data';
 
   @override
-  String get navBookmarks => 'Bookmarks';
+  String get navBookmarks => 'Bookmark';
 
   @override
-  String get navSettings => 'Settings';
+  String get navSettings => 'Setting';
 
   @override
   String get tabBus => 'Bus';
@@ -89,16 +89,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabMTR => 'MTR';
 
   @override
-  String get kmbEmptyTitle => 'No bookmarked routes yet';
+  String get emptyTitle => 'No bookmarked routes yet';
 
   @override
-  String get kmbEmptyInstructionPrefix => 'In the bus route page';
+  String get emptyInstructionAction => 'Long press the stopname';
 
   @override
-  String get kmbEmptyInstructionAction => 'Long press the stopname';
-
-  @override
-  String get kmbEmptyInstructionSuffix => 'to add to bookmarks';
+  String get emptyInstructionSuffix => 'to add to bookmarks';
 
   @override
   String get toWord => 'To';
@@ -190,10 +187,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get etaSeqSuffix => '';
 
   @override
-  String get devLinksDialogTitle => 'Developer Links';
+  String get devLinksDialogTitle => 'Project\'s GitHub Link';
 
   @override
-  String get devLinksDialogContent => 'Routing to GitHub';
+  String get devLinksDialogContent => 'Route to GitHub. Star it if you like it!';
 
   @override
   String get back => 'Back';

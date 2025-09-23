@@ -165,7 +165,7 @@ abstract class AppLocalizations {
   /// No description provided for @menuDevLinks.
   ///
   /// In en, this message translates to:
-  /// **'Developer Links'**
+  /// **'Project\'s GitHub Repo'**
   String get menuDevLinks;
 
   /// No description provided for @menuDevLinksSubtitle.
@@ -231,13 +231,13 @@ abstract class AppLocalizations {
   /// No description provided for @navBookmarks.
   ///
   /// In en, this message translates to:
-  /// **'Bookmarks'**
+  /// **'Bookmark'**
   String get navBookmarks;
 
   /// No description provided for @navSettings.
   ///
   /// In en, this message translates to:
-  /// **'Settings'**
+  /// **'Setting'**
   String get navSettings;
 
   /// No description provided for @tabBus.
@@ -252,29 +252,23 @@ abstract class AppLocalizations {
   /// **'MTR'**
   String get tabMTR;
 
-  /// No description provided for @kmbEmptyTitle.
+  /// No description provided for @emptyTitle.
   ///
   /// In en, this message translates to:
   /// **'No bookmarked routes yet'**
-  String get kmbEmptyTitle;
+  String get emptyTitle;
 
-  /// No description provided for @kmbEmptyInstructionPrefix.
-  ///
-  /// In en, this message translates to:
-  /// **'In the bus route page'**
-  String get kmbEmptyInstructionPrefix;
-
-  /// No description provided for @kmbEmptyInstructionAction.
+  /// No description provided for @emptyInstructionAction.
   ///
   /// In en, this message translates to:
   /// **'Long press the stopname'**
-  String get kmbEmptyInstructionAction;
+  String get emptyInstructionAction;
 
-  /// No description provided for @kmbEmptyInstructionSuffix.
+  /// No description provided for @emptyInstructionSuffix.
   ///
   /// In en, this message translates to:
   /// **'to add to bookmarks'**
-  String get kmbEmptyInstructionSuffix;
+  String get emptyInstructionSuffix;
 
   /// No description provided for @toWord.
   ///
@@ -453,13 +447,13 @@ abstract class AppLocalizations {
   /// No description provided for @devLinksDialogTitle.
   ///
   /// In en, this message translates to:
-  /// **'Developer Links'**
+  /// **'Project\'s GitHub Link'**
   String get devLinksDialogTitle;
 
   /// No description provided for @devLinksDialogContent.
   ///
   /// In en, this message translates to:
-  /// **'Routing to GitHub'**
+  /// **'Route to GitHub. Star it if you like it!'**
   String get devLinksDialogContent;
 
   /// No description provided for @back.

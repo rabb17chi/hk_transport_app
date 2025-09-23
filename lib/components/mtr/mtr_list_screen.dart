@@ -119,9 +119,10 @@ class _MTRListScreenState extends State<MTRListScreen> {
           side: BorderSide.none,
         ),
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 20,
+              width: 40,
               height: 20,
               decoration: BoxDecoration(
                 color: lineColor,
@@ -304,6 +305,12 @@ class _MTRListScreenState extends State<MTRListScreen> {
 
   void _selectStation(
       String stationName, String stationId, String lineCode) async {
+    if (_isLoadingSchedule) {
+      return; // Prevent multi-click while loading
+    }
+    setState(() {
+      _isLoadingSchedule = true;
+    });
     // 如果沒有選擇的線路，使用傳入的線路代碼
     var selectedLineCode = currentLineCode ?? lineCode;
 
@@ -318,41 +325,54 @@ class _MTRListScreenState extends State<MTRListScreen> {
     final stationData = MTRData.getStationData(stationId);
 
     // 打印車站詳細信息
-    if (stationData != null) {
-      // 調用MTR API獲取時刻表
-      final response = await MTRScheduleService.getSchedule(
-        lineCode: selectedLineCode,
-        stationId: stationId,
-      );
-
-      if (response != null) {
-        // 顯示時刻表對話框
-        showDialog(
-          context: context,
-          builder: (context) => MTRScheduleDialog(
-            initialResponse: response,
-            stationName: stationName,
-            lineCode: selectedLineCode,
-            stationId: stationId,
-          ),
+    try {
+      if (stationData != null) {
+        // 調用MTR API獲取時刻表
+        final response = await MTRScheduleService.getSchedule(
+          lineCode: selectedLineCode,
+          stationId: stationId,
         );
+
+        if (!mounted) return;
+
+        if (response != null) {
+          // 顯示時刻表對話框
+          showDialog(
+            context: context,
+            builder: (context) => MTRScheduleDialog(
+              initialResponse: response,
+              stationName: stationName,
+              lineCode: selectedLineCode,
+              stationId: stationId,
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('無法獲取時刻表，請稍後重試'),
+              duration: Duration(seconds: 3),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       } else {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('無法獲取時刻表，請稍後重試'),
-            duration: Duration(seconds: 3),
-            backgroundColor: Colors.red,
+            content: Text('找不到車站資料'),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.orange,
           ),
         );
       }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('找不到車站資料'),
-          duration: Duration(seconds: 2),
-          backgroundColor: Colors.orange,
-        ),
-      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingSchedule = false;
+        });
+      } else {
+        _isLoadingSchedule = false;
+      }
     }
 
     setState(() {

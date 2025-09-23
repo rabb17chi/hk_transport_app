@@ -6,6 +6,7 @@ import '../../l10n/locale_utils.dart';
 import '../../l10n/app_localizations.dart';
 import '../../theme/app_color_scheme.dart';
 import '../mtr/mtr_schedule_dialog.dart';
+import 'bookmarks_empty_state.dart';
 
 /// MTR Bookmarks Widget
 ///
@@ -25,43 +26,14 @@ class MTRBookmarksWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
+    // no-op
 
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
     if (mtrBookmarks.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.bookmark_border,
-              size: 64,
-              color: AppColorScheme.textMutedColor,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              loc.mtrEmptyTitle,
-              style: const TextStyle(
-                fontSize: 18,
-                color: AppColorScheme.textMutedColor,
-              ),
-            ),
-            Text(loc.longPress,
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20)),
-            Text(
-              loc.mtrEmptySubtitle,
-              style: const TextStyle(
-                color: AppColorScheme.textMutedColor,
-              ),
-            ),
-          ],
-        ),
-      );
+      return const BookmarksEmptyState();
     }
 
     return ListView.builder(

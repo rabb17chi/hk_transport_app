@@ -4,6 +4,7 @@ import '../../scripts/kmb/kmb_api_service.dart';
 import '../../l10n/locale_utils.dart';
 import '../../l10n/app_localizations.dart';
 import '../../theme/app_color_scheme.dart';
+import 'bookmarks_empty_state.dart';
 
 /// KMB Bookmarks Widget
 ///
@@ -23,66 +24,14 @@ class KMBBookmarksWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    final isChinese = LocaleUtils.isChinese(context);
+    // no-op
 
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
     if (kmbBookmarks.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.bookmark_border,
-              size: 64,
-              color: AppColorScheme.textMutedColor,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              loc.kmbEmptyTitle,
-              style: const TextStyle(
-                fontSize: 18,
-                color: AppColorScheme.textMutedColor,
-              ),
-            ),
-            const SizedBox(height: 8),
-            isChinese
-                // 中文 Chinese
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(loc.kmbEmptyInstructionAction,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20)),
-                      const SizedBox(width: 2),
-                      Text(loc.kmbEmptyInstructionSuffix,
-                          style: const TextStyle(
-                              color: AppColorScheme.textMutedColor)),
-                    ],
-                  )
-                // 英文 English
-                : Column(
-                    children: [
-                      Text(loc.kmbEmptyInstructionPrefix,
-                          style: const TextStyle(
-                              color: AppColorScheme.textMutedColor)),
-                      Text(loc.kmbEmptyInstructionAction,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20)),
-                      Text(loc.kmbEmptyInstructionSuffix,
-                          style: const TextStyle(
-                              color: AppColorScheme.textMutedColor)),
-                    ],
-                  )
-          ],
-        ),
-      );
+      return const BookmarksEmptyState();
     }
 
     return ListView.builder(

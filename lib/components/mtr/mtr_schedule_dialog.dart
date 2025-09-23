@@ -164,11 +164,24 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
       title: Row(
         children: [
           Container(
-            width: 20,
-            height: 20,
+            width: 68,
+            height: 28,
             decoration: BoxDecoration(
               color: _getLineColor(widget.lineCode),
               borderRadius: BorderRadius.circular(4),
+            ),
+            child: Center(
+              child: Text(
+                LocaleUtils.isChinese(context)
+                    ? (MTRData.getLineData(widget.lineCode)?['fullNameTc'] ??
+                        widget.lineCode)
+                    : widget.lineCode,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
           const SizedBox(width: 12),
@@ -285,7 +298,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                       const SizedBox(height: 12),
                       const Divider(height: 1),
                       const SizedBox(height: 4),
-                      Text(
+                      const Text(
                         '其他線路',
                         style: TextStyle(
                           fontSize: 12,
@@ -307,7 +320,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                               backgroundColor: _getLineColor(code),
                               side: BorderSide(color: _getLineColor(code)),
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 6),
+                                  horizontal: 4, vertical: 4),
                             ),
                             child: isAdding
                                 ? const SizedBox(
@@ -320,10 +333,14 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                                     ),
                                   )
                                 : Text(
-                                    code,
+                                    LocaleUtils.isChinese(context)
+                                        ? (MTRData.getLineData(
+                                                code)?['fullNameTc'] ??
+                                            code)
+                                        : code,
                                     style: const TextStyle(
                                       fontSize: 12,
-                                      fontWeight: FontWeight.w700,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                           );

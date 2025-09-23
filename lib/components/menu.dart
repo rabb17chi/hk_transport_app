@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hk_transport_app/l10n/app_localizations.dart';
 import '../scripts/kmb/kmb_cache_service.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
@@ -40,6 +41,8 @@ class _MenuScreenState extends State<MenuScreen> {
   static const int _languageIndex = 7;
   static const int _resetIndex = 8;
 
+  bool get _isDev => !kReleaseMode;
+
   @override
   void initState() {
     super.initState();
@@ -67,25 +70,34 @@ class _MenuScreenState extends State<MenuScreen> {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           children: [
-            _buildDataOperationsSection(),
+            Container(child: _buildDataOperationsSection()),
             const Divider(),
-            _buildSystemMonitorSection(),
+            if (_isDev) Container(child: _buildSystemMonitorSection()),
+            if (_isDev) const Divider(),
+            Container(color: Colors.grey[300], child: _buildWidgetSection()),
             const Divider(),
-            _buildWidgetSection(),
+            Container(
+              color: Colors.grey[300],
+              child: _buildAppUseGuide(),
+            ),
             const Divider(),
-            _buildAppUseGuide(),
+            Container(child: _buildThemeSection()),
             const Divider(),
-            _buildThemeSection(),
+            Container(
+              color: Colors.grey[300],
+              child: _buildStyleTile(),
+            ),
             const Divider(),
-            _buildStyleTile(),
+            Container(child: _buildDevLinksTile()),
             const Divider(),
-            _buildDevLinksTile(),
+            Container(
+              color: Colors.grey[300],
+              child: _buildTermsTile(),
+            ),
             const Divider(),
-            _buildTermsTile(),
+            Container(child: _buildLanguageSection()),
             const Divider(),
-            _buildLanguageSection(),
-            const Divider(),
-            _buildResetTile(),
+            Container(child: _buildResetTile()),
           ],
         ),
       ),

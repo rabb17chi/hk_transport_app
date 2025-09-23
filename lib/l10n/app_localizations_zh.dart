@@ -89,16 +89,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tabMTR => '港鐵';
 
   @override
-  String get kmbEmptyTitle => '暫未有收藏的路線';
+  String get emptyTitle => '暫未有收藏的路線';
 
   @override
-  String get kmbEmptyInstructionPrefix => '在巴士路線頁面';
+  String get emptyInstructionAction => '長按站名';
 
   @override
-  String get kmbEmptyInstructionAction => '長按站名';
-
-  @override
-  String get kmbEmptyInstructionSuffix => '以加入收藏';
+  String get emptyInstructionSuffix => '以加入收藏';
 
   @override
   String get toWord => '往';
@@ -351,18 +348,6 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
 
   @override
   String get tabMTR => '港鐵';
-
-  @override
-  String get kmbEmptyTitle => '暫未有收藏的路線';
-
-  @override
-  String get kmbEmptyInstructionPrefix => '在巴士路線頁面';
-
-  @override
-  String get kmbEmptyInstructionAction => '長按站名';
-
-  @override
-  String get kmbEmptyInstructionSuffix => '以加入收藏';
 
   @override
   String get toWord => '往';
