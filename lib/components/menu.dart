@@ -68,20 +68,20 @@ class _MenuScreenState extends State<MenuScreen> {
     return Scaffold(
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           children: [
+            Container(child: _buildThemeSection()),
+            const Divider(),
+            Container(child: _buildLanguageSection()),
+            const Divider(),
             Container(child: _buildDataOperationsSection()),
             const Divider(),
-            if (_isDev) Container(child: _buildSystemMonitorSection()),
-            if (_isDev) const Divider(),
             Container(color: Colors.grey[300], child: _buildWidgetSection()),
             const Divider(),
             Container(
               color: Colors.grey[300],
               child: _buildAppUseGuide(),
             ),
-            const Divider(),
-            Container(child: _buildThemeSection()),
             const Divider(),
             Container(
               color: Colors.grey[300],
@@ -95,9 +95,8 @@ class _MenuScreenState extends State<MenuScreen> {
               child: _buildTermsTile(),
             ),
             const Divider(),
-            Container(child: _buildLanguageSection()),
-            const Divider(),
             Container(child: _buildResetTile()),
+            if (_isDev) Container(child: _buildSystemMonitorSection()),
           ],
         ),
       ),
