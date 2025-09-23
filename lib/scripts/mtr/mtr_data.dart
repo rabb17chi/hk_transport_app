@@ -13,7 +13,6 @@ class MTRData {
       'fullNameEn': 'Island Line',
       'shortName': 'ISL',
       'color': '#0066CC',
-      'defaultDest': [], // 空數組
       'upDefaultDest': ['KET'], // 堅尼地城 (上行終點)
       'downDefaultDest': ['CHW'], // 柴灣 (下行終點)
     },
@@ -22,8 +21,7 @@ class MTRData {
       'fullNameEn': 'Tsuen Wan Line',
       'shortName': 'TWL',
       'color': '#E2231A',
-      'defaultDest': [], // 空數組
-      'upDefaultDest': ['TWH'], // 荃灣 (上行終點)
+      'upDefaultDest': ['TSW'], // 荃灣 (上行終點)
       'downDefaultDest': ['CEN'], // 中環 (下行終點)
     },
     'KTL': {
@@ -31,7 +29,6 @@ class MTRData {
       'fullNameEn': 'Kwun Tong Line',
       'shortName': 'KTL',
       'color': '#00B04F',
-      'defaultDest': [], // 空數組
       'upDefaultDest': ['TIK'], // 調景嶺 (上行終點)
       'downDefaultDest': ['WHA'], // 黃埔 (下行終點)
     },
@@ -40,7 +37,6 @@ class MTRData {
       'fullNameEn': 'Tseung Kwan O Line',
       'shortName': 'TKL',
       'color': '#6B208B',
-      'defaultDest': [], // 空數組
       'upDefaultDest': ['POA'], // 寶琳 (上行終點)
       'downDefaultDest': ['NOP'], // 北角 (下行終點)
     },
@@ -49,7 +45,6 @@ class MTRData {
       'fullNameEn': 'Tung Chung Line',
       'shortName': 'TCL',
       'color': '#FE7F1D',
-      'defaultDest': [], // 空數組
       'upDefaultDest': ['TUC'], // 東涌 (上行終點)
       'downDefaultDest': ['HOK'], // 香港 (下行終點)
     },
@@ -58,7 +53,6 @@ class MTRData {
       'fullNameEn': 'East Rail Line',
       'shortName': 'EAL',
       'color': '#53B7E8',
-      'defaultDest': [], // 空數組
       'upDefaultDest': ['LOW'], // 羅湖 (上行終點)
       'downDefaultDest': ['ADM'], // 金鐘 (下行終點)
     },
@@ -67,7 +61,6 @@ class MTRData {
       'fullNameEn': 'Tuen Ma Line',
       'shortName': 'TML',
       'color': '#9A3B26',
-      'defaultDest': [], // 空數組
       'upDefaultDest': ['TUM'], // 屯門 (上行終點)
       'downDefaultDest': ['WKS'], // 烏溪沙 (下行終點)
     },
@@ -76,7 +69,6 @@ class MTRData {
       'fullNameEn': 'South Island Line',
       'shortName': 'SIL',
       'color': '#B5BD00',
-      'defaultDest': [], // 空數組
       'upDefaultDest': ['SOH'], // 海怡半島 (上行終點)
       'downDefaultDest': ['ADM'], // 金鐘 (下行終點)
     },

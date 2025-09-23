@@ -12,13 +12,19 @@ class _AppUseGuideDialogState extends State<AppUseGuideDialog> {
   late PageController _pageController;
   int _currentIndex = 0;
 
-  // Mock data for demonstration - in real app, these would be actual image paths
+  // Guide images from assets
   final List<String> _guideImages = [
-    'guide_1.png',
-    'guide_2.png',
-    'guide_3.png',
-    'guide_4.png',
-    'guide_5.png',
+    'bookmark_item_kmb.jpg',
+    'bookmark_item_mtr.jpg',
+    'kmb_input_default.jpg',
+    'kmb_keyboard_input_result.jpg',
+    'kmb_data_withBookmarks_and_apiData.jpg',
+    'mtr_list_default.jpg',
+    'mtr_list_display_withBookmarks.jpg',
+    'mtr_apiDialog_timeData.jpg',
+    'mtr_apiDialog_multi_line_button.jpg',
+    'mtr_apiDialog_multi_line.jpg',
+    'menu_01.jpg'
   ];
 
   @override
@@ -102,31 +108,26 @@ class _AppUseGuideDialogState extends State<AppUseGuideDialog> {
                         width: 1,
                       ),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.image_not_supported,
-                          size: 64,
-                          color: Colors.grey[400],
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          loc.imageLoading,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          imagePath,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[500],
-                          ),
-                        ),
-                      ],
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        'lib/assets/app_guide/$imagePath',
+                        fit: BoxFit.contain,
+                        // errorBuilder: (context, error, stackTrace) {
+                        //   return Center(
+                        //     child: Column(
+                        //       mainAxisAlignment: MainAxisAlignment.center,
+                        //       children: [
+                        //         Icon(
+                        //           Icons.broken_image_outlined,
+                        //           size: 64,
+                        //           color: Colors.grey[400],
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   );
+                        // },
+                      ),
                     ),
                   );
                 },

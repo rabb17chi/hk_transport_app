@@ -1,3 +1,6 @@
+# Ignore Photoshop source files in assets
+lib/assets/app_guide/*.psd
+lib/assets/app_guide/photoShop_data/
 # Miscellaneous
 *.class
 *.log
