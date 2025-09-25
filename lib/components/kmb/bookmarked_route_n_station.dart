@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
+import '../ui/eta_dialog.dart';
 import '../../scripts/bookmarks/bookmarks_service.dart';
 
 /// BookmarkedRouteWithStation Widget
@@ -90,38 +91,15 @@ class _BookmarkedRouteWithStationState
                     final eta = await KMBApiService.getETA(
                         b.stopId, b.route, b.serviceType);
                     if (!mounted) return;
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text('${b.route} - ${b.stopNameTc}'),
-                          content: SizedBox(
-                            width: 200,
-                            child: ListView(
-                              shrinkWrap: true,
-                              children: eta.take(5).map((e) {
-                                return Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 6),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text('第 ${e.etaSeq} 班'),
-                                      Text(
-                                        e.arrivalTimeString,
-                                        style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        );
-                      },
+                    await EtaDialog.showWithPairs(
+                      context,
+                      title: '${b.route} - ${b.stopNameTc}',
+                      emptyText: '',
+                      rows: eta
+                          .take(5)
+                          .map((e) =>
+                              MapEntry('第 ${e.etaSeq} 班', e.arrivalTimeString))
+                          .toList(),
                     );
                   },
                 );

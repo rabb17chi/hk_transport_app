@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import '../../scripts/bookmarks/bookmarks_service.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
 import '../../scripts/ctb/ctb_route_stops_service.dart';
+import '../ui/eta_dialog.dart';
 import '../../l10n/locale_utils.dart';
 import '../../l10n/app_localizations.dart';
 import '../../theme/app_color_scheme.dart';
+import '../../scripts/utils/text_utils.dart';
 import 'bookmarks_empty_state.dart';
 
 /// KMB Bookmarks Widget
@@ -25,10 +27,7 @@ class KMBBookmarksWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    String cleanStopName(String name) {
-      final regex = RegExp(r"\s*\([A-Za-z]{2}\d{3}\)");
-      return name.replaceAll(regex, "");
-    }
+    String cleanStopName(String name) => TextUtils.cleanupStopDisplayName(name);
     // no-op
 
     if (isLoading) {
@@ -115,102 +114,35 @@ class KMBBookmarksWidget extends StatelessWidget {
                     }
                     print('==========================');
                   } catch (_) {}
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text(
-                            '${bookmark.route} ${loc.toWord} ${isZh ? bookmark.destTc : bookmark.destEn} - ${isZh ? (bookmark.stopNameTc.isEmpty ? bookmark.stopId : bookmark.stopNameTc) : (bookmark.stopNameEn.isEmpty ? bookmark.stopId : bookmark.stopNameEn)}'),
-                        content: SizedBox(
-                          width: 260,
-                          child: filtered.isEmpty
-                              ? Text(loc.etaEmpty)
-                              : ListView(
-                                  shrinkWrap: true,
-                                  children: filtered.take(6).map((e) {
-                                    final label = isZh
-                                        ? e.arrivalTimeStringZh
-                                        : e.arrivalTimeStringEn;
-                                    int seq = e.etaSeq;
-                                    if (seq > 3) seq -= 3;
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 6),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                              '${loc.etaSeqPrefix}$seq${loc.etaSeqSuffix}'),
-                                          Text(
-                                            label,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: Text(loc.close),
-                          ),
-                        ],
-                      );
-                    },
+                  await EtaDialog.showWithPairs(
+                    context,
+                    title:
+                        '${bookmark.route} ${loc.toWord} ${isZh ? bookmark.destTc : bookmark.destEn} - ${isZh ? (bookmark.stopNameTc.isEmpty ? bookmark.stopId : bookmark.stopNameTc) : (bookmark.stopNameEn.isEmpty ? bookmark.stopId : bookmark.stopNameEn)}',
+                    emptyText: loc.etaEmpty,
+                    rows: filtered.take(6).map((e) {
+                      final label =
+                          isZh ? e.arrivalTimeStringZh : e.arrivalTimeStringEn;
+                      int seq = e.etaSeq;
+                      if (seq > 3) seq -= 3;
+                      return MapEntry(
+                          '${loc.etaSeqPrefix}$seq${loc.etaSeqSuffix}', label);
+                    }).toList(),
                   );
                 } else {
                   final eta = await KMBApiService.getETA(
                       bookmark.stopId, bookmark.route, bookmark.serviceType);
                   if (!context.mounted) return;
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text(
-                            '${bookmark.route} ${loc.toWord} ${LocaleUtils.isChinese(context) ? bookmark.destTc : bookmark.destEn} - ${LocaleUtils.isChinese(context) ? bookmark.stopNameTc : bookmark.stopNameEn}'),
-                        content: SizedBox(
-                          width: 260,
-                          child: eta.isEmpty
-                              ? Text(loc.etaEmpty)
-                              : ListView(
-                                  shrinkWrap: true,
-                                  children: eta.take(6).map((e) {
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 6),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                              '${loc.etaSeqPrefix}${e.etaSeq}${loc.etaSeqSuffix}'),
-                                          Text(
-                                            e.arrivalTimeString,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: Text(loc.close),
-                          ),
-                        ],
-                      );
-                    },
+                  await EtaDialog.showWithPairs(
+                    context,
+                    title:
+                        '${bookmark.route} ${loc.toWord} ${LocaleUtils.isChinese(context) ? bookmark.destTc : bookmark.destEn} - ${LocaleUtils.isChinese(context) ? bookmark.stopNameTc : bookmark.stopNameEn}',
+                    emptyText: loc.etaEmpty,
+                    rows: eta
+                        .take(6)
+                        .map((e) => MapEntry(
+                            '${loc.etaSeqPrefix}${e.etaSeq}${loc.etaSeqSuffix}',
+                            e.arrivalTimeString))
+                        .toList(),
                   );
                 }
               } catch (e) {

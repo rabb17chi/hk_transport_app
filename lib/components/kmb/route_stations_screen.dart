@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hk_transport_app/l10n/app_localizations.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
+import '../../scripts/utils/text_utils.dart';
 import '../../scripts/ctb/ctb_route_stops_service.dart';
 import '../../scripts/bookmarks/bookmarks_service.dart';
 import '../../scripts/utils/vibration_helper.dart';
@@ -48,11 +49,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
   int? _selectedStationSeq; // Track the sequence number of selected station
   List<KMBRoute> _availableBounds = []; // Available bounds for this route
 
-  String _cleanStopName(String name) {
-    // Remove trailing code like " (XX123)" or similar alnum code in parentheses
-    final regex = RegExp(r"\s*\([A-Za-z]{2}\d{3}\)");
-    return name.replaceAll(regex, "");
-  }
+  String _cleanStopName(String name) => TextUtils.cleanupStopDisplayName(name);
 
   @override
   void initState() {
