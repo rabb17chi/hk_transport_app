@@ -420,6 +420,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                               final isSelected = _selectedStopId == stop.stop &&
                                   _selectedStationSeq == stop.seq;
                               final bookmarkItem = BookmarkItem(
+                                operator: 'CTB',
                                 route: widget.routeNumber,
                                 bound: widget.bound,
                                 stopId: stop.stop,
@@ -439,16 +440,32 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                     },
                                     onLongPress: () async {
                                       HapticFeedback.mediumImpact();
+                                      // Fetch stop info to store names with the bookmark
+                                      CTBStopInfo? info;
+                                      try {
+                                        info = await _getCtbStopInfo(stop.stop);
+                                      } catch (_) {}
+                                      final item = BookmarkItem(
+                                        operator: 'CTB',
+                                        route: widget.routeNumber,
+                                        bound: widget.bound,
+                                        stopId: stop.stop,
+                                        stopNameTc: info?.nameTc ?? '',
+                                        stopNameEn: info?.nameEn ?? '',
+                                        serviceType: '1',
+                                        destTc: widget.destinationTc,
+                                        destEn: widget.destinationEn,
+                                      );
                                       final already =
                                           await BookmarksService.isBookmarked(
-                                              bookmarkItem);
+                                              item);
                                       if (already) {
                                         await BookmarksService.removeBookmark(
-                                            bookmarkItem);
+                                            item);
                                         if (!mounted) return;
                                       } else {
                                         await BookmarksService.addBookmark(
-                                            bookmarkItem);
+                                            item);
                                         if (!mounted) return;
                                       }
                                       if (mounted) setState(() {});
@@ -585,8 +602,8 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                                             .dark
                                                                     ? Colors
                                                                         .white
-                                                                    : AppColorScheme
-                                                                        .textMediumColor,
+                                                                    : Colors
+                                                                        .black,
                                                               ),
                                                             ),
                                                           ],

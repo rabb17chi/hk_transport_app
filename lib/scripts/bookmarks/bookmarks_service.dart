@@ -11,6 +11,8 @@ class BookmarkItem {
   final String serviceType;
   final String destTc;
   final String destEn;
+  // Operator/company for the route, e.g. 'KMB' or 'CTB'. Defaults to 'KMB'.
+  final String operator;
 
   const BookmarkItem({
     required this.route,
@@ -21,6 +23,7 @@ class BookmarkItem {
     required this.serviceType,
     required this.destTc,
     required this.destEn,
+    this.operator = 'KMB',
   });
 
   Map<String, dynamic> toJson() => {
@@ -32,6 +35,7 @@ class BookmarkItem {
         'serviceType': serviceType,
         'destTc': destTc,
         'destEn': destEn,
+        'operator': operator,
       };
 
   static BookmarkItem fromJson(Map<String, dynamic> json) => BookmarkItem(
@@ -43,13 +47,14 @@ class BookmarkItem {
         serviceType: json['serviceType'] as String? ?? '1',
         destTc: json['destTc'] as String? ?? '',
         destEn: json['destEn'] as String? ?? '',
+        operator: json['operator'] as String? ?? 'KMB',
       );
 }
 
 class BookmarksService {
   static const String _bookmarksKey = 'kmb_bookmarks_v1';
   static String keyFor(BookmarkItem item) =>
-      '${item.route}|${item.bound}|${item.stopId}|${item.serviceType}';
+      '${item.operator}|${item.route}|${item.bound}|${item.stopId}|${item.serviceType}';
 
   // Global refresh trigger for all bookmark widgets
   static final ValueNotifier<int> _refreshTrigger = ValueNotifier<int>(0);

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../scripts/bookmarks/bookmarks_service.dart';
 import '../../scripts/bookmarks/mtr_bookmarks_service.dart';
 import '../../l10n/app_localizations.dart';
-import 'kmb_bookmarks_widget.dart';
+import 'bus_bookmarks_widget.dart';
 import 'mtr_bookmarks_widget.dart';
 
 class BookmarkPage extends StatefulWidget {
