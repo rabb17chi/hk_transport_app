@@ -15,7 +15,6 @@ class _AppUseGuideDialogState extends State<AppUseGuideDialog> {
   // Guide images from assets
   final List<String> _guideImages = [
     'bookmark_item_kmb.jpg',
-    'bookmark_item_mtr.jpg',
     'kmb_input_default.jpg',
     'kmb_keyboard_input_result.jpg',
     'kmb_data_withBookmarks_and_apiData.jpg',

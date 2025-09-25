@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'components/kmb/kmb_screen_refactored.dart';
 import 'components/menu.dart';
@@ -12,6 +13,7 @@ import 'scripts/locale/locale_service.dart';
 import 'scripts/theme/theme_service.dart';
 import 'scripts/utils/settings_service.dart';
 import 'services/widget_service.dart';
+import 'scripts/ctb/ctb_api_service.dart';
 
 // Global system info storage
 class SystemInfo {
@@ -34,16 +36,6 @@ class SystemInfo {
     viewInsets = mediaQuery.viewInsets;
     padding = mediaQuery.padding;
     hasLogged = true;
-
-    print('=== SYSTEM SCALING INFO (ONE-TIME) ===');
-    print('Text Scale Factor: $textScaleFactor');
-    print('Device Pixel Ratio: $devicePixelRatio');
-    print('Screen Size: ${screenSize?.width} x ${screenSize?.height}');
-    print('Screen Density: $devicePixelRatio');
-    print('Platform Brightness: $platformBrightness');
-    print('View Insets: $viewInsets');
-    print('Padding: $padding');
-    print('=====================================');
   }
 }
 
@@ -52,6 +44,7 @@ void main() async {
   await ThemeService.initialize();
   await SettingsService.load();
   await WidgetService.initialize();
+  unawaited(CTBApiService.getAllRoutes().catchError((_) {}));
   runApp(const MyApp());
 }
 

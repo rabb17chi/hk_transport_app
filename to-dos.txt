@@ -1,0 +1,12 @@
+TODOs
+
+1) GPS nearest-station on MTR list page
+   - Use user GPS to find closest MTR station
+   - Display the station; allow tap to view train time-diff
+
+1.b) Stations GPS locations
+   - Gather station coordinates (e.g., from Google Maps/dataset)
+
+2) Menu.dart > appUseGuide
+   - Improve images/pictures quality and presentation
+

@@ -599,6 +599,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Widget cleared successfully'**
   String get widgetCleared;
+
+  /// No description provided for @kmbSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter route number'**
+  String get kmbSearchHint;
+
+  /// No description provided for @kmbNoMatchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching routes'**
+  String get kmbNoMatchTitle;
+
+  /// No description provided for @kmbNoMatchSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check the route number'**
+  String get kmbNoMatchSubtitle;
+
+  /// No description provided for @kmbEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please input route number'**
+  String get kmbEmptyTitle;
+
+  /// No description provided for @kmbEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 1A'**
+  String get kmbEmptySubtitle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hk_transport_app/components/kmb/input_keyboard.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
+import 'package:hk_transport_app/l10n/app_localizations.dart';
 import '../../scripts/utils/settings_service.dart';
 import '../../services/widget_service.dart';
 import '../../theme/app_color_scheme.dart';
@@ -227,6 +228,12 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final String hintRouteText = l10n.kmbSearchHint;
+    final String noMatchTitle = l10n.kmbNoMatchTitle;
+    final String noMatchSubtitle = l10n.kmbNoMatchSubtitle;
+    final String emptyTitle = l10n.kmbEmptyTitle;
+    final String emptySubtitle = l10n.kmbEmptySubtitle;
     return Scaffold(
       body: SafeArea(
         child: _isLoading && _routes.isEmpty && _stops.isEmpty
@@ -236,7 +243,7 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.error_outline,
                           size: 64,
                           color: AppColorScheme.errorIconColor,
@@ -278,11 +285,11 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                               children: [
                                 TextField(
                                   controller: _searchController,
-                                  decoration: const InputDecoration(
-                                    hintText: '請輸入路線號碼',
+                                  decoration: InputDecoration(
+                                    hintText: hintRouteText,
                                     counterText: "",
-                                    border: OutlineInputBorder(),
-                                    prefixIcon: Icon(Icons.search),
+                                    border: const OutlineInputBorder(),
+                                    prefixIcon: const Icon(Icons.search),
                                   ),
                                   textCapitalization:
                                       TextCapitalization.characters,
@@ -332,23 +339,23 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                                   ] else if (_searchController
                                       .text.isNotEmpty) ...[
                                     const SizedBox(height: 16),
-                                    const Center(
+                                    Center(
                                       child: Column(
                                         children: [
-                                          Icon(Icons.search_off,
+                                          const Icon(Icons.search_off,
                                               size: 48,
                                               color: AppColorScheme
                                                   .searchIconColor),
-                                          SizedBox(height: 8),
+                                          const SizedBox(height: 8),
                                           Text(
-                                            '沒有相應路線',
-                                            style: TextStyle(
+                                            noMatchTitle,
+                                            style: const TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(
-                                            '請重新檢查路線號碼',
-                                            style: TextStyle(
+                                            noMatchSubtitle,
+                                            style: const TextStyle(
                                                 color: AppColorScheme
                                                     .searchTextColor),
                                           ),
@@ -358,23 +365,23 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                                   ],
                                 ] else ...[
                                   const SizedBox(height: 16),
-                                  const Center(
+                                  Center(
                                     child: Column(
                                       children: [
-                                        Icon(Icons.search,
+                                        const Icon(Icons.search,
                                             size: 48,
                                             color:
                                                 AppColorScheme.searchIconColor),
-                                        SizedBox(height: 8),
+                                        const SizedBox(height: 8),
                                         Text(
-                                          '請輸入路線號碼',
-                                          style: TextStyle(
+                                          emptyTitle,
+                                          style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          '例如: 1A',
-                                          style: TextStyle(
+                                          emptySubtitle,
+                                          style: const TextStyle(
                                               color: AppColorScheme
                                                   .exampleTextColor),
                                         ),

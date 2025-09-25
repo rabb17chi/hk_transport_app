@@ -263,6 +263,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get widgetCleared => '小工具清除成功';
+
+  @override
+  String get kmbSearchHint => '請輸入路線號碼';
+
+  @override
+  String get kmbNoMatchTitle => '沒有相應路線';
+
+  @override
+  String get kmbNoMatchSubtitle => '請重新檢查路線號碼';
+
+  @override
+  String get kmbEmptyTitle => '請輸入路線號碼';
+
+  @override
+  String get kmbEmptySubtitle => '例如: 1A';
 }
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).
@@ -515,4 +530,19 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
 
   @override
   String get widgetCleared => '小工具清除成功';
+
+  @override
+  String get kmbSearchHint => '請輸入路線號碼';
+
+  @override
+  String get kmbNoMatchTitle => '沒有相應路線';
+
+  @override
+  String get kmbNoMatchSubtitle => '請重新檢查路線號碼';
+
+  @override
+  String get kmbEmptyTitle => '請輸入路線號碼';
+
+  @override
+  String get kmbEmptySubtitle => '例如: 1A';
 }

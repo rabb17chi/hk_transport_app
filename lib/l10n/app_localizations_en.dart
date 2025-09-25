@@ -263,4 +263,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get widgetCleared => 'Widget cleared successfully';
+
+  @override
+  String get kmbSearchHint => 'Enter route number';
+
+  @override
+  String get kmbNoMatchTitle => 'No matching routes';
+
+  @override
+  String get kmbNoMatchSubtitle => 'Please check the route number';
+
+  @override
+  String get kmbEmptyTitle => 'Please input route number';
+
+  @override
+  String get kmbEmptySubtitle => 'e.g. 1A';
 }

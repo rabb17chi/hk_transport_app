@@ -83,6 +83,11 @@
   "widgetClear": "清除小工具",
   "widgetClearSubtitle": "移除所有小工具資料",
   "widgetClearNow": "立即清除",
-  "widgetCleared": "小工具清除成功"
+  "widgetCleared": "小工具清除成功",
+  "kmbSearchHint": "請輸入路線號碼",
+  "kmbNoMatchTitle": "沒有相應路線",
+  "kmbNoMatchSubtitle": "請重新檢查路線號碼",
+  "kmbEmptyTitle": "請輸入路線號碼",
+  "kmbEmptySubtitle": "例如: 1A"
 }
 

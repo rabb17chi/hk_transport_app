@@ -75,11 +75,10 @@ class _MenuScreenState extends State<MenuScreen> {
             Container(child: _buildLanguageSection()),
             const Divider(),
             Container(child: _buildDataOperationsSection()),
-            const Divider(),
-            Container(color: Colors.grey[300], child: _buildWidgetSection()),
+            // const Divider(),
+            // Container(color: Colors.grey[300], child: _buildWidgetSection()),
             const Divider(),
             Container(
-              color: Colors.grey[300],
               child: _buildAppUseGuide(),
             ),
             const Divider(),

@@ -82,6 +82,11 @@
   "widgetClear": "Clear Widget",
   "widgetClearSubtitle": "Remove all widget data",
   "widgetClearNow": "Clear Now",
-  "widgetCleared": "Widget cleared successfully"
+  "widgetCleared": "Widget cleared successfully",
+  "kmbSearchHint": "Enter route number",
+  "kmbNoMatchTitle": "No matching routes",
+  "kmbNoMatchSubtitle": "Please check the route number",
+  "kmbEmptyTitle": "Please input route number",
+  "kmbEmptySubtitle": "e.g. 1A"
 }
 
