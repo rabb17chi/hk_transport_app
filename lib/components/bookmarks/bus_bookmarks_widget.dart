@@ -25,6 +25,10 @@ class KMBBookmarksWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
+    String cleanStopName(String name) {
+      final regex = RegExp(r"\s*\([A-Za-z]{2}\d{3}\)");
+      return name.replaceAll(regex, "");
+    }
     // no-op
 
     if (isLoading) {
@@ -70,14 +74,11 @@ class KMBBookmarksWidget extends StatelessWidget {
                   final isZh = LocaleUtils.isChinese(context);
                   final name =
                       (isZh ? bookmark.stopNameTc : bookmark.stopNameEn).trim();
-                  final display = name.isEmpty
-                      ? bookmark.stopId
-                      : '$name (${bookmark.stopId})';
-                  return display;
+                  return name;
                 }
-                return LocaleUtils.isChinese(context)
-                    ? bookmark.stopNameTc
-                    : bookmark.stopNameEn;
+                final isZh = LocaleUtils.isChinese(context);
+                final raw = isZh ? bookmark.stopNameTc : bookmark.stopNameEn;
+                return cleanStopName(raw);
               }(),
               style: const TextStyle(color: AppColorScheme.textMutedColor),
             ),

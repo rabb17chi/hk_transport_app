@@ -236,7 +236,9 @@ class _MTRListScreenState extends State<MTRListScreen> {
                 Expanded(
                   child: Text(
                     displayTitle,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: isBookmarked ? Colors.black : Colors.white),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -259,7 +261,9 @@ class _MTRListScreenState extends State<MTRListScreen> {
               ],
             ),
             subtitle: Text(displaySubtitle,
-                style: const TextStyle(fontWeight: FontWeight.w500)),
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: isBookmarked ? Colors.black : Colors.white)),
             trailing: null,
             onTap: _isLoadingSchedule
                 ? null

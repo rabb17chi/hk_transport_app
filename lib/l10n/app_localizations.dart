@@ -186,6 +186,12 @@ abstract class AppLocalizations {
   /// **'Show special KMB routes'**
   String get dataOpsSpecialToggle;
 
+  /// No description provided for @dataOpsDisplayBusFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Display Bus Full Name (stop codes)'**
+  String get dataOpsDisplayBusFullName;
+
   /// No description provided for @dataOpsRefreshKMB.
   ///
   /// In en, this message translates to:

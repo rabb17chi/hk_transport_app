@@ -48,6 +48,12 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
   int? _selectedStationSeq; // Track the sequence number of selected station
   List<KMBRoute> _availableBounds = []; // Available bounds for this route
 
+  String _cleanStopName(String name) {
+    // Remove trailing code like " (XX123)" or similar alnum code in parentheses
+    final regex = RegExp(r"\s*\([A-Za-z]{2}\d{3}\)");
+    return name.replaceAll(regex, "");
+  }
+
   @override
   void initState() {
     super.initState();
@@ -760,7 +766,8 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    stop.stopNameTc,
+                                                    _cleanStopName(
+                                                        stop.stopNameTc),
                                                     style: TextStyle(
                                                       fontSize: 18,
                                                       fontWeight:
@@ -775,7 +782,8 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                   ),
                                                   const SizedBox(height: 4),
                                                   Text(
-                                                    stop.stopNameEn,
+                                                    _cleanStopName(
+                                                        stop.stopNameEn),
                                                     style: TextStyle(
                                                       fontSize: 14,
                                                       color: Theme.of(context)

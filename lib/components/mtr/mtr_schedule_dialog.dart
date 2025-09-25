@@ -192,7 +192,9 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                 Text(
                   widget.stationName,
                   style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
                 ),
               ],
             ),
@@ -298,9 +300,9 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                       const SizedBox(height: 12),
                       const Divider(height: 1),
                       const SizedBox(height: 4),
-                      const Text(
-                        '其他線路',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(context)!.mtrOtherLines,
+                        style: const TextStyle(
                           fontSize: 12,
                           color: AppColorScheme.textMediumColor,
                           fontWeight: FontWeight.w600,
@@ -359,7 +361,8 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
             await VibrationHelper.mediumVibrate();
             Navigator.of(context).pop();
           },
-          child: Text(AppLocalizations.of(context)!.mtrClose),
+          child: Text(AppLocalizations.of(context)!.mtrClose,
+              style: const TextStyle(color: Colors.black)),
         ),
         ElevatedButton(
           onPressed: isLoading
@@ -440,6 +443,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
               ),
             ),

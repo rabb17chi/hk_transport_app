@@ -9,7 +9,6 @@ import '../../theme/app_color_scheme.dart';
 import 'route_banner.dart';
 import 'route_stations_screen.dart';
 import '../ui/transport_route_banner.dart';
-import '../../scripts/ctb/ctb_route_stops_service.dart';
 
 class KMBTestScreenRefactored extends StatefulWidget {
   const KMBTestScreenRefactored({super.key});
@@ -406,20 +405,6 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                                                   textColor: AppColorScheme
                                                       .ctbBannerTextColor,
                                                   onTap: () async {
-                                                    try {
-                                                      final stops =
-                                                          await CTBRouteStopsService
-                                                              .getRouteStops(
-                                                        route: ctb.route,
-                                                        bound: 'outbound',
-                                                      );
-                                                      await CTBRouteStopsService
-                                                          .ensureStopsCached(
-                                                        stops
-                                                            .map((s) => s.stop)
-                                                            .toList(),
-                                                      );
-                                                    } catch (_) {}
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
@@ -449,20 +434,6 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                                                   textColor: AppColorScheme
                                                       .ctbBannerTextColor,
                                                   onTap: () async {
-                                                    try {
-                                                      final stops =
-                                                          await CTBRouteStopsService
-                                                              .getRouteStops(
-                                                        route: ctb.route,
-                                                        bound: 'inbound',
-                                                      );
-                                                      await CTBRouteStopsService
-                                                          .ensureStopsCached(
-                                                        stops
-                                                            .map((s) => s.stop)
-                                                            .toList(),
-                                                      );
-                                                    } catch (_) {}
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(

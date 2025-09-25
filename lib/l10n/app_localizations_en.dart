@@ -54,6 +54,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dataOpsSpecialToggle => 'Show special KMB routes';
 
   @override
+  String get dataOpsDisplayBusFullName => 'Display Bus Full Name (stop codes)';
+
+  @override
   String get dataOpsRefreshKMB => 'Refresh KMB Data';
 
   @override

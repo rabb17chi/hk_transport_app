@@ -37,6 +37,17 @@ class DataOperationsSection extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           ValueListenableBuilder<bool>(
+            valueListenable: SettingsService.displayBusFullNameNotifier,
+            builder: (context, value, _) => SwitchListTile(
+              secondary: const Icon(Icons.badge),
+              title:
+                  Text(AppLocalizations.of(context)!.dataOpsDisplayBusFullName),
+              value: value,
+              onChanged: (v) => SettingsService.setDisplayBusFullName(v),
+            ),
+          ),
+          const SizedBox(height: 4),
+          ValueListenableBuilder<bool>(
             valueListenable: SettingsService.mtrReverseStationsNotifier,
             builder: (context, value, _) => SwitchListTile(
               secondary: const Icon(Icons.swap_vert),

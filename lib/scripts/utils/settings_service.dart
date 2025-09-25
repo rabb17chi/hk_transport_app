@@ -8,6 +8,7 @@ class SettingsService {
   static const String _mtrAutoRefreshKey = 'mtr_auto_refresh_v1';
   static const String _showSpecialRoutesKey = 'showSpecialRoutes';
   static const String _kmbLastUpdateKey = 'kmb_last_update_time';
+  static const String _displayBusFullNameKey = 'display_bus_full_name_v1';
 
   // MTR station order: true = reverse order, false = normal order
   // MTR 車站順序：true = 反向順序，false = 正常順序
@@ -32,6 +33,11 @@ class SettingsService {
   // Default: never updated / 預設：從未更新
   static final ValueNotifier<DateTime?> kmbLastUpdateNotifier =
       ValueNotifier<DateTime?>(null);
+
+  // Display bus full names (with stop id/code): true = show full, false = shorten
+  // 顯示完整巴士站名（包含代碼）：true = 顯示完整，false = 簡化
+  static final ValueNotifier<bool> displayBusFullNameNotifier =
+      ValueNotifier<bool>(false);
 
   // Load all settings from SharedPreferences on app startup
   // 在應用程式啟動時從 SharedPreferences 載入所有設定
@@ -62,6 +68,10 @@ class SettingsService {
       kmbLastUpdateNotifier.value =
           DateTime.fromMillisecondsSinceEpoch(lastUpdateMillis);
     }
+
+    // Load Display Bus Full Name setting
+    final showFull = prefs.getBool(_displayBusFullNameKey) ?? false;
+    displayBusFullNameNotifier.value = showFull;
   }
 
   // Set MTR station order preference
@@ -103,5 +113,13 @@ class SettingsService {
     final now = DateTime.now();
     await prefs.setInt(_kmbLastUpdateKey, now.millisecondsSinceEpoch);
     kmbLastUpdateNotifier.value = now;
+  }
+
+  // Set display bus full name preference
+  // 設定是否顯示完整巴士站名
+  static Future<void> setDisplayBusFullName(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_displayBusFullNameKey, value);
+    displayBusFullNameNotifier.value = value;
   }
 }

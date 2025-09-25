@@ -14,6 +14,7 @@
   "menuDevLinksSubtitle": "GitHub Project Page",
   "menuDataOpsTitle": "Data Operations",
   "dataOpsSpecialToggle": "Show special KMB routes",
+  "dataOpsDisplayBusFullName": "Display Bus Full Name (stop codes)",
   "dataOpsRefreshKMB": "Refresh KMB Data",
   "dataOpsRefreshNow": "Refresh Now",
   "dataOpsLastUpdate": "Last updated: {time}",

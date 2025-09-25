@@ -54,6 +54,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dataOpsSpecialToggle => '（九巴）顯示特別班次';
 
   @override
+  String get dataOpsDisplayBusFullName => 'Display Bus Full Name (stop codes)';
+
+  @override
   String get dataOpsRefreshKMB => '手動更新巴士資料';
 
   @override
@@ -328,6 +331,9 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
 
   @override
   String get dataOpsSpecialToggle => '（九巴）顯示特別班次';
+
+  @override
+  String get dataOpsDisplayBusFullName => '顯示完整巴士站名（代碼）';
 
   @override
   String get dataOpsRefreshKMB => '手動更新巴士資料';

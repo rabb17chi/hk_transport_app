@@ -14,6 +14,7 @@
   "menuDevLinksSubtitle": "GitHub 專案頁",
   "menuDataOpsTitle": "更多資料操作",
   "dataOpsSpecialToggle": "（九巴）顯示特別班次",
+  "dataOpsDisplayBusFullName": "顯示完整巴士站名（代碼）",
   "dataOpsRefreshKMB": "手動更新巴士資料",
   "dataOpsRefreshNow": "立即更新",
   "dataOpsLastUpdate": "最後更新：{time}",
