@@ -23,6 +23,7 @@ A comprehensive Hong Kong transport information app providing real-time MTR and 
 - **即時到站時間** / Real-time Arrival: 查看巴士預計到達時間
 - **路線詳情** / Route Details: 完整的路線和車站列表
 - **書籤功能** / Bookmark Feature: 收藏常用路線和車站
+- **城巴支援** / Citybus (CTB) Support: 可搜尋/顯示 CTB 路線、取得 ETA、並將 CTB 車站加入收藏
 
 ### 📱 用戶介面 / User Interface
 
@@ -37,6 +38,7 @@ A comprehensive Hong Kong transport information app providing real-time MTR and 
 - **分類管理** / Categorized Management: 分別管理港鐵和九巴書籤
 - **快速存取** / Quick Access: 一鍵存取收藏的路線和車站
 - **同步儲存** / Sync Storage: 本地儲存，無需網路連線
+- **CTB 書籤** / CTB Bookmarks: 支援 CTB 書籤（含站名與 stopId 儲存；清單顯示以站名為主）
 
 ### 🚀 啟動與體驗 / Startup & UX
 
@@ -65,6 +67,7 @@ A comprehensive Hong Kong transport information app providing real-time MTR and 
 - **離線快取** / Offline Cache: 智能快取機制減少網路請求
 - **錯誤處理** / Error Handling: 完善的錯誤處理和用戶提示（僅保留錯誤 Snackbar，移除成功提示）
 - **性能優化** / Performance Optimization: 流暢的用戶體驗
+- **站名顯示選項** / Stop Name Display Option: 可於「更多資料操作」中切換「顯示完整巴士站名」，開啟時顯示括號代碼；關閉時自動清理如「(XX123)」的尾碼
 
 ## 安裝與使用 / Installation & Usage
 
