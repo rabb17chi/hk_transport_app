@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hk_transport_app/l10n/app_localizations.dart';
 import '../scripts/kmb/kmb_cache_service.dart';
+import '../scripts/ctb/ctb_api_service.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
 import 'menu/data_operations_section.dart';
 import 'menu/app_use_guide_dialog.dart';
@@ -57,6 +58,7 @@ class _MenuScreenState extends State<MenuScreen> {
     try {
       await KMBApiService.getAllRoutes();
       await KMBApiService.getAllStops();
+      await CTBApiService.getAllRoutes();
     } catch (_) {}
     setState(() {
       _isRefreshing = false;
@@ -83,14 +85,12 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
             const Divider(),
             Container(
-              color: Colors.grey[300],
               child: _buildStyleTile(),
             ),
             const Divider(),
             Container(child: _buildDevLinksTile()),
             const Divider(),
             Container(
-              color: Colors.grey[300],
               child: _buildTermsTile(),
             ),
             const Divider(),

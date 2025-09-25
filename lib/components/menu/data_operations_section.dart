@@ -59,9 +59,10 @@ class DataOperationsSection extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.sync),
             title: Text(AppLocalizations.of(context)!.dataOpsRefreshKMB),
-            trailing: TextButton(
+            trailing: IconButton(
               onPressed: onRefreshKMB,
-              child: Text(AppLocalizations.of(context)!.dataOpsRefreshNow),
+              icon: const Icon(Icons.refresh),
+              tooltip: AppLocalizations.of(context)!.dataOpsRefreshNow,
             ),
           ),
         ],

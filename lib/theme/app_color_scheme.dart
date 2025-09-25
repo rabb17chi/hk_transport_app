@@ -81,6 +81,15 @@ class AppColorScheme {
   static const Color kmbBannerBorderColor = Color(0xFF757575);
 
   // ============================================================================
+  // CTB SPECIFIC COLORS
+  // ============================================================================
+
+  // CTB banner background (#015ea8) and text color (#fedc0b)
+  static const Color ctbBannerBackgroundColor = Color(0xFF015EA8);
+
+  static const Color ctbBannerTextColor = Color(0xFFFEDC0B);
+
+  // ============================================================================
   // MTR LINE COLORS (from mtr_data.dart)
   // ============================================================================
 

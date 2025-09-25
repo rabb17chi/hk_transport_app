@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hk_transport_app/components/kmb/input_keyboard.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
+import '../../scripts/ctb/ctb_api_service.dart';
 import 'package:hk_transport_app/l10n/app_localizations.dart';
 import '../../scripts/utils/settings_service.dart';
 import '../../services/widget_service.dart';
 import '../../theme/app_color_scheme.dart';
 import 'route_banner.dart';
 import 'route_stations_screen.dart';
+import '../ui/transport_route_banner.dart';
 
 class KMBTestScreenRefactored extends StatefulWidget {
   const KMBTestScreenRefactored({super.key});
@@ -16,9 +18,29 @@ class KMBTestScreenRefactored extends StatefulWidget {
       _KMBTestScreenRefactoredState();
 }
 
+// Unified item to merge KMB and CTB for rendering and sorting
+enum _Operator { kmb, ctb }
+
+class _UnifiedRoute {
+  final _Operator operatorType;
+  final String routeNo;
+  final KMBRoute? kmb;
+  final CTBRoute? ctb;
+  _UnifiedRoute.kmb(this.kmb)
+      : operatorType = _Operator.kmb,
+        routeNo = kmb!.route,
+        ctb = null;
+  _UnifiedRoute.ctb(this.ctb)
+      : operatorType = _Operator.ctb,
+        routeNo = ctb!.route,
+        kmb = null;
+}
+
 class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
   List<KMBRoute> _routes = [];
   List<KMBStop> _stops = [];
+  List<CTBRoute> _ctbRoutes = [];
+  List<_UnifiedRoute> _unifiedFilteredRoutes = [];
 
   bool _isLoading = false;
   String _errorMessage = '';
@@ -27,6 +49,7 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
   // Text controller for keyboard communication
   final TextEditingController _searchController = TextEditingController();
   List<KMBRoute> _filteredRoutes = [];
+  List<CTBRoute> _filteredCtbRoutes = [];
 
   @override
   void initState() {
@@ -66,11 +89,19 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
     try {
       final routes = await KMBApiService.getAllRoutes();
       final stops = await KMBApiService.getAllStops();
+      // Load CTB routes (from cache if available)
+      List<CTBRoute> ctbRoutes = [];
+      try {
+        ctbRoutes = await CTBApiService.getAllRoutes();
+      } catch (_) {}
 
       setState(() {
         _routes = routes; // keep all service types
         _stops = stops;
         _filteredRoutes = _applyServiceTypeFilter(routes);
+        _ctbRoutes = ctbRoutes;
+        _filteredCtbRoutes =
+            ctbRoutes; // initial (empty query shows none later)
         _isLoading = false;
       });
     } catch (e) {
@@ -165,12 +196,27 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
     setState(() {
       if (query.isEmpty) {
         _filteredRoutes = _applyServiceTypeFilter(_routes);
+        _filteredCtbRoutes = <CTBRoute>[]; // hide CTB list when no query
+        _unifiedFilteredRoutes = <_UnifiedRoute>[];
       } else {
         _filteredRoutes = _applyServiceTypeFilter(_routes)
             .where((route) =>
                 route.route.toUpperCase().startsWith(query) ||
                 route.route.toUpperCase() == query)
             .toList();
+        _filteredCtbRoutes = _ctbRoutes
+            .where((r) =>
+                r.route.toUpperCase().startsWith(query) ||
+                r.route.toUpperCase() == query)
+            .toList();
+
+        // Merge and sort
+        _unifiedFilteredRoutes = <_UnifiedRoute>[
+          ..._filteredRoutes.map((r) => _UnifiedRoute.kmb(r)),
+          ..._filteredCtbRoutes.map((r) => _UnifiedRoute.ctb(r)),
+        ];
+        _unifiedFilteredRoutes.sort((a, b) =>
+            a.routeNo.toUpperCase().compareTo(b.routeNo.toUpperCase()));
       }
     });
   }
@@ -298,46 +344,114 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                                 ),
                                 const SizedBox(height: 8),
                                 if (_searchController.text.isNotEmpty) ...[
-                                  if (_filteredRoutes.isNotEmpty) ...[
+                                  if (_unifiedFilteredRoutes.isNotEmpty) ...[
                                     Expanded(
                                       child: ListView.builder(
-                                        itemCount: _filteredRoutes.length,
+                                        itemCount:
+                                            _unifiedFilteredRoutes.length,
                                         itemBuilder: (context, index) {
-                                          final route = _filteredRoutes[index];
-                                          final routeKey =
-                                              '${route.route}_${route.bound}';
-                                          final isSelected =
-                                              _selectedRouteKey == routeKey;
-
-                                          return RouteBanner(
-                                            route: route,
-                                            isSelected: isSelected,
-                                            onTap: () {
-                                              // Navigate to route stations screen
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      RouteStationsScreen(
-                                                    routeKey: routeKey,
-                                                    routeNumber: route.route,
-                                                    bound: route.bound,
-                                                    serviceType:
-                                                        route.serviceType,
-                                                    destinationTc: route.destTc,
-                                                    destinationEn: route.destEn,
+                                          final item =
+                                              _unifiedFilteredRoutes[index];
+                                          if (item.operatorType ==
+                                              _Operator.kmb) {
+                                            final route = item.kmb!;
+                                            final routeKey =
+                                                '${route.route}_${route.bound}';
+                                            final isSelected =
+                                                _selectedRouteKey == routeKey;
+                                            return RouteBanner(
+                                              route: route,
+                                              isSelected: isSelected,
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        RouteStationsScreen(
+                                                      routeKey: routeKey,
+                                                      routeNumber: route.route,
+                                                      bound: route.bound,
+                                                      serviceType:
+                                                          route.serviceType,
+                                                      destinationTc:
+                                                          route.destTc,
+                                                      destinationEn:
+                                                          route.destEn,
+                                                    ),
                                                   ),
+                                                );
+                                                _onRouteSelected(routeKey);
+                                              },
+                                            );
+                                          } else {
+                                            final ctb = item.ctb!;
+                                            return Column(
+                                              children: [
+                                                TransportRouteBanner(
+                                                  titleTop: ctb.destTc,
+                                                  titleBottom: ctb.destEn,
+                                                  routeNumber: ctb.route,
+                                                  backgroundColor: AppColorScheme
+                                                      .ctbBannerBackgroundColor,
+                                                  textColor: AppColorScheme
+                                                      .ctbBannerTextColor,
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            RouteStationsScreen(
+                                                          routeKey:
+                                                              '${ctb.route}_O',
+                                                          routeNumber:
+                                                              ctb.route,
+                                                          bound: 'O',
+                                                          destinationTc:
+                                                              ctb.destTc,
+                                                          destinationEn:
+                                                              ctb.destEn,
+                                                          isCTB: true,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
                                                 ),
-                                              );
-
-                                              _onRouteSelected(routeKey);
-                                            },
-                                          );
+                                                TransportRouteBanner(
+                                                  titleTop: ctb.origTc,
+                                                  titleBottom: ctb.origEn,
+                                                  routeNumber: ctb.route,
+                                                  backgroundColor: AppColorScheme
+                                                      .ctbBannerBackgroundColor,
+                                                  textColor: AppColorScheme
+                                                      .ctbBannerTextColor,
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            RouteStationsScreen(
+                                                          routeKey:
+                                                              '${ctb.route}_I',
+                                                          routeNumber:
+                                                              ctb.route,
+                                                          bound: 'I',
+                                                          destinationTc:
+                                                              ctb.origTc,
+                                                          destinationEn:
+                                                              ctb.origEn,
+                                                          isCTB: true,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          }
                                         },
                                       ),
                                     ),
-                                  ] else if (_searchController
-                                      .text.isNotEmpty) ...[
+                                  ] else ...[
                                     const SizedBox(height: 16),
                                     Center(
                                       child: Column(

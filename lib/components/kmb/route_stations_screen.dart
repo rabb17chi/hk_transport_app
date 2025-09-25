@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
+import '../../scripts/ctb/ctb_route_stops_service.dart';
 import '../../scripts/bookmarks/bookmarks_service.dart';
 import '../../scripts/utils/vibration_helper.dart';
 import '../../theme/app_color_scheme.dart';
@@ -16,6 +17,7 @@ class RouteStationsScreen extends StatefulWidget {
       serviceType; // pass through actual service type (defaults to '1')
   final String destinationTc;
   final String destinationEn;
+  final bool isCTB;
 
   const RouteStationsScreen({
     super.key,
@@ -25,6 +27,7 @@ class RouteStationsScreen extends StatefulWidget {
     this.serviceType,
     required this.destinationTc,
     required this.destinationEn,
+    this.isCTB = false,
   });
 
   @override
@@ -33,6 +36,8 @@ class RouteStationsScreen extends StatefulWidget {
 
 class _RouteStationsScreenState extends State<RouteStationsScreen> {
   List<KMBRouteStop> _routeStops = [];
+  List<CTBRouteStop> _ctbRouteStops = [];
+  final Map<String, CTBStopInfo> _ctbStopInfoCache = {};
   bool _isLoading = true;
   String _errorMessage = '';
   List<KMBETA> _etaData = [];
@@ -46,6 +51,14 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
     super.initState();
     _loadRouteStops();
     _findAvailableBounds();
+  }
+
+  Future<CTBStopInfo> _getCtbStopInfo(String stopId) async {
+    final cached = _ctbStopInfoCache[stopId];
+    if (cached != null) return cached;
+    final info = await CTBRouteStopsService.getStopInfo(stopId);
+    _ctbStopInfoCache[stopId] = info;
+    return info;
   }
 
   /// Find other bounds available for this route
@@ -101,16 +114,27 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
     });
 
     try {
-      final routeStops = await KMBApiService.getRouteStops(
-        widget.routeNumber,
-        widget.bound,
-        widget.serviceType ?? '1',
-      );
-
-      setState(() {
-        _routeStops = routeStops;
-        _isLoading = false;
-      });
+      if (widget.isCTB) {
+        final dir = widget.bound == 'I' ? 'inbound' : 'outbound';
+        final routeStops = await CTBRouteStopsService.getRouteStops(
+          route: widget.routeNumber,
+          bound: dir,
+        );
+        setState(() {
+          _ctbRouteStops = routeStops;
+          _isLoading = false;
+        });
+      } else {
+        final routeStops = await KMBApiService.getRouteStops(
+          widget.routeNumber,
+          widget.bound,
+          widget.serviceType ?? '1',
+        );
+        setState(() {
+          _routeStops = routeStops;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
       setState(() {
         _errorMessage = 'Error loading stations: $e';
@@ -158,7 +182,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            '${widget.routeNumber} 往 ${widget.destinationTc} ${widget.serviceType == '1' ? '' : '| 特別班次'}'),
+            '${widget.routeNumber} 往 ${widget.destinationTc} ${widget.isCTB ? '| 城巴' : widget.serviceType == '1' ? '' : '| 特別班次'}'),
         backgroundColor: const Color(0xFF323232),
         foregroundColor: const Color(0xFFF7A925),
         actions: _availableBounds.length > 1 && widget.serviceType == '1'
@@ -206,7 +230,9 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                   ),
                 )
               : SafeArea(
-                  child: _routeStops.isEmpty
+                  child: (widget.isCTB
+                          ? _ctbRouteStops.isEmpty
+                          : _routeStops.isEmpty)
                       ? const Center(
                           child: Text(
                             'No stations found',
@@ -216,8 +242,201 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                       : ListView.builder(
                           padding: const EdgeInsets.fromLTRB(16, 16, 16,
                               16), // Bottom padding for navigation bar
-                          itemCount: _routeStops.length,
+                          itemCount: widget.isCTB
+                              ? _ctbRouteStops.length
+                              : _routeStops.length,
                           itemBuilder: (context, index) {
+                            if (widget.isCTB) {
+                              final stop = _ctbRouteStops[index];
+                              final isSelected = _selectedStopId == stop.stop &&
+                                  _selectedStationSeq == stop.seq;
+                              final bookmarkItem = BookmarkItem(
+                                route: widget.routeNumber,
+                                bound: widget.bound,
+                                stopId: stop.stop,
+                                stopNameTc: '',
+                                stopNameEn: '',
+                                serviceType: '1',
+                                destTc: widget.destinationTc,
+                                destEn: widget.destinationEn,
+                              );
+
+                              return Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      HapticFeedback.lightImpact();
+                                      // No ETA implementation for CTB yet
+                                    },
+                                    onLongPress: () async {
+                                      HapticFeedback.mediumImpact();
+                                      final already =
+                                          await BookmarksService.isBookmarked(
+                                              bookmarkItem);
+                                      if (already) {
+                                        await BookmarksService.removeBookmark(
+                                            bookmarkItem);
+                                        if (!mounted) return;
+                                      } else {
+                                        await BookmarksService.addBookmark(
+                                            bookmarkItem);
+                                        if (!mounted) return;
+                                      }
+                                      if (mounted) setState(() {});
+                                    },
+                                    child: FutureBuilder<bool>(
+                                      future: BookmarksService.isBookmarked(
+                                          bookmarkItem),
+                                      builder: (context, snap) {
+                                        final bookmarked = snap.data == true;
+                                        return Container(
+                                          margin:
+                                              const EdgeInsets.only(bottom: 8),
+                                          padding: const EdgeInsets.all(16),
+                                          decoration: BoxDecoration(
+                                            color: bookmarked
+                                                ? AppColorScheme.bookmarkedColor
+                                                    .withOpacity(Theme.of(
+                                                                    context)
+                                                                .brightness ==
+                                                            Brightness.dark
+                                                        ? 0.85
+                                                        : 0.35)
+                                                : Theme.of(context)
+                                                            .brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.grey[900]
+                                                    : Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            border: Border.all(
+                                              color: isSelected
+                                                  ? AppColorScheme
+                                                      .selectedBorderColor
+                                                  : Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                              width: isSelected ? 3 : 1,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: 40,
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      const Color(0xFFF7A925),
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    '${index + 1}',
+                                                    style: TextStyle(
+                                                      color: Theme.of(context)
+                                                                  .brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 16),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    FutureBuilder<CTBStopInfo>(
+                                                      future: _getCtbStopInfo(
+                                                          stop.stop),
+                                                      builder: (context, snap) {
+                                                        final info = snap.data;
+                                                        final isChinese =
+                                                            Localizations.localeOf(
+                                                                        context)
+                                                                    .languageCode ==
+                                                                'zh';
+                                                        final displayTop =
+                                                            info == null
+                                                                ? stop.stop
+                                                                : (isChinese
+                                                                    ? info
+                                                                        .nameTc
+                                                                    : info
+                                                                        .nameEn);
+                                                        final displayBottom =
+                                                            info == null
+                                                                ? ''
+                                                                : (isChinese
+                                                                    ? info
+                                                                        .nameEn
+                                                                    : info
+                                                                        .nameTc);
+                                                        return Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              displayTop,
+                                                              style: TextStyle(
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Theme.of(context)
+                                                                            .brightness ==
+                                                                        Brightness
+                                                                            .dark
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors
+                                                                        .black,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 4),
+                                                            Text(
+                                                              displayBottom,
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                color: Theme.of(context)
+                                                                            .brightness ==
+                                                                        Brightness
+                                                                            .dark
+                                                                    ? Colors
+                                                                        .white
+                                                                    : AppColorScheme
+                                                                        .textMediumColor,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  if (isSelected && _isLoadingETA)
+                                    const SizedBox.shrink(),
+                                ],
+                              );
+                            }
+
                             final stop = _routeStops[index];
                             final isSelected = _selectedStopId == stop.stop &&
                                 _selectedStationSeq == stop.seq;
@@ -337,7 +556,9 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    stop.stopNameTc,
+                                                    stop is KMBRouteStop
+                                                        ? stop.stopNameTc
+                                                        : stop.stop,
                                                     style: TextStyle(
                                                       fontSize: 18,
                                                       fontWeight:
@@ -352,7 +573,9 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                   ),
                                                   const SizedBox(height: 4),
                                                   Text(
-                                                    stop.stopNameEn,
+                                                    stop is KMBRouteStop
+                                                        ? stop.stopNameEn
+                                                        : '',
                                                     style: TextStyle(
                                                       fontSize: 14,
                                                       color: Theme.of(context)

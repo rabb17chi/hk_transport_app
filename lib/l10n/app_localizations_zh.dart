@@ -27,7 +27,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get menuStyleSubtitle => '字體、顏色、大小（即將推出）';
 
   @override
-  String get menuUpdateKMB => '手動更新九巴資料';
+  String get menuUpdateKMB => '手動更新巴士資料';
 
   @override
   String get menuRefresh => '刷新';
@@ -54,7 +54,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dataOpsSpecialToggle => '（九巴）顯示特別班次';
 
   @override
-  String get dataOpsRefreshKMB => '手動更新九巴資料';
+  String get dataOpsRefreshKMB => '手動更新巴士資料';
 
   @override
   String get dataOpsRefreshNow => '立即更新';
@@ -330,7 +330,7 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
   String get dataOpsSpecialToggle => '（九巴）顯示特別班次';
 
   @override
-  String get dataOpsRefreshKMB => '手動更新九巴資料';
+  String get dataOpsRefreshKMB => '手動更新巴士資料';
 
   @override
   String get dataOpsRefreshNow => '立即更新';
