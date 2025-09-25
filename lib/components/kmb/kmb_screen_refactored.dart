@@ -9,6 +9,7 @@ import '../../theme/app_color_scheme.dart';
 import 'route_banner.dart';
 import 'route_stations_screen.dart';
 import '../ui/transport_route_banner.dart';
+import '../../scripts/ctb/ctb_route_stops_service.dart';
 
 class KMBTestScreenRefactored extends StatefulWidget {
   const KMBTestScreenRefactored({super.key});
@@ -249,9 +250,15 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
 
     final availableChars = <String>{};
 
-    for (final route in _routes) {
-      final routeStr = route.route.toUpperCase();
-      if (routeStr.startsWith(currentInput.toUpperCase()) &&
+    // Consider both KMB and CTB route numbers when suggesting next characters
+    final allRouteStrings = <String>[
+      ..._routes.map((r) => r.route.toUpperCase()),
+      ..._ctbRoutes.map((r) => r.route.toUpperCase()),
+    ];
+
+    final prefix = currentInput.toUpperCase();
+    for (final routeStr in allRouteStrings) {
+      if (routeStr.startsWith(prefix) &&
           routeStr.length > currentInput.length) {
         final nextChar = routeStr[currentInput.length];
         availableChars.add(nextChar);
@@ -261,11 +268,14 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
     // Debug: Print available characters for debugging
     if (currentInput.isNotEmpty) {
       print('Input: "$currentInput" -> Available next chars: $availableChars');
-      final matches = _routes
-          .where((route) =>
-              route.route.toUpperCase().startsWith(currentInput.toUpperCase()))
-          .map((r) => '${r.route}(${r.serviceType})')
-          .toList();
+      final matches = [
+        ..._routes
+            .where((route) => route.route.toUpperCase().startsWith(prefix))
+            .map((r) => 'KMB:${r.route}(${r.serviceType})'),
+        ..._ctbRoutes
+            .where((route) => route.route.toUpperCase().startsWith(prefix))
+            .map((r) => 'CTB:${r.route}')
+      ];
       print('Matching routes: $matches');
     }
 
@@ -395,7 +405,21 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                                                       .ctbBannerBackgroundColor,
                                                   textColor: AppColorScheme
                                                       .ctbBannerTextColor,
-                                                  onTap: () {
+                                                  onTap: () async {
+                                                    try {
+                                                      final stops =
+                                                          await CTBRouteStopsService
+                                                              .getRouteStops(
+                                                        route: ctb.route,
+                                                        bound: 'outbound',
+                                                      );
+                                                      await CTBRouteStopsService
+                                                          .ensureStopsCached(
+                                                        stops
+                                                            .map((s) => s.stop)
+                                                            .toList(),
+                                                      );
+                                                    } catch (_) {}
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
@@ -424,7 +448,21 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                                                       .ctbBannerBackgroundColor,
                                                   textColor: AppColorScheme
                                                       .ctbBannerTextColor,
-                                                  onTap: () {
+                                                  onTap: () async {
+                                                    try {
+                                                      final stops =
+                                                          await CTBRouteStopsService
+                                                              .getRouteStops(
+                                                        route: ctb.route,
+                                                        bound: 'inbound',
+                                                      );
+                                                      await CTBRouteStopsService
+                                                          .ensureStopsCached(
+                                                        stops
+                                                            .map((s) => s.stop)
+                                                            .toList(),
+                                                      );
+                                                    } catch (_) {}
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(

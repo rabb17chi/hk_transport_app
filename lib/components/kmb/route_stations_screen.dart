@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hk_transport_app/l10n/app_localizations.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
 import '../../scripts/ctb/ctb_route_stops_service.dart';
 import '../../scripts/bookmarks/bookmarks_service.dart';
@@ -41,6 +42,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
   bool _isLoading = true;
   String _errorMessage = '';
   List<KMBETA> _etaData = [];
+  List<CTBETA> _ctbEtaData = [];
   bool _isLoadingETA = false;
   String? _selectedStopId; // Track which station is selected
   int? _selectedStationSeq; // Track the sequence number of selected station
@@ -177,14 +179,182 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
     }
   }
 
+  Future<void> _loadCTBETA(String stopId, int stationSeq) async {
+    try {
+      setState(() {
+        _isLoadingETA = true;
+        _selectedStopId = stopId;
+        _selectedStationSeq = stationSeq;
+        _ctbEtaData = [];
+      });
+
+      final etaData = await CTBRouteStopsService.getETA(
+        stopId: stopId,
+        route: widget.routeNumber,
+      );
+
+      // Filter by current screen bound (I/O) and sort by eta_seq
+      final currentDir = widget.bound.toUpperCase();
+      final filtered = etaData
+          .where((e) => e.dir.toUpperCase() == currentDir)
+          .toList()
+        ..sort((a, b) => a.etaSeq.compareTo(b.etaSeq));
+
+      // Debug logs for CTB ETA
+      try {
+        print('=== CTB ETA Debug ===');
+        print('Route: ${widget.routeNumber}, Stop: $stopId, Dir: $currentDir');
+        for (int i = 0; i < filtered.length && i < 3; i++) {
+          final e = filtered[i];
+          print(
+              'ETA #${e.etaSeq}: route=${e.route}, dir=${e.dir}, seq=${e.seq}, stop=${e.stop}, eta=${e.eta}, minutes=${e.minutesUntilArrival}');
+        }
+        print('Total ETAs after filter: ${filtered.length}');
+        print('======================');
+      } catch (_) {}
+
+      setState(() {
+        _ctbEtaData = filtered;
+        _isLoadingETA = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Error loading ETA: $e';
+        _isLoadingETA = false;
+      });
+    }
+  }
+
+  // === Reusable ETA widgets ===
+  Widget _buildEtaBlock(List<Widget> rows) {
+    final noData = rows.isEmpty;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.dark
+            ? Colors.grey[900]
+            : Colors.white,
+        border: Border.all(
+          color: AppColorScheme.successBorderColor,
+          width: 3,
+        ),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '🚌 到站時間',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          if (noData) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: AppColorScheme.unselectedBorderColor,
+                  width: 2,
+                ),
+              ),
+              alignment: Alignment.centerRight,
+              child: Text(
+                AppLocalizations.of(context)?.etaEmpty ?? '',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ] else ...[
+            ...rows,
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEtaRow(String leftLabel, String rightLabel) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.white
+              : const Color(0xFF323232),
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            leftLabel,
+            style: TextStyle(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : const Color(0xFF323232),
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Text(
+            rightLabel,
+            style: TextStyle(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : const Color(0xFF323232),
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEtaLoading() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: AppColorScheme.unselectedBorderColor,
+          width: 2,
+        ),
+      ),
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            color: AppColorScheme.loadingIconColor,
+            strokeWidth: 2,
+          ),
+          SizedBox(width: 16),
+          Text('載入中...'),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            '${widget.routeNumber} 往 ${widget.destinationTc} ${widget.isCTB ? '| 城巴' : widget.serviceType == '1' ? '' : '| 特別班次'}'),
-        backgroundColor: const Color(0xFF323232),
-        foregroundColor: const Color(0xFFF7A925),
+            '${widget.routeNumber} 往 ${widget.destinationTc} ${widget.isCTB ? '' : widget.serviceType == '1' ? '' : '| 特別班次'}'),
+        backgroundColor:
+            widget.isCTB ? const Color(0xFF0055B8) : const Color(0xFF323232),
+        foregroundColor:
+            widget.isCTB ? const Color(0xFFFFDD00) : const Color(0xFFF7A925),
         actions: _availableBounds.length > 1 && widget.serviceType == '1'
             ? [
                 IconButton(
@@ -240,8 +410,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                           ),
                         )
                       : ListView.builder(
-                          padding: const EdgeInsets.fromLTRB(16, 16, 16,
-                              16), // Bottom padding for navigation bar
+                          padding: const EdgeInsets.all(16),
                           itemCount: widget.isCTB
                               ? _ctbRouteStops.length
                               : _routeStops.length,
@@ -266,7 +435,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                   GestureDetector(
                                     onTap: () async {
                                       HapticFeedback.lightImpact();
-                                      // No ETA implementation for CTB yet
+                                      await _loadCTBETA(stop.stop, stop.seq);
                                     },
                                     onLongPress: () async {
                                       HapticFeedback.mediumImpact();
@@ -364,7 +533,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                                         context)
                                                                     .languageCode ==
                                                                 'zh';
-                                                        final displayTop =
+                                                        final displayTopBase =
                                                             info == null
                                                                 ? stop.stop
                                                                 : (isChinese
@@ -372,6 +541,8 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                                         .nameTc
                                                                     : info
                                                                         .nameEn);
+                                                        final displayTop =
+                                                            '$displayTopBase (${stop.stop})';
                                                         final displayBottom =
                                                             info == null
                                                                 ? ''
@@ -432,7 +603,23 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                     ),
                                   ),
                                   if (isSelected && _isLoadingETA)
-                                    const SizedBox.shrink(),
+                                    _buildEtaLoading(),
+                                  if (isSelected && !_isLoadingETA)
+                                    _buildEtaBlock(
+                                      _ctbEtaData.map((eta) {
+                                        final isChinese =
+                                            Localizations.localeOf(context)
+                                                    .languageCode ==
+                                                'zh';
+                                        final label = isChinese
+                                            ? eta.arrivalTimeStringZh
+                                            : eta.arrivalTimeStringEn;
+                                        int displaySeq = eta.etaSeq;
+                                        if (displaySeq > 3) displaySeq -= 3;
+                                        return _buildEtaRow(
+                                            '第 $displaySeq 班', label);
+                                      }).toList(),
+                                    ),
                                 ],
                               );
                             }
@@ -556,9 +743,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    stop is KMBRouteStop
-                                                        ? stop.stopNameTc
-                                                        : stop.stop,
+                                                    stop.stopNameTc,
                                                     style: TextStyle(
                                                       fontSize: 18,
                                                       fontWeight:
@@ -573,9 +758,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                   ),
                                                   const SizedBox(height: 4),
                                                   Text(
-                                                    stop is KMBRouteStop
-                                                        ? stop.stopNameEn
-                                                        : '',
+                                                    stop.stopNameEn,
                                                     style: TextStyle(
                                                       fontSize: 14,
                                                       color: Theme.of(context)
@@ -600,145 +783,21 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                     _etaData.isNotEmpty &&
                                     _etaData.any((eta) =>
                                         eta.seq == _selectedStationSeq)) ...[
-                                  Container(
-                                    margin: const EdgeInsets.only(bottom: 16),
-                                    padding: const EdgeInsets.all(16),
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? Colors.grey[900]
-                                          : Colors.white,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color:
-                                            AppColorScheme.successBorderColor,
-                                        width: 3,
-                                      ),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          '🚌 到站時間',
-                                          style: TextStyle(
-                                            // color: Color(0xFFF7A925),
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 12),
-                                        ..._etaData.where((eta) {
-                                          final matches =
-                                              eta.seq == _selectedStationSeq;
-                                          // print('ETA Seq: ${eta.seq}, Selected Station Seq: $_selectedStationSeq, Matches: $matches');
-                                          return matches;
-                                        }) // Filter by sequence matching selected station sequence
-                                            .map((eta) {
-                                          int displaySeq = eta.etaSeq;
-                                          if (displaySeq > 3) {
-                                            displaySeq -= 3;
-                                          }
-                                          return Container(
-                                            margin: const EdgeInsets.symmetric(
-                                                vertical: 8),
-                                            padding: const EdgeInsets.all(12),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: Theme.of(context)
-                                                            .brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white
-                                                    : const Color(0xFF323232),
-                                                width: 1,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      '第 $displaySeq 班',
-                                                      style: TextStyle(
-                                                        color: Theme.of(context)
-                                                                    .brightness ==
-                                                                Brightness.dark
-                                                            ? Colors.white
-                                                            : Color(0xFF323232),
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.end,
-                                                  children: [
-                                                    Text(
-                                                      eta.arrivalTimeString,
-                                                      style: TextStyle(
-                                                        color: Theme.of(context)
-                                                                    .brightness ==
-                                                                Brightness.dark
-                                                            ? Colors.white
-                                                            : Color(0xFF323232),
-                                                        fontSize: 24,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }).toList(),
-                                      ],
-                                    ),
+                                  _buildEtaBlock(
+                                    _etaData
+                                        .where((eta) =>
+                                            eta.seq == _selectedStationSeq)
+                                        .map((eta) {
+                                      int displaySeq = eta.etaSeq;
+                                      if (displaySeq > 3) displaySeq -= 3;
+                                      return _buildEtaRow('第 $displaySeq 班',
+                                          eta.arrivalTimeString);
+                                    }).toList(),
                                   ),
                                 ],
                                 // Loading indicator for ETA
                                 if (isSelected && _isLoadingETA)
-                                  Container(
-                                    margin: const EdgeInsets.only(bottom: 16),
-                                    padding: const EdgeInsets.all(16),
-                                    decoration: BoxDecoration(
-                                      // color: const Color(0xFF1E1E1E),
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: AppColorScheme
-                                            .unselectedBorderColor,
-                                        width: 2,
-                                      ),
-                                    ),
-                                    child: const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        CircularProgressIndicator(
-                                          color:
-                                              AppColorScheme.loadingIconColor,
-                                          strokeWidth: 2,
-                                        ),
-                                        SizedBox(width: 16),
-                                        Text(
-                                          '載入中...',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                  _buildEtaLoading(),
                               ],
                             );
                           },
