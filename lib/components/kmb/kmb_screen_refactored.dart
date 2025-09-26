@@ -247,11 +247,12 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                     children: [
                       // Search Field - Fixed height
                       Container(
-                        height: 400, // Fixed height to prevent overflow
+                        constraints: const BoxConstraints(
+                            maxHeight: 400), // Fixed height to prevent overflow
                         padding: const EdgeInsets.all(16.0),
                         child: Card(
                           child: Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: const EdgeInsets.all(12.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

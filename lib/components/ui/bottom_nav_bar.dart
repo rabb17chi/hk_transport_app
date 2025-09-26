@@ -51,7 +51,7 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
       ),
       child: SafeArea(
         child: SizedBox(
-          height: 60,
+          height: 72,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [

@@ -92,10 +92,11 @@ class _InputKeyboardState extends State<InputKeyboard> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: scheme.surface,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
         ),
@@ -220,6 +221,7 @@ class _InputKeyboardState extends State<InputKeyboard> {
   }
 
   Widget _buildKey(String text) {
+    final scheme = Theme.of(context).colorScheme;
     final isLengthLimit = _currentText.length >= 4;
     final isAvailable = widget.availableCharacters.isNotEmpty &&
         widget.availableCharacters.contains(text);
@@ -246,9 +248,11 @@ class _InputKeyboardState extends State<InputKeyboard> {
         child: Text(
           text,
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 12,
             fontWeight: FontWeight.bold,
-            color: isDisabled ? Colors.grey[400] : Colors.black,
+            color: isDisabled
+                ? scheme.onSurface.withOpacity(0.38)
+                : scheme.onSurface,
           ),
         ),
       ),
@@ -257,58 +261,56 @@ class _InputKeyboardState extends State<InputKeyboard> {
 
   Color? _getKeyBackgroundColor(
       bool isDisabled, bool isAvailable, bool isNumber) {
+    final scheme = Theme.of(context).colorScheme;
     if (isDisabled) {
-      return Colors.grey[100]; // All disabled keys - light grey
+      return scheme.surfaceVariant.withOpacity(0.5);
     } else {
-      return Colors.grey[200]; // Available keys - normal grey
+      return scheme.surfaceVariant;
     }
   }
 
-  // Color? _getKeyTextColor(bool isDisabled, bool isAvailable, bool isNumber) {
-  //   if (isDisabled) {
-  //     return Colors.grey[400]; // All disabled keys - grey text
-  //   } else {
-  //     return Colors.black; // Available keys - normal black
-  //   }
-  // }
-
   Widget _buildClearKey() {
+    final scheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: ElevatedButton(
         onPressed: _onClearAll,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.orange[100],
-          foregroundColor: Colors.orange[800],
+          backgroundColor: scheme.tertiaryContainer,
+          foregroundColor: scheme.onTertiaryContainer,
           elevation: 2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 8),
         ),
-        child: const Text(
+        child: Text(
           '-',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: scheme.onTertiaryContainer),
         ),
       ),
     );
   }
 
   Widget _buildBackspaceKey() {
+    final scheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: ElevatedButton(
         onPressed: _onBackspace,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.red[100],
-          foregroundColor: Colors.red[800],
+          backgroundColor: scheme.errorContainer,
+          foregroundColor: scheme.onErrorContainer,
           elevation: 2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
           padding: const EdgeInsets.symmetric(vertical: 16),
         ),
-        child: const Icon(Icons.backspace, size: 20),
+        child: Icon(Icons.backspace, size: 20, color: scheme.onErrorContainer),
       ),
     );
   }

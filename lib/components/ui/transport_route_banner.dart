@@ -31,8 +31,7 @@ class TransportRouteBanner extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(8),
         child: Container(
-          height: 80,
-          margin: const EdgeInsets.symmetric(vertical: 4),
+          margin: const EdgeInsets.symmetric(vertical: 6),
           decoration: BoxDecoration(
             color: backgroundColor,
             borderRadius: BorderRadius.circular(8),
@@ -48,7 +47,7 @@ class TransportRouteBanner extends StatelessWidget {
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: Row(
               children: [
                 Expanded(
@@ -58,32 +57,30 @@ class TransportRouteBanner extends StatelessWidget {
                     children: [
                       Text(
                         titleTop,
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: textColor,
-                          height: 1.1,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         titleBottom,
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 8,
                           fontWeight: FontWeight.w500,
                           color: textColor,
-                          height: 1.1,
                         ),
                       ),
                     ],
                   ),
                 ),
                 Container(
-                  width: 60,
+                  width: 80,
                   height: 60,
                   alignment: Alignment.center,
                   child: Text(

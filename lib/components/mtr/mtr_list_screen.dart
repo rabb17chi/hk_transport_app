@@ -226,7 +226,7 @@ class _MTRListScreenState extends State<MTRListScreen> {
                   style: const TextStyle(
                     color: Colors.black87,
                     fontWeight: FontWeight.bold,
-                    fontSize: 12,
+                    fontSize: 8,
                   ),
                 ),
               ),
@@ -268,7 +268,6 @@ class _MTRListScreenState extends State<MTRListScreen> {
             onTap: _isLoadingSchedule
                 ? null
                 : () async {
-                    // 觸發中等振動
                     await VibrationHelper.mediumVibrate();
 
                     _selectStation(displayTitle, stationKey, lineCode);
