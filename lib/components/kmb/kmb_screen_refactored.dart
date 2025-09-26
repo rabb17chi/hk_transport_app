@@ -4,7 +4,6 @@ import '../../scripts/kmb/kmb_api_service.dart';
 import '../../scripts/ctb/ctb_api_service.dart';
 import 'package:hk_transport_app/l10n/app_localizations.dart';
 import '../../scripts/utils/settings_service.dart';
-import '../../services/widget_service.dart';
 import '../../theme/app_color_scheme.dart';
 import 'route_banner.dart';
 import 'route_stations_screen.dart';
@@ -59,9 +58,6 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
     // Listen to special routes changes
     SettingsService.showSpecialRoutesNotifier
         .addListener(_onSpecialRoutesChanged);
-
-    // Update widget with default data when app starts
-    _updateWidgetWithDefaultData();
   }
 
   @override
@@ -116,78 +112,6 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
     setState(() {
       _selectedRouteKey = routeKey;
     });
-
-    // Update widget with selected route data
-    _updateWidgetWithSelectedRoute(routeKey);
-  }
-
-  void _updateWidgetWithDefaultData() async {
-    try {
-      // Update widget with default message when no route is selected
-      await WidgetService.updateKMBWidget(
-        route: 'KMB',
-        destination: 'Search for a route',
-        eta: 'No route selected',
-        time: DateTime.now().toString().substring(11, 16),
-      );
-
-      debugPrint('Widget updated with default data');
-    } catch (e) {
-      debugPrint('Error updating widget with default data: $e');
-    }
-  }
-
-  void _updateWidgetWithSelectedRoute(String routeKey) async {
-    try {
-      // Find the selected route from filtered routes
-      KMBRoute? selectedRoute;
-      try {
-        selectedRoute = _filteredRoutes.firstWhere(
-          (route) => '${route.route}_${route.bound}' == routeKey,
-        );
-      } catch (e) {
-        // If not found in filtered routes, try to find in all routes
-        selectedRoute = _routes.firstWhere(
-          (route) => '${route.route}_${route.bound}' == routeKey,
-        );
-      }
-
-      // Get real ETA data for the first stop of the route
-      String etaText = 'No ETA';
-      try {
-        final routeStops = await KMBApiService.getRouteStops(
-            selectedRoute.route,
-            selectedRoute.bound,
-            selectedRoute.serviceType);
-        if (routeStops.isNotEmpty) {
-          final firstStop = routeStops.first;
-          final etaList = await KMBApiService.getETA(
-              firstStop.stop, selectedRoute.route, selectedRoute.serviceType);
-
-          if (etaList.isNotEmpty) {
-            final eta = etaList.first;
-            etaText = eta.toString();
-          }
-        }
-      } catch (e) {
-        debugPrint('Error fetching ETA: $e');
-        etaText = 'ETA unavailable';
-      }
-
-      // Update widget with selected route data
-      await WidgetService.updateKMBWidget(
-        route: selectedRoute.route,
-        destination: selectedRoute.destTc, // Use Chinese destination
-        eta: etaText,
-        time: DateTime.now().toString().substring(11, 16),
-        bound: selectedRoute.bound,
-        serviceType: selectedRoute.serviceType,
-      );
-
-      debugPrint('Widget updated with selected route: ${selectedRoute.route}');
-    } catch (e) {
-      debugPrint('Error updating widget with selected route: $e');
-    }
   }
 
   void _filterRoutes() {
@@ -235,13 +159,6 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
       _searchController.text = text;
       _filterRoutes();
     });
-
-    // Update widget if there's a single matching route
-    if (text.isNotEmpty && _filteredRoutes.length == 1) {
-      final route = _filteredRoutes.first;
-      final routeKey = '${route.route}_${route.bound}';
-      _updateWidgetWithSelectedRoute(routeKey);
-    }
   }
 
   Set<String> _getAvailableNextCharacters(String currentInput) {

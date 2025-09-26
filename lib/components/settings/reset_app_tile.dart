@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../scripts/kmb/kmb_cache_service.dart';
 import '../ui/splash_screen.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
+import '../../scripts/utils/first_time_service.dart';
 
 class ResetAppTile extends StatefulWidget {
   const ResetAppTile({super.key});
@@ -77,6 +78,8 @@ class _ResetAppTileState extends State<ResetAppTile> {
       await prefs.remove('kmb_bookmarks_v1');
       await prefs.remove('mtr_bookmarks_v1');
       await prefs.remove('last_platform');
+      // Reset first-time guide flag
+      await FirstTimeService.reset();
 
       // Remove per-route-stop cache entries
       final keys = prefs.getKeys();

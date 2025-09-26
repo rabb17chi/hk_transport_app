@@ -88,6 +88,22 @@
   "kmbNoMatchTitle": "No matching routes",
   "kmbNoMatchSubtitle": "Please check the route number",
   "kmbEmptyTitle": "Please input route number",
-  "kmbEmptySubtitle": "e.g. 1A"
+  "kmbEmptySubtitle": "e.g. 1A",
+
+  "introWelcomeTitle": "Welcome to App",
+  "introUseIt": "You can use it to check",
+  "introHKTransportsETA": "HK transports' ETA",
+  "introETAFull": "(Estimated Time of Arrival)",
+  "introIfChangeMode": "If you change mode...",
+  "holdToChange": "Hold to change",
+  "busLabel": "Bus",
+  "mtrLabel": "MTR",
+  "introSetupPref": "Let's set up the preference!",
+  "introModeSet": "Mode Set: {mode}",
+  "firstTimeSettingsStored": "Settings will be stored.",
+  "firstTimeTitleWelcome": "App Introduction",
+  "firstTimeTitleSetup": "Setup",
+  "firstTimeTitleTips": "Tips",
+  "firstTimeTitleReady": "Ready"
 }
 

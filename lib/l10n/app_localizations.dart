@@ -635,6 +635,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'e.g. 1A'**
   String get kmbEmptySubtitle;
+
+  /// No description provided for @introWelcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to App'**
+  String get introWelcomeTitle;
+
+  /// No description provided for @introUseIt.
+  ///
+  /// In en, this message translates to:
+  /// **'You can use it to check'**
+  String get introUseIt;
+
+  /// No description provided for @introHKTransportsETA.
+  ///
+  /// In en, this message translates to:
+  /// **'HK transports\' ETA'**
+  String get introHKTransportsETA;
+
+  /// No description provided for @introETAFull.
+  ///
+  /// In en, this message translates to:
+  /// **'(Estimated Time of Arrival)'**
+  String get introETAFull;
+
+  /// No description provided for @introIfChangeMode.
+  ///
+  /// In en, this message translates to:
+  /// **'If you change mode...'**
+  String get introIfChangeMode;
+
+  /// No description provided for @holdToChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold to change'**
+  String get holdToChange;
+
+  /// No description provided for @busLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Bus'**
+  String get busLabel;
+
+  /// No description provided for @mtrLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'MTR'**
+  String get mtrLabel;
+
+  /// No description provided for @introSetupPref.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s set up the preference!'**
+  String get introSetupPref;
+
+  /// No description provided for @introModeSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Mode Set: {mode}'**
+  String introModeSet(Object mode);
+
+  /// No description provided for @firstTimeSettingsStored.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings will be stored.'**
+  String get firstTimeSettingsStored;
+
+  /// No description provided for @firstTimeTitleWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'App Introduction'**
+  String get firstTimeTitleWelcome;
+
+  /// No description provided for @firstTimeTitleSetup.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup'**
+  String get firstTimeTitleSetup;
+
+  /// No description provided for @firstTimeTitleTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Tips'**
+  String get firstTimeTitleTips;
+
+  /// No description provided for @firstTimeTitleReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready'**
+  String get firstTimeTitleReady;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

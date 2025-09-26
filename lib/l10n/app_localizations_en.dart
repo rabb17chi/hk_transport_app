@@ -281,4 +281,51 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get kmbEmptySubtitle => 'e.g. 1A';
+
+  @override
+  String get introWelcomeTitle => 'Welcome to App';
+
+  @override
+  String get introUseIt => 'You can use it to check';
+
+  @override
+  String get introHKTransportsETA => 'HK transports\' ETA';
+
+  @override
+  String get introETAFull => '(Estimated Time of Arrival)';
+
+  @override
+  String get introIfChangeMode => 'If you change mode...';
+
+  @override
+  String get holdToChange => 'Hold to change';
+
+  @override
+  String get busLabel => 'Bus';
+
+  @override
+  String get mtrLabel => 'MTR';
+
+  @override
+  String get introSetupPref => 'Let\'s set up the preference!';
+
+  @override
+  String introModeSet(Object mode) {
+    return 'Mode Set: $mode';
+  }
+
+  @override
+  String get firstTimeSettingsStored => 'Settings will be stored.';
+
+  @override
+  String get firstTimeTitleWelcome => 'App Introduction';
+
+  @override
+  String get firstTimeTitleSetup => 'Setup';
+
+  @override
+  String get firstTimeTitleTips => 'Tips';
+
+  @override
+  String get firstTimeTitleReady => 'Ready';
 }

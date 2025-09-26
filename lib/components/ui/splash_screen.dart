@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../main.dart';
 // import '../scripts/locale/locale_service.dart';
 import '../../scripts/utils/startup_service.dart';
+import '../../scripts/utils/first_time_service.dart';
+import '../first_time/first_time_to_app.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -23,6 +25,8 @@ class _SplashScreenState extends State<SplashScreen> {
     final start = DateTime.now();
     final isMTR = await StartupService.loadInitialPlatformIsMTR();
     await StartupService.initializeApp();
+    // Dev: bypass first-time checker
+    final isFirstTime = true;
 
     // Ensure splash shows at least 2 seconds
     final elapsed = DateTime.now().difference(start);
@@ -32,18 +36,33 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     if (!mounted) return;
-    Navigator.of(context).pushReplacement(
-      PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 350),
-        pageBuilder: (_, __, ___) => MyHomePage(initialIsMTR: isMTR),
-        transitionsBuilder: (_, animation, __, child) {
-          return FadeTransition(
-            opacity: animation,
-            child: child,
-          );
-        },
-      ),
-    );
+    if (isFirstTime) {
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          transitionDuration: const Duration(milliseconds: 350),
+          pageBuilder: (_, __, ___) => const FirstTimeToApp(),
+          transitionsBuilder: (_, animation, __, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        ),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          transitionDuration: const Duration(milliseconds: 350),
+          pageBuilder: (_, __, ___) => MyHomePage(initialIsMTR: isMTR),
+          transitionsBuilder: (_, animation, __, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+        ),
+      );
+    }
   }
 
   @override

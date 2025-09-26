@@ -281,6 +281,53 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get kmbEmptySubtitle => '例如: 1A';
+
+  @override
+  String get introWelcomeTitle => 'Welcome to App';
+
+  @override
+  String get introUseIt => 'You can use it to check';
+
+  @override
+  String get introHKTransportsETA => 'HK transports\' ETA';
+
+  @override
+  String get introETAFull => '(Estimated Time of Arrival)';
+
+  @override
+  String get introIfChangeMode => 'If you change mode...';
+
+  @override
+  String get holdToChange => 'Hold to change';
+
+  @override
+  String get busLabel => 'Bus';
+
+  @override
+  String get mtrLabel => 'MTR';
+
+  @override
+  String get introSetupPref => 'Let\'s set up the preference!';
+
+  @override
+  String introModeSet(Object mode) {
+    return 'Mode Set: $mode';
+  }
+
+  @override
+  String get firstTimeSettingsStored => 'Settings will be stored.';
+
+  @override
+  String get firstTimeTitleWelcome => 'App Introduction';
+
+  @override
+  String get firstTimeTitleSetup => 'Setup';
+
+  @override
+  String get firstTimeTitleTips => 'Tips';
+
+  @override
+  String get firstTimeTitleReady => 'Ready';
 }
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).
@@ -551,4 +598,51 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
 
   @override
   String get kmbEmptySubtitle => '例如: 1A';
+
+  @override
+  String get introWelcomeTitle => '歡迎使用本應用';
+
+  @override
+  String get introUseIt => '你可以用來查看';
+
+  @override
+  String get introHKTransportsETA => '香港交通的到站時間';
+
+  @override
+  String get introETAFull => '（Estimated Time of Arrival）';
+
+  @override
+  String get introIfChangeMode => '如需切換模式...';
+
+  @override
+  String get holdToChange => '長按切換';
+
+  @override
+  String get busLabel => '巴士';
+
+  @override
+  String get mtrLabel => '港鐵';
+
+  @override
+  String get introSetupPref => '先設定你的偏好！';
+
+  @override
+  String introModeSet(Object mode) {
+    return '當前模式：$mode';
+  }
+
+  @override
+  String get firstTimeSettingsStored => '設定將會被儲存。';
+
+  @override
+  String get firstTimeTitleWelcome => '應用介紹';
+
+  @override
+  String get firstTimeTitleSetup => '設定';
+
+  @override
+  String get firstTimeTitleTips => '提示';
+
+  @override
+  String get firstTimeTitleReady => '開始';
 }

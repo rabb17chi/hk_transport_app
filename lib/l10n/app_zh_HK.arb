@@ -89,6 +89,22 @@
   "kmbNoMatchTitle": "沒有相應路線",
   "kmbNoMatchSubtitle": "請重新檢查路線號碼",
   "kmbEmptyTitle": "請輸入路線號碼",
-  "kmbEmptySubtitle": "例如: 1A"
+  "kmbEmptySubtitle": "例如: 1A",
+
+  "introWelcomeTitle": "歡迎使用本應用",
+  "introUseIt": "你可以用來查看",
+  "introHKTransportsETA": "香港交通的到站時間",
+  "introETAFull": "（Estimated Time of Arrival）",
+  "introIfChangeMode": "如需切換模式...",
+  "holdToChange": "長按切換",
+  "busLabel": "巴士",
+  "mtrLabel": "港鐵",
+  "introSetupPref": "先設定你的偏好！",
+  "introModeSet": "當前模式：{mode}",
+  "firstTimeSettingsStored": "設定將會被儲存。",
+  "firstTimeTitleWelcome": "應用介紹",
+  "firstTimeTitleSetup": "設定",
+  "firstTimeTitleTips": "提示",
+  "firstTimeTitleReady": "開始"
 }
 
