@@ -334,6 +334,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get firstTimeFinalThanks => 'Thanks for using the app!';
+
+  @override
+  String get dataOpsVibrationToggle => 'Vibration';
+
+  @override
+  String get dataOpsSubtitleToggle => 'Show Bus Station Subtitle';
 }
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).
@@ -657,4 +663,10 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
 
   @override
   String get firstTimeFinalThanks => '感謝使用本應用！';
+
+  @override
+  String get dataOpsVibrationToggle => '震動';
+
+  @override
+  String get dataOpsSubtitleToggle => '顯示巴士站副標題';
 }

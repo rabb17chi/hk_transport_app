@@ -737,6 +737,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Thanks for using the app!'**
   String get firstTimeFinalThanks;
+
+  /// No description provided for @dataOpsVibrationToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibration'**
+  String get dataOpsVibrationToggle;
+
+  /// No description provided for @dataOpsSubtitleToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Bus Station Subtitle'**
+  String get dataOpsSubtitleToggle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

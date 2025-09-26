@@ -106,6 +106,8 @@
   "firstTimeTitleTips": "Tips",
   "firstTimeTitleReady": "Ready",
   "firstTimeFinalAdjustSettings": "You can adjust your settings in Menu",
-  "firstTimeFinalThanks": "Thanks for using the app!"
+  "firstTimeFinalThanks": "Thanks for using the app!",
+  "dataOpsVibrationToggle": "Vibration",
+  "dataOpsSubtitleToggle": "Show Bus Station Subtitle"
 }
 

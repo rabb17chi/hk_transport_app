@@ -6,6 +6,7 @@ import '../../scripts/utils/text_utils.dart';
 import '../../scripts/ctb/ctb_route_stops_service.dart';
 import '../../scripts/bookmarks/bookmarks_service.dart';
 import '../../scripts/utils/vibration_helper.dart';
+import '../../scripts/utils/settings_service.dart';
 import '../../theme/app_color_scheme.dart';
 
 /// Route Stations Screen
@@ -595,19 +596,33 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                             ),
                                                             const SizedBox(
                                                                 height: 4),
-                                                            Text(
-                                                              displayBottom,
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Theme.of(context)
-                                                                            .brightness ==
-                                                                        Brightness
-                                                                            .dark
-                                                                    ? Colors
-                                                                        .white
-                                                                    : Colors
-                                                                        .black,
-                                                              ),
+                                                            ValueListenableBuilder<
+                                                                bool>(
+                                                              valueListenable:
+                                                                  SettingsService
+                                                                      .showSubtitleNotifier,
+                                                              builder: (context,
+                                                                  showSubtitle,
+                                                                  _) {
+                                                                if (!showSubtitle)
+                                                                  return const SizedBox
+                                                                      .shrink();
+                                                                return Text(
+                                                                  displayBottom,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: Theme.of(context).brightness ==
+                                                                            Brightness
+                                                                                .dark
+                                                                        ? Colors
+                                                                            .white
+                                                                        : Colors
+                                                                            .black,
+                                                                  ),
+                                                                );
+                                                              },
                                                             ),
                                                           ],
                                                         );
@@ -778,18 +793,30 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                     ),
                                                   ),
                                                   const SizedBox(height: 4),
-                                                  Text(
-                                                    _cleanStopName(
-                                                        stop.stopNameEn),
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Theme.of(context)
-                                                                  .brightness ==
-                                                              Brightness.dark
-                                                          ? Colors.white
-                                                          : AppColorScheme
-                                                              .textMediumColor,
-                                                    ),
+                                                  ValueListenableBuilder<bool>(
+                                                    valueListenable:
+                                                        SettingsService
+                                                            .showSubtitleNotifier,
+                                                    builder: (context,
+                                                        showSubtitle, _) {
+                                                      if (!showSubtitle)
+                                                        return const SizedBox
+                                                            .shrink();
+                                                      return Text(
+                                                        _cleanStopName(
+                                                            stop.stopNameEn),
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          color: Theme.of(context)
+                                                                      .brightness ==
+                                                                  Brightness
+                                                                      .dark
+                                                              ? Colors.white
+                                                              : AppColorScheme
+                                                                  .textMediumColor,
+                                                        ),
+                                                      );
+                                                    },
                                                   ),
                                                 ],
                                               ),

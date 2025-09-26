@@ -334,4 +334,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get firstTimeFinalThanks => 'Thanks for using the app!';
+
+  @override
+  String get dataOpsVibrationToggle => 'Vibration';
+
+  @override
+  String get dataOpsSubtitleToggle => 'Show Bus Station Subtitle';
 }

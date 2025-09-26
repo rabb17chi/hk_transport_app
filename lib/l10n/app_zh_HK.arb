@@ -107,6 +107,8 @@
   "firstTimeTitleTips": "開始使用",
   "firstTimeTitleReady": "開始",
   "firstTimeFinalAdjustSettings": "你可以在「菜單」中調整設定",
-  "firstTimeFinalThanks": "感謝使用本應用！"
+  "firstTimeFinalThanks": "感謝使用本應用！",
+  "dataOpsVibrationToggle": "震動",
+  "dataOpsSubtitleToggle": "顯示巴士站副標題"
 }
 

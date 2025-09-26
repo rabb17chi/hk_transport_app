@@ -27,10 +27,20 @@ class DataOperationsSection extends StatelessWidget {
         trailing: const SizedBox.shrink(),
         children: [
           ValueListenableBuilder<bool>(
+            valueListenable: SettingsService.showSubtitleNotifier,
+            builder: (context, value, _) => SwitchListTile(
+              secondary: const Icon(Icons.subtitles),
+              title: Text(AppLocalizations.of(context)!.dataOpsSubtitleToggle),
+              value: value,
+              onChanged: (v) => SettingsService.setShowSubtitle(v),
+            ),
+          ),
+          const SizedBox(height: 4),
+          ValueListenableBuilder<bool>(
             valueListenable: SettingsService.vibrationEnabledNotifier,
             builder: (context, value, _) => SwitchListTile(
               secondary: const Icon(Icons.vibration),
-              title: const Text('Vibration'),
+              title: Text(AppLocalizations.of(context)!.dataOpsVibrationToggle),
               value: value,
               onChanged: (v) => SettingsService.setVibrationEnabled(v),
             ),
