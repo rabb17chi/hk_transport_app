@@ -17,20 +17,18 @@ A comprehensive Hong Kong transport information app providing real-time MTR and 
 - **車站資訊** / Station Information: 詳細的車站資料和時刻表
 - **多語言支援** / Multi-language Support: 中文繁體和英文介面
 
-### 🚌 九巴服務 / KMB Services
+### 🚌 巴士服務 / Services
 
-- **路線查詢** / Route Search: 搜尋九巴路線和車站資訊
+- **路線查詢** / Route Search: 搜尋巴士路線和車站資訊
 - **即時到站時間** / Real-time Arrival: 查看巴士預計到達時間
 - **路線詳情** / Route Details: 完整的路線和車站列表
 - **書籤功能** / Bookmark Feature: 收藏常用路線和車站
-- **城巴支援** / Citybus (CTB) Support: 可搜尋/顯示 CTB 路線、取得 ETA、並將 CTB 車站加入收藏
 
 ### 📱 用戶介面 / User Interface
 
 - **現代化設計** / Modern Design: 簡潔美觀的 Material Design 3 介面
-- **直觀導航** / Intuitive Navigation: 底部導航欄與模式切換（含輕觸覺回饋）
+- **直觀導航** / Intuitive Navigation: 底部導航欄與模式長按切換
 - **響應式佈局** / Responsive Layout: 適配不同螢幕尺寸
-- **觸覺反饋** / Haptic Feedback: 提供觸覺回饋增強用戶體驗
 
 ### ⭐ 書籤系統 / Bookmark System
 
@@ -38,18 +36,18 @@ A comprehensive Hong Kong transport information app providing real-time MTR and 
 - **分類管理** / Categorized Management: 分別管理港鐵和九巴書籤
 - **快速存取** / Quick Access: 一鍵存取收藏的路線和車站
 - **同步儲存** / Sync Storage: 本地儲存，無需網路連線
-- **CTB 書籤** / CTB Bookmarks: 支援 CTB 書籤（含站名與 stopId 儲存；清單顯示以站名為主）
 
 ### 🚀 啟動與體驗 / Startup & UX
 
 - **平台記憶** / Platform Memory: 記住你上次使用的模式（MTR/KMB），下次開啟自動套用
 - **重設功能** / Reset: 在「菜單」頁可一鍵重設（清除書籤、KMB 快取並重新抓取資料）
 - **開發者連結** / Developer Link: 透過對話框打開 GitHub 專案頁（使用手機預設瀏覽器）
+- **第一次啟動導覽** / First-time Onboarding: 4 個步驟；最後一步提醒可於「菜單」調整設定
 
 ### 🌐 多語言 / Localization
 
 - **內建語言包** / Bundled: 使用 Flutter gen-l10n 與 ARB 檔，支援英文與繁體中文（香港）
-- **自動語言對應** / Auto Mapping: 偵測裝置語言，若為中文（中國/台灣/香港/澳門或繁體腳本）自動套用 zh_HK，否則英文
+- **自動語言對應** / Auto Mapping: 偵測裝置語言，若為中文自動套用 zh_HK，否則英文
 - **手動切換** / Manual Switch: 在「菜單」頁可切換 English / 繁體中文 / 跟隨系統
 
 ## 技術特色 / Technical Features
@@ -59,15 +57,17 @@ A comprehensive Hong Kong transport information app providing real-time MTR and 
 - **Flutter 框架** / Flutter Framework: 跨平台移動應用開發
 - **模組化設計** / Modular Design: 清晰的代碼結構和組件分離
 - **狀態管理** / State Management: 高效的狀態管理和數據流
-- **API 整合** / API Integration: 整合港鐵和九巴官方 API
+- **API 整合** / API Integration: 整合政府公開數據集官方 API
 
 ### 🔧 核心功能 / Core Features
 
 - **即時數據** / Real-time Data: 從官方 API 獲取最新交通資訊
 - **離線快取** / Offline Cache: 智能快取機制減少網路請求
-- **錯誤處理** / Error Handling: 完善的錯誤處理和用戶提示（僅保留錯誤 Snackbar，移除成功提示）
+- **錯誤處理** / Error Handling: 完善的錯誤處理和用戶提示
 - **性能優化** / Performance Optimization: 流暢的用戶體驗
 - **站名顯示選項** / Stop Name Display Option: 可於「更多資料操作」中切換「顯示完整巴士站名」，開啟時顯示括號代碼；關閉時自動清理如「(XX123)」的尾碼
+- **暗色鍵盤** / Dark Keyboard: 自訂輸入鍵盤會依主題自動套用暗色/亮色配色
+- **MTR 反向示範** / MTR Reverse Demo: 設定頁以機場快線（AEL）示例，直向、滿寬、依系統語言顯示站名
 
 ## 安裝與使用 / Installation & Usage
 
@@ -168,7 +168,7 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
 
 For questions or suggestions, please contact:
 
-- **GitHub** / GitHub: [@your-username](https://github.com/your-username)
+- **rabb17Info** / GitHub: [Link](https://rabb17.info)
 
 ---
 

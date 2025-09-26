@@ -164,7 +164,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
       title: Row(
         children: [
           Container(
-            width: 68,
+            width: 80,
             height: 28,
             decoration: BoxDecoration(
               color: _getLineColor(widget.lineCode),
