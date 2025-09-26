@@ -1,4 +1,4 @@
-package com.example.hk_transport_app
+package rabb17.hktransport
 
 import io.flutter.embedding.android.FlutterActivity
 

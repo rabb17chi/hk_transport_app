@@ -1,4 +1,4 @@
-package com.example.hk_transport_app
+package rabb17.hktransport
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -59,7 +59,7 @@ class KMBWidgetProvider : AppWidgetProvider() {
             
             // Fallback: try all possible SharedPreferences files
             val sharedPrefs1 = context.getSharedPreferences("HomeWidgetProvider", Context.MODE_PRIVATE)
-            val sharedPrefs2 = context.getSharedPreferences("group.com.example.hk_transport_app", Context.MODE_PRIVATE)
+            val sharedPrefs2 = context.getSharedPreferences("group.rabb17.hktransport", Context.MODE_PRIVATE)
             val sharedPrefs3 = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
             val sharedPrefs4 = context.getSharedPreferences("home_widget", Context.MODE_PRIVATE)
             val sharedPrefs5 = context.getSharedPreferences("es.antonborri.home_widget", Context.MODE_PRIVATE)
@@ -81,7 +81,7 @@ class KMBWidgetProvider : AppWidgetProvider() {
                     sharedPrefs5.getString("kmb_eta", "N/A"))))) ?: "N/A"
             time = sharedPrefs1.getString("kmb_time",
                      sharedPrefs2.getString("kmb_time",
-                     sharedPrefs3.getString("kmb_time",
+                     sharedPrefs2.getString("kmb_time",
                      sharedPrefs4.getString("kmb_time",
                      sharedPrefs5.getString("kmb_time", "N/A"))))) ?: "N/A"
 
