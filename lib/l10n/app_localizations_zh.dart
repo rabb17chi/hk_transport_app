@@ -328,6 +328,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get firstTimeTitleReady => 'Ready';
+
+  @override
+  String get firstTimeFinalAdjustSettings => 'You can adjust your settings in Menu';
+
+  @override
+  String get firstTimeFinalThanks => 'Thanks for using the app!';
 }
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).
@@ -632,17 +638,23 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
   }
 
   @override
-  String get firstTimeSettingsStored => '設定將會被儲存。';
+  String get firstTimeSettingsStored => '設定將會被儲存';
 
   @override
   String get firstTimeTitleWelcome => '應用介紹';
 
   @override
-  String get firstTimeTitleSetup => '設定';
+  String get firstTimeTitleSetup => '偏好設定';
 
   @override
-  String get firstTimeTitleTips => '提示';
+  String get firstTimeTitleTips => '開始使用';
 
   @override
   String get firstTimeTitleReady => '開始';
+
+  @override
+  String get firstTimeFinalAdjustSettings => '你可以在「菜單」中調整設定';
+
+  @override
+  String get firstTimeFinalThanks => '感謝使用本應用！';
 }

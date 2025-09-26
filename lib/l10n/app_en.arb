@@ -104,6 +104,8 @@
   "firstTimeTitleWelcome": "App Introduction",
   "firstTimeTitleSetup": "Setup",
   "firstTimeTitleTips": "Tips",
-  "firstTimeTitleReady": "Ready"
+  "firstTimeTitleReady": "Ready",
+  "firstTimeFinalAdjustSettings": "You can adjust your settings in Menu",
+  "firstTimeFinalThanks": "Thanks for using the app!"
 }
 

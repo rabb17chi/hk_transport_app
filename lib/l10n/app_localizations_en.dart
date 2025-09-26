@@ -328,4 +328,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get firstTimeTitleReady => 'Ready';
+
+  @override
+  String get firstTimeFinalAdjustSettings => 'You can adjust your settings in Menu';
+
+  @override
+  String get firstTimeFinalThanks => 'Thanks for using the app!';
 }

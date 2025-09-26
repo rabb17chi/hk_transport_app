@@ -101,10 +101,12 @@
   "mtrLabel": "港鐵",
   "introSetupPref": "先設定你的偏好！",
   "introModeSet": "當前模式：{mode}",
-  "firstTimeSettingsStored": "設定將會被儲存。",
+  "firstTimeSettingsStored": "設定將會被儲存",
   "firstTimeTitleWelcome": "應用介紹",
-  "firstTimeTitleSetup": "設定",
-  "firstTimeTitleTips": "提示",
-  "firstTimeTitleReady": "開始"
+  "firstTimeTitleSetup": "偏好設定",
+  "firstTimeTitleTips": "開始使用",
+  "firstTimeTitleReady": "開始",
+  "firstTimeFinalAdjustSettings": "你可以在「菜單」中調整設定",
+  "firstTimeFinalThanks": "感謝使用本應用！"
 }
 

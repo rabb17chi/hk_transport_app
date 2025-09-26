@@ -145,6 +145,14 @@ class _MTRSettingStepState extends State<MTRSettingStep> {
                       ),
                     ],
                   ),
+                  _autoRefresh
+                      ? Text(
+                          'Extra API-network will be used.',
+                          style: TextStyle(
+                            fontSize: 10,
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                   const SizedBox(height: 8),
                   _buildAutoRefreshDemo(context),
                 ],
@@ -228,7 +236,7 @@ class _MTRSettingStepState extends State<MTRSettingStep> {
             ],
           ),
           if (_autoRefresh) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             Align(
               alignment: Alignment.centerRight,
               child: Container(

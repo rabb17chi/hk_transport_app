@@ -4,6 +4,7 @@
 /// 減少代碼重複並提供一致的用戶體驗
 
 import 'package:vibration/vibration.dart';
+import 'settings_service.dart';
 
 /// 振動等級枚舉
 enum VibrationLevel {
@@ -29,6 +30,10 @@ class VibrationHelper {
     int? customDuration,
   }) async {
     try {
+      // Respect user setting
+      if (!SettingsService.vibrationEnabledNotifier.value) {
+        return;
+      }
       // 檢查設備是否支持振動
       if (await Vibration.hasVibrator() == true) {
         // 使用自定義時長或根據等級獲取時長

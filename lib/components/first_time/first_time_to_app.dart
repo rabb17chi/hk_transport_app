@@ -5,6 +5,7 @@ import 'steps/project_intro.dart';
 import 'steps/bus_setting.dart';
 import '../../l10n/app_localizations.dart';
 import 'steps/mtr_setting.dart';
+import 'steps/final_dive_into_app.dart';
 
 class FirstTimeToApp extends StatefulWidget {
   const FirstTimeToApp({super.key});
@@ -14,7 +15,7 @@ class FirstTimeToApp extends StatefulWidget {
 }
 
 class _FirstTimeToAppState extends State<FirstTimeToApp> {
-  static const int _totalSteps = 5;
+  static const int _totalSteps = 4;
   final PageController _pageController = PageController();
   int _currentStep = 0;
 
@@ -61,8 +62,6 @@ class _FirstTimeToAppState extends State<FirstTimeToApp> {
         return '${loc.firstTimeTitleSetup} - 港鐵';
       case 3:
         return loc.firstTimeTitleTips;
-      case 4:
-        return loc.firstTimeTitleReady;
       default:
         return '';
     }
@@ -118,13 +117,7 @@ class _FirstTimeToAppState extends State<FirstTimeToApp> {
                       if (index == 2) {
                         return const MTRSettingStep();
                       }
-                      return Center(
-                        child: Text(
-                          'Step ${index + 1} of $_totalSteps',
-                          style: Theme.of(context).textTheme.headlineSmall,
-                          textAlign: TextAlign.center,
-                        ),
-                      );
+                      return const FinalDiveIntoAppStep();
                     },
                   ),
                 ),

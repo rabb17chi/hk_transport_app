@@ -25,8 +25,8 @@ class _SplashScreenState extends State<SplashScreen> {
     final start = DateTime.now();
     final isMTR = await StartupService.loadInitialPlatformIsMTR();
     await StartupService.initializeApp();
-    // Dev: bypass first-time checker
-    final isFirstTime = true;
+    // Check if user has completed first-time flow
+    final isFirstTime = await FirstTimeService.isFirstTime();
 
     // Ensure splash shows at least 2 seconds
     final elapsed = DateTime.now().difference(start);

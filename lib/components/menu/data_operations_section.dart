@@ -27,6 +27,16 @@ class DataOperationsSection extends StatelessWidget {
         trailing: const SizedBox.shrink(),
         children: [
           ValueListenableBuilder<bool>(
+            valueListenable: SettingsService.vibrationEnabledNotifier,
+            builder: (context, value, _) => SwitchListTile(
+              secondary: const Icon(Icons.vibration),
+              title: const Text('Vibration'),
+              value: value,
+              onChanged: (v) => SettingsService.setVibrationEnabled(v),
+            ),
+          ),
+          const SizedBox(height: 4),
+          ValueListenableBuilder<bool>(
             valueListenable: SettingsService.showSpecialRoutesNotifier,
             builder: (context, value, _) => SwitchListTile(
               secondary: const Icon(Icons.filter_alt),

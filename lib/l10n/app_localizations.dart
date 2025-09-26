@@ -725,6 +725,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ready'**
   String get firstTimeTitleReady;
+
+  /// No description provided for @firstTimeFinalAdjustSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'You can adjust your settings in Menu'**
+  String get firstTimeFinalAdjustSettings;
+
+  /// No description provided for @firstTimeFinalThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks for using the app!'**
+  String get firstTimeFinalThanks;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

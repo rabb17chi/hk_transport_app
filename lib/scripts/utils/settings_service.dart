@@ -9,6 +9,7 @@ class SettingsService {
   static const String _showSpecialRoutesKey = 'showSpecialRoutes';
   static const String _kmbLastUpdateKey = 'kmb_last_update_time';
   static const String _displayBusFullNameKey = 'display_bus_full_name_v1';
+  static const String _vibrationEnabledKey = 'vibration_enabled_v1';
 
   // MTR station order: true = reverse order, false = normal order
   // MTR 車站順序：true = 反向順序，false = 正常順序
@@ -38,6 +39,12 @@ class SettingsService {
   // 顯示完整巴士站名（包含代碼）：true = 顯示完整，false = 簡化
   static final ValueNotifier<bool> displayBusFullNameNotifier =
       ValueNotifier<bool>(false);
+
+  // Vibration enabled: true = vibrate on interactions, false = no vibration
+  // 震動開關：true = 啟用震動，false = 關閉震動
+  // Default: enabled
+  static final ValueNotifier<bool> vibrationEnabledNotifier =
+      ValueNotifier<bool>(true);
 
   // Load all settings from SharedPreferences on app startup
   // 在應用程式啟動時從 SharedPreferences 載入所有設定
@@ -72,6 +79,10 @@ class SettingsService {
     // Load Display Bus Full Name setting
     final showFull = prefs.getBool(_displayBusFullNameKey) ?? false;
     displayBusFullNameNotifier.value = showFull;
+
+    // Load vibration enabled
+    final vibrationEnabled = prefs.getBool(_vibrationEnabledKey) ?? true;
+    vibrationEnabledNotifier.value = vibrationEnabled;
   }
 
   // Set MTR station order preference
@@ -121,5 +132,12 @@ class SettingsService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_displayBusFullNameKey, value);
     displayBusFullNameNotifier.value = value;
+  }
+
+  // Set vibration enabled preference
+  static Future<void> setVibrationEnabled(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_vibrationEnabledKey, value);
+    vibrationEnabledNotifier.value = value;
   }
 }
