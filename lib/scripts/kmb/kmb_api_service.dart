@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 import 'kmb_cache_service.dart';
 
 /// KMB API Service for Hong Kong Bus Data
@@ -10,7 +12,7 @@ class KMBApiService {
   static const String baseUrl = 'https://data.etabus.gov.hk/v1/transport/kmb';
 
   /// Fetch all available KMB bus routes
-  static Future<List<KMBRoute>> getAllRoutes() async {
+  static Future<List<KMBRoute>> getAllRoutes([BuildContext? context]) async {
     try {
       // Try to get cached data first
       final cachedRoutes = await KMBCacheService.getCachedRoutes();
@@ -43,17 +45,25 @@ class KMBApiService {
         return routes;
       } else {
         print('API Error: ${response.statusCode} - ${response.body}');
+        final errorMessage = context != null
+            ? AppLocalizations.of(context)?.apiErrorFailedToLoadRoutes ??
+                'Failed to load routes'
+            : 'Failed to load routes';
         throw Exception(
-            'Failed to load routes: ${response.statusCode} - ${response.body}');
+            '$errorMessage: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
       print('Error in getAllRoutes: $e');
-      throw Exception('Error fetching routes: $e');
+      final errorMessage = context != null
+          ? AppLocalizations.of(context)?.apiErrorFetchingRoutes ??
+              'Error fetching routes'
+          : 'Error fetching routes';
+      throw Exception('$errorMessage: $e');
     }
   }
 
   /// Fetch all available KMB bus stops
-  static Future<List<KMBStop>> getAllStops() async {
+  static Future<List<KMBStop>> getAllStops([BuildContext? context]) async {
     try {
       // Try to get cached data first
       final cachedStops = await KMBCacheService.getCachedStops();
@@ -85,18 +95,27 @@ class KMBApiService {
         return stops;
       } else {
         print('API Error: ${response.statusCode} - ${response.body}');
+        final errorMessage = context != null
+            ? AppLocalizations.of(context)?.apiErrorFailedToLoadStops ??
+                'Failed to load stops'
+            : 'Failed to load stops';
         throw Exception(
-            'Failed to load stops: ${response.statusCode} - ${response.body}');
+            '$errorMessage: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
       print('Error in getAllStops: $e');
-      throw Exception('Error fetching stops: $e');
+      final errorMessage = context != null
+          ? AppLocalizations.of(context)?.apiErrorFetchingStops ??
+              'Error fetching stops'
+          : 'Error fetching stops';
+      throw Exception('$errorMessage: $e');
     }
   }
 
   /// Search routes by route number
-  static Future<List<KMBRoute>> searchRoutes(String query) async {
-    final allRoutes = await getAllRoutes();
+  static Future<List<KMBRoute>> searchRoutes(String query,
+      [BuildContext? context]) async {
+    final allRoutes = await getAllRoutes(context);
     return allRoutes
         .where((route) =>
             route.route.toLowerCase().contains(query.toLowerCase()) ||
@@ -119,7 +138,8 @@ class KMBApiService {
 
   /// Fetch route stops for a specific route, bound and serviceType
   static Future<List<KMBRouteStop>> getRouteStops(
-      String route, String bound, String serviceType) async {
+      String route, String bound, String serviceType,
+      [BuildContext? context]) async {
     try {
       // Convert bound to API format (I -> inbound, O -> outbound)
       final boundParam = bound == 'I' ? 'inbound' : 'outbound';
@@ -179,9 +199,16 @@ class KMBApiService {
               bound: stopData['bound']?.toString() ?? '',
               stop: stopId,
               seq: int.tryParse(stopData['seq']?.toString() ?? '0') ?? 0,
-              stopNameEn: 'Unknown Stop',
-              stopNameTc: '未知車站',
-              stopNameSc: '未知车站',
+              stopNameEn: context != null
+                  ? AppLocalizations.of(context)?.apiErrorUnknownStop ??
+                      'Unknown Stop'
+                  : 'Unknown Stop',
+              stopNameTc: context != null
+                  ? AppLocalizations.of(context)?.apiErrorUnknownStop ?? '未知車站'
+                  : '未知車站',
+              stopNameSc: context != null
+                  ? AppLocalizations.of(context)?.apiErrorUnknownStop ?? '未知车站'
+                  : '未知车站',
             ));
           }
         }
@@ -199,16 +226,25 @@ class KMBApiService {
         return stops;
       } else {
         print('API Error: ${response.statusCode} - ${response.body}');
-        throw Exception('Failed to load route stops: ${response.statusCode}');
+        final errorMessage = context != null
+            ? AppLocalizations.of(context)?.apiErrorFailedToLoadRouteStops ??
+                'Failed to load route stops'
+            : 'Failed to load route stops';
+        throw Exception('$errorMessage: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Error fetching route stops: $e');
+      final errorMessage = context != null
+          ? AppLocalizations.of(context)?.apiErrorFetchingRouteStops ??
+              'Error fetching route stops'
+          : 'Error fetching route stops';
+      throw Exception('$errorMessage: $e');
     }
   }
 
   /// Get ETA data for a specific stop, route, and service type
   static Future<List<KMBETA>> getETA(
-      String stopId, String route, String serviceType) async {
+      String stopId, String route, String serviceType,
+      [BuildContext? context]) async {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/eta/$stopId/$route/$serviceType'),
@@ -220,10 +256,18 @@ class KMBApiService {
 
         return etaData.map((eta) => KMBETA.fromJson(eta)).toList();
       } else {
-        throw Exception('Failed to load ETA: ${response.statusCode}');
+        final errorMessage = context != null
+            ? AppLocalizations.of(context)?.apiErrorFailedToLoadETA ??
+                'Failed to load ETA'
+            : 'Failed to load ETA';
+        throw Exception('$errorMessage: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Error fetching ETA: $e');
+      final errorMessage = context != null
+          ? AppLocalizations.of(context)?.apiErrorFetchingETA ??
+              'Error fetching ETA'
+          : 'Error fetching ETA';
+      throw Exception('$errorMessage: $e');
     }
   }
 }
@@ -420,32 +464,50 @@ class KMBETA {
   }
 
   /// Get formatted arrival time string
-  String get arrivalTimeString {
+  String getArrivalTimeString([BuildContext? context]) {
     if (eta.trim().isEmpty) {
-      return '沒有資料';
+      return context != null
+          ? AppLocalizations.of(context)?.apiErrorNoData ?? '沒有資料'
+          : '沒有資料';
     }
     final minutes = minutesUntilArrival;
     if (minutes > 0) {
-      return '$minutes 分鐘';
+      final minutesText = context != null
+          ? AppLocalizations.of(context)?.apiErrorMinutes ?? '分鐘'
+          : '分鐘';
+      return '$minutes $minutesText';
     } else if (minutes == 0) {
-      return '即將到達';
+      return context != null
+          ? AppLocalizations.of(context)?.apiErrorArrivingNow ?? '即將到達'
+          : '即將到達';
     } else {
-      return '巴士可能已離站';
+      return context != null
+          ? AppLocalizations.of(context)?.apiErrorBusMayHaveLeft ?? '巴士可能已離站'
+          : '巴士可能已離站';
     }
   }
 
   /// Get formatted arrival time string in English
-  String get arrivalTimeStringEn {
+  String getArrivalTimeStringEn([BuildContext? context]) {
     if (eta.trim().isEmpty) {
-      return 'No Data';
+      return context != null
+          ? AppLocalizations.of(context)?.apiErrorNoData ?? 'No Data'
+          : 'No Data';
     }
     final minutes = minutesUntilArrival;
     if (minutes > 0) {
-      return '$minutes min';
+      final minutesText = context != null
+          ? AppLocalizations.of(context)?.apiErrorMinutes ?? 'min'
+          : 'min';
+      return '$minutes $minutesText';
     } else if (minutes == 0) {
-      return 'Arriving now';
+      return context != null
+          ? AppLocalizations.of(context)?.apiErrorArrivingNow ?? 'Arriving now'
+          : 'Arriving now';
     } else {
-      return 'Expired';
+      return context != null
+          ? AppLocalizations.of(context)?.apiErrorExpired ?? 'Expired'
+          : 'Expired';
     }
   }
 

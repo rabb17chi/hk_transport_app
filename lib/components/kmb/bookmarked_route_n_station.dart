@@ -97,8 +97,8 @@ class _BookmarkedRouteWithStationState
                       emptyText: '',
                       rows: eta
                           .take(5)
-                          .map((e) =>
-                              MapEntry('第 ${e.etaSeq} 班', e.arrivalTimeString))
+                          .map((e) => MapEntry('第 ${e.etaSeq} 班',
+                              e.getArrivalTimeString(context)))
                           .toList(),
                     );
                   },

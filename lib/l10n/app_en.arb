@@ -108,6 +108,22 @@
   "firstTimeFinalAdjustSettings": "You can adjust your settings in Menu",
   "firstTimeFinalThanks": "Thanks for using the app!",
   "dataOpsVibrationToggle": "Vibration",
-  "dataOpsSubtitleToggle": "Show Bus Station Subtitle"
+  "dataOpsSubtitleToggle": "Show Bus Station Subtitle",
+  
+  "apiErrorFailedToLoadRoutes": "Failed to load routes",
+  "apiErrorFailedToLoadStops": "Failed to load stops", 
+  "apiErrorFailedToLoadRouteStops": "Failed to load route stops",
+  "apiErrorFailedToLoadETA": "Failed to load ETA",
+  "apiErrorFetchingRoutes": "Error fetching routes",
+  "apiErrorFetchingStops": "Error fetching stops",
+  "apiErrorFetchingRouteStops": "Error fetching route stops",
+  "apiErrorFetchingETA": "Error fetching ETA",
+  "apiErrorUnknownStop": "Unknown Stop",
+  "apiErrorNoData": "No Data",
+  "apiErrorArrivingNow": "Arriving now",
+  "apiErrorExpired": "Expired",
+  "apiErrorMinutes": "min",
+  "apiErrorBusMayHaveLeft": "Bus may have left",
+  "etaTitle": "Arrival Time"
 }
 

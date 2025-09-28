@@ -141,7 +141,7 @@ class KMBBookmarksWidget extends StatelessWidget {
                         .take(6)
                         .map((e) => MapEntry(
                             '${loc.etaSeqPrefix}${e.etaSeq}${loc.etaSeqSuffix}',
-                            e.arrivalTimeString))
+                            e.getArrivalTimeString(context)))
                         .toList(),
                   );
                 }

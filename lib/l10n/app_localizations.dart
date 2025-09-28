@@ -749,6 +749,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show Bus Station Subtitle'**
   String get dataOpsSubtitleToggle;
+
+  /// No description provided for @apiErrorFailedToLoadRoutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load routes'**
+  String get apiErrorFailedToLoadRoutes;
+
+  /// No description provided for @apiErrorFailedToLoadStops.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load stops'**
+  String get apiErrorFailedToLoadStops;
+
+  /// No description provided for @apiErrorFailedToLoadRouteStops.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load route stops'**
+  String get apiErrorFailedToLoadRouteStops;
+
+  /// No description provided for @apiErrorFailedToLoadETA.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load ETA'**
+  String get apiErrorFailedToLoadETA;
+
+  /// No description provided for @apiErrorFetchingRoutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Error fetching routes'**
+  String get apiErrorFetchingRoutes;
+
+  /// No description provided for @apiErrorFetchingStops.
+  ///
+  /// In en, this message translates to:
+  /// **'Error fetching stops'**
+  String get apiErrorFetchingStops;
+
+  /// No description provided for @apiErrorFetchingRouteStops.
+  ///
+  /// In en, this message translates to:
+  /// **'Error fetching route stops'**
+  String get apiErrorFetchingRouteStops;
+
+  /// No description provided for @apiErrorFetchingETA.
+  ///
+  /// In en, this message translates to:
+  /// **'Error fetching ETA'**
+  String get apiErrorFetchingETA;
+
+  /// No description provided for @apiErrorUnknownStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Stop'**
+  String get apiErrorUnknownStop;
+
+  /// No description provided for @apiErrorNoData.
+  ///
+  /// In en, this message translates to:
+  /// **'No Data'**
+  String get apiErrorNoData;
+
+  /// No description provided for @apiErrorArrivingNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Arriving now'**
+  String get apiErrorArrivingNow;
+
+  /// No description provided for @apiErrorExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get apiErrorExpired;
+
+  /// No description provided for @apiErrorMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'min'**
+  String get apiErrorMinutes;
+
+  /// No description provided for @apiErrorBusMayHaveLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Bus may have left'**
+  String get apiErrorBusMayHaveLeft;
+
+  /// No description provided for @etaTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival Time'**
+  String get etaTitle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

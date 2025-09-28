@@ -340,6 +340,51 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get dataOpsSubtitleToggle => 'Show Bus Station Subtitle';
+
+  @override
+  String get apiErrorFailedToLoadRoutes => 'Failed to load routes';
+
+  @override
+  String get apiErrorFailedToLoadStops => 'Failed to load stops';
+
+  @override
+  String get apiErrorFailedToLoadRouteStops => 'Failed to load route stops';
+
+  @override
+  String get apiErrorFailedToLoadETA => 'Failed to load ETA';
+
+  @override
+  String get apiErrorFetchingRoutes => 'Error fetching routes';
+
+  @override
+  String get apiErrorFetchingStops => 'Error fetching stops';
+
+  @override
+  String get apiErrorFetchingRouteStops => 'Error fetching route stops';
+
+  @override
+  String get apiErrorFetchingETA => 'Error fetching ETA';
+
+  @override
+  String get apiErrorUnknownStop => 'Unknown Stop';
+
+  @override
+  String get apiErrorNoData => 'No Data';
+
+  @override
+  String get apiErrorArrivingNow => 'Arriving now';
+
+  @override
+  String get apiErrorExpired => 'Expired';
+
+  @override
+  String get apiErrorMinutes => 'min';
+
+  @override
+  String get apiErrorBusMayHaveLeft => 'Bus may have left';
+
+  @override
+  String get etaTitle => 'Arrival Time';
 }
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).
@@ -669,4 +714,49 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
 
   @override
   String get dataOpsSubtitleToggle => '顯示巴士站副標題';
+
+  @override
+  String get apiErrorFailedToLoadRoutes => '載入路線失敗';
+
+  @override
+  String get apiErrorFailedToLoadStops => '載入車站失敗';
+
+  @override
+  String get apiErrorFailedToLoadRouteStops => '載入路線車站失敗';
+
+  @override
+  String get apiErrorFailedToLoadETA => '載入到站時間失敗';
+
+  @override
+  String get apiErrorFetchingRoutes => '獲取路線時發生錯誤';
+
+  @override
+  String get apiErrorFetchingStops => '獲取車站時發生錯誤';
+
+  @override
+  String get apiErrorFetchingRouteStops => '獲取路線車站時發生錯誤';
+
+  @override
+  String get apiErrorFetchingETA => '獲取到站時間時發生錯誤';
+
+  @override
+  String get apiErrorUnknownStop => '未知車站';
+
+  @override
+  String get apiErrorNoData => '沒有資料';
+
+  @override
+  String get apiErrorArrivingNow => '即將到達';
+
+  @override
+  String get apiErrorExpired => '巴士可能已離站';
+
+  @override
+  String get apiErrorMinutes => '分鐘';
+
+  @override
+  String get apiErrorBusMayHaveLeft => '巴士可能已離站';
+
+  @override
+  String get etaTitle => '到站時間';
 }

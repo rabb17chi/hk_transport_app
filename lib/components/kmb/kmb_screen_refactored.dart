@@ -84,8 +84,8 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
     });
 
     try {
-      final routes = await KMBApiService.getAllRoutes();
-      final stops = await KMBApiService.getAllStops();
+      final routes = await KMBApiService.getAllRoutes(context);
+      final stops = await KMBApiService.getAllStops(context);
       // Load CTB routes (from cache if available)
       List<CTBRoute> ctbRoutes = [];
       try {

@@ -109,6 +109,22 @@
   "firstTimeFinalAdjustSettings": "你可以在「菜單」中調整設定",
   "firstTimeFinalThanks": "感謝使用本應用！",
   "dataOpsVibrationToggle": "震動",
-  "dataOpsSubtitleToggle": "顯示巴士站副標題"
+  "dataOpsSubtitleToggle": "顯示巴士站副標題",
+  
+  "apiErrorFailedToLoadRoutes": "載入路線失敗",
+  "apiErrorFailedToLoadStops": "載入車站失敗",
+  "apiErrorFailedToLoadRouteStops": "載入路線車站失敗", 
+  "apiErrorFailedToLoadETA": "載入到站時間失敗",
+  "apiErrorFetchingRoutes": "獲取路線時發生錯誤",
+  "apiErrorFetchingStops": "獲取車站時發生錯誤",
+  "apiErrorFetchingRouteStops": "獲取路線車站時發生錯誤",
+  "apiErrorFetchingETA": "獲取到站時間時發生錯誤",
+  "apiErrorUnknownStop": "未知車站",
+  "apiErrorNoData": "沒有資料",
+  "apiErrorArrivingNow": "即將到達",
+  "apiErrorExpired": "巴士可能已離站",
+  "apiErrorMinutes": "分鐘",
+  "apiErrorBusMayHaveLeft": "巴士可能已離站",
+  "etaTitle": "到站時間"
 }
 

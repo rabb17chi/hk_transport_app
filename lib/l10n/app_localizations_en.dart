@@ -340,4 +340,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dataOpsSubtitleToggle => 'Show Bus Station Subtitle';
+
+  @override
+  String get apiErrorFailedToLoadRoutes => 'Failed to load routes';
+
+  @override
+  String get apiErrorFailedToLoadStops => 'Failed to load stops';
+
+  @override
+  String get apiErrorFailedToLoadRouteStops => 'Failed to load route stops';
+
+  @override
+  String get apiErrorFailedToLoadETA => 'Failed to load ETA';
+
+  @override
+  String get apiErrorFetchingRoutes => 'Error fetching routes';
+
+  @override
+  String get apiErrorFetchingStops => 'Error fetching stops';
+
+  @override
+  String get apiErrorFetchingRouteStops => 'Error fetching route stops';
+
+  @override
+  String get apiErrorFetchingETA => 'Error fetching ETA';
+
+  @override
+  String get apiErrorUnknownStop => 'Unknown Stop';
+
+  @override
+  String get apiErrorNoData => 'No Data';
+
+  @override
+  String get apiErrorArrivingNow => 'Arriving now';
+
+  @override
+  String get apiErrorExpired => 'Expired';
+
+  @override
+  String get apiErrorMinutes => 'min';
+
+  @override
+  String get apiErrorBusMayHaveLeft => 'Bus may have left';
+
+  @override
+  String get etaTitle => 'Arrival Time';
 }
