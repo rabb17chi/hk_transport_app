@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../scripts/utils/responsive_utils.dart';
 
 /// Generic transport route banner used by KMB and CTB
 class TransportRouteBanner extends StatelessWidget {
@@ -31,7 +32,8 @@ class TransportRouteBanner extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(8),
         child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 6),
+          margin: EdgeInsets.symmetric(
+              vertical: ResponsiveUtils.getResponsiveSize(context, 6.0)),
           decoration: BoxDecoration(
             color: backgroundColor,
             borderRadius: BorderRadius.circular(8),
@@ -47,7 +49,10 @@ class TransportRouteBanner extends StatelessWidget {
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveUtils.getResponsiveSize(context, 12.0),
+              vertical: ResponsiveUtils.getResponsiveSize(context, 8.0),
+            ),
             child: Row(
               children: [
                 Expanded(
@@ -60,18 +65,22 @@ class TransportRouteBanner extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: ResponsiveUtils.getOverflowSafeFontSize(
+                              context, 24.0),
                           fontWeight: FontWeight.bold,
                           color: textColor,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(
+                          height:
+                              ResponsiveUtils.getResponsiveSize(context, 2.0)),
                       Text(
                         titleBottom,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 8,
+                          fontSize: ResponsiveUtils.getOverflowSafeFontSize(
+                              context, 14.0),
                           fontWeight: FontWeight.w500,
                           color: textColor,
                         ),
@@ -80,13 +89,14 @@ class TransportRouteBanner extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  width: 80,
-                  height: 60,
+                  width: ResponsiveUtils.getResponsiveSize(context, 100.0),
+                  height: ResponsiveUtils.getResponsiveSize(context, 60.0),
                   alignment: Alignment.center,
                   child: Text(
                     routeNumber,
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: ResponsiveUtils.getOverflowSafeFontSize(
+                          context, 30.0),
                       fontWeight: FontWeight.bold,
                       color: textColor,
                     ),

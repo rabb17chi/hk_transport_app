@@ -4,6 +4,7 @@ import '../../scripts/kmb/kmb_api_service.dart';
 import '../../scripts/ctb/ctb_api_service.dart';
 import 'package:hk_transport_app/l10n/app_localizations.dart';
 import '../../scripts/utils/settings_service.dart';
+import '../../scripts/utils/responsive_utils.dart';
 import '../../theme/app_color_scheme.dart';
 import 'route_banner.dart';
 import 'route_stations_screen.dart';
@@ -380,54 +381,24 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                                     ),
                                   ] else ...[
                                     const SizedBox(height: 16),
-                                    Center(
-                                      child: Column(
-                                        children: [
-                                          const Icon(Icons.search_off,
-                                              size: 48,
-                                              color: AppColorScheme
-                                                  .searchIconColor),
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            noMatchTitle,
-                                            style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                            noMatchSubtitle,
-                                            style: const TextStyle(
-                                                color: AppColorScheme
-                                                    .searchTextColor),
-                                          ),
-                                        ],
-                                      ),
+                                    CenteredContentWidget(
+                                      icon: Icons.search_off,
+                                      title: noMatchTitle,
+                                      subtitle: noMatchSubtitle,
+                                      iconColor: AppColorScheme.searchIconColor,
+                                      subtitleColor:
+                                          AppColorScheme.searchTextColor,
                                     ),
                                   ],
                                 ] else ...[
                                   const SizedBox(height: 16),
-                                  Center(
-                                    child: Column(
-                                      children: [
-                                        const Icon(Icons.search,
-                                            size: 48,
-                                            color:
-                                                AppColorScheme.searchIconColor),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          emptyTitle,
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          emptySubtitle,
-                                          style: const TextStyle(
-                                              color: AppColorScheme
-                                                  .exampleTextColor),
-                                        ),
-                                      ],
-                                    ),
+                                  CenteredContentWidget(
+                                    icon: Icons.search,
+                                    title: emptyTitle,
+                                    subtitle: emptySubtitle,
+                                    iconColor: AppColorScheme.searchIconColor,
+                                    subtitleColor:
+                                        AppColorScheme.exampleTextColor,
                                   ),
                                 ],
                               ],
@@ -449,6 +420,69 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                       ),
                     ],
                   ),
+      ),
+    );
+  }
+}
+
+/// Centered Content Widget
+///
+/// A reusable widget that displays centered content with an icon and text
+/// Takes up all remaining space in its parent
+class CenteredContentWidget extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color iconColor;
+  final Color? titleColor;
+  final Color? subtitleColor;
+
+  const CenteredContentWidget({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.iconColor,
+    this.titleColor,
+    this.subtitleColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Expanded(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: ResponsiveUtils.getOverflowSafeFontSize(context, 60.0),
+              color: iconColor,
+            ),
+            SizedBox(
+                height: ResponsiveUtils.getOverflowSafeFontSize(context, 8.0)),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize:
+                    ResponsiveUtils.getOverflowSafeFontSize(context, 24.0),
+                fontWeight: FontWeight.bold,
+                color: titleColor ?? colorScheme.onSurface,
+              ),
+            ),
+            Text(
+              subtitle,
+              style: TextStyle(
+                fontSize:
+                    ResponsiveUtils.getOverflowSafeFontSize(context, 24.0),
+                color: subtitleColor ?? colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

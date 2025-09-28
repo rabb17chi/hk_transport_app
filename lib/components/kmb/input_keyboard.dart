@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../scripts/utils/vibration_helper.dart';
+import '../../scripts/utils/responsive_utils.dart';
 
 /// InputKeyboard Widget
 ///
@@ -115,10 +116,10 @@ class _InputKeyboardState extends State<InputKeyboard> {
               child: Row(
                 children: [
                   Expanded(
-                    flex: 8,
+                    flex: 7,
                     child: _buildNumberKeyboard(),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 8),
                   Expanded(
                     flex: 2,
                     child: _buildLetterKeyboard(),
@@ -245,14 +246,16 @@ class _InputKeyboardState extends State<InputKeyboard> {
           splashFactory: NoSplash.splashFactory,
           animationDuration: const Duration(milliseconds: 0),
         ),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-            color: isDisabled
-                ? scheme.onSurface.withOpacity(0.38)
-                : scheme.onSurface,
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: ResponsiveUtils.getOverflowSafeFontSize(context, 20.0),
+              fontWeight: FontWeight.bold,
+              color: isDisabled
+                  ? scheme.onSurface.withOpacity(0.38)
+                  : scheme.onSurface,
+            ),
           ),
         ),
       ),
@@ -271,6 +274,7 @@ class _InputKeyboardState extends State<InputKeyboard> {
 
   Widget _buildClearKey() {
     final scheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: ElevatedButton(
@@ -282,14 +286,17 @@ class _InputKeyboardState extends State<InputKeyboard> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 16),
         ),
-        child: Text(
-          '-',
-          style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: scheme.onTertiaryContainer),
+        child: Center(
+          child: Text(
+            'C',
+            style: TextStyle(
+                fontSize:
+                    ResponsiveUtils.getOverflowSafeFontSize(context, 20.0),
+                fontWeight: FontWeight.bold,
+                color: scheme.onTertiaryContainer),
+          ),
         ),
       ),
     );
@@ -297,6 +304,7 @@ class _InputKeyboardState extends State<InputKeyboard> {
 
   Widget _buildBackspaceKey() {
     final scheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: ElevatedButton(
@@ -308,9 +316,13 @@ class _InputKeyboardState extends State<InputKeyboard> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 20),
         ),
-        child: Icon(Icons.backspace, size: 20, color: scheme.onErrorContainer),
+        child: Center(
+          child: Icon(Icons.backspace,
+              size: ResponsiveUtils.getOverflowSafeFontSize(context, 20.0),
+              color: scheme.onErrorContainer),
+        ),
       ),
     );
   }

@@ -7,6 +7,7 @@ import '../../scripts/ctb/ctb_route_stops_service.dart';
 import '../../scripts/bookmarks/bookmarks_service.dart';
 import '../../scripts/utils/vibration_helper.dart';
 import '../../scripts/utils/settings_service.dart';
+import '../../scripts/utils/responsive_utils.dart';
 import '../../theme/app_color_scheme.dart';
 
 /// Route Stations Screen
@@ -248,10 +249,10 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             '🚌 到站時間',
             style: TextStyle(
-              fontSize: 20,
+              fontSize: ResponsiveUtils.getOverflowSafeFontSize(context, 20.0),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -269,8 +270,9 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
               alignment: Alignment.centerRight,
               child: Text(
                 AppLocalizations.of(context)?.etaEmpty ?? '',
-                style: const TextStyle(
-                  fontSize: 20,
+                style: TextStyle(
+                  fontSize:
+                      ResponsiveUtils.getOverflowSafeFontSize(context, 20.0),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -305,7 +307,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
               color: Theme.of(context).brightness == Brightness.dark
                   ? Colors.white
                   : const Color(0xFF323232),
-              fontSize: 20,
+              fontSize: ResponsiveUtils.getOverflowSafeFontSize(context, 20.0),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -315,7 +317,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
               color: Theme.of(context).brightness == Brightness.dark
                   ? Colors.white
                   : const Color(0xFF323232),
-              fontSize: 24,
+              fontSize: ResponsiveUtils.getOverflowSafeFontSize(context, 32.0),
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -335,15 +337,20 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
           width: 2,
         ),
       ),
-      child: const Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircularProgressIndicator(
             color: AppColorScheme.loadingIconColor,
             strokeWidth: 2,
           ),
-          SizedBox(width: 16),
-          Text('載入中...'),
+          SizedBox(width: 8),
+          Text(
+            '載入中...',
+            style: TextStyle(
+              fontSize: ResponsiveUtils.getOverflowSafeFontSize(context, 14.0),
+            ),
+          ),
         ],
       ),
     );
@@ -354,7 +361,11 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            '${widget.routeNumber} 往 ${widget.destinationTc} ${widget.isCTB ? '' : widget.serviceType == '1' ? '' : '| 特別班次'}'),
+          '${widget.routeNumber} 往 ${widget.destinationTc} ${widget.isCTB ? '' : widget.serviceType == '1' ? '' : '| 特別班次'}',
+          style: TextStyle(
+            fontSize: ResponsiveUtils.getOverflowSafeFontSize(context, 16.0),
+          ),
+        ),
         backgroundColor:
             widget.isCTB ? const Color(0xFF0055B8) : const Color(0xFF323232),
         foregroundColor:
@@ -388,7 +399,10 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                       const SizedBox(height: 16),
                       Text(
                         _errorMessage,
-                        style: const TextStyle(fontSize: 16),
+                        style: TextStyle(
+                          fontSize: ResponsiveUtils.getOverflowSafeFontSize(
+                              context, 16.0),
+                        ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 16),
@@ -398,7 +412,13 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                           backgroundColor: const Color(0xFFF7A925),
                           foregroundColor: Colors.white,
                         ),
-                        child: const Text('Retry'),
+                        child: Text(
+                          'Retry',
+                          style: TextStyle(
+                            fontSize: ResponsiveUtils.getOverflowSafeFontSize(
+                                context, 14.0),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -407,10 +427,13 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                   child: (widget.isCTB
                           ? _ctbRouteStops.isEmpty
                           : _routeStops.isEmpty)
-                      ? const Center(
+                      ? Center(
                           child: Text(
                             'No stations found',
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(
+                              fontSize: ResponsiveUtils.getOverflowSafeFontSize(
+                                  context, 18.0),
+                            ),
                           ),
                         )
                       : ListView.builder(
@@ -419,6 +442,9 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                               ? _ctbRouteStops.length
                               : _routeStops.length,
                           itemBuilder: (context, index) {
+                            final isChinese =
+                                Localizations.localeOf(context).languageCode ==
+                                    'zh';
                             if (widget.isCTB) {
                               final stop = _ctbRouteStops[index];
                               final isSelected = _selectedStopId == stop.stop &&
@@ -526,6 +552,9 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                   child: Text(
                                                     '${index + 1}',
                                                     style: TextStyle(
+                                                      fontSize: ResponsiveUtils
+                                                          .getOverflowSafeFontSize(
+                                                              context, 20.0),
                                                       color: Theme.of(context)
                                                                   .brightness ==
                                                               Brightness.dark
@@ -533,7 +562,6 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                           : Colors.black,
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontSize: 16,
                                                     ),
                                                   ),
                                                 ),
@@ -563,7 +591,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                                     : info
                                                                         .nameEn);
                                                         final displayTop =
-                                                            '$displayTopBase (${stop.stop})';
+                                                            displayTopBase;
                                                         final displayBottom =
                                                             info == null
                                                                 ? ''
@@ -580,7 +608,10 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                             Text(
                                                               displayTop,
                                                               style: TextStyle(
-                                                                fontSize: 18,
+                                                                fontSize: ResponsiveUtils
+                                                                    .getOverflowSafeFontSize(
+                                                                        context,
+                                                                        22.0),
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold,
@@ -611,8 +642,10 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                                   displayBottom,
                                                                   style:
                                                                       TextStyle(
-                                                                    fontSize:
-                                                                        12,
+                                                                    fontSize: ResponsiveUtils
+                                                                        .getOverflowSafeFontSize(
+                                                                            context,
+                                                                            12.0),
                                                                     color: Theme.of(context).brightness ==
                                                                             Brightness
                                                                                 .dark
@@ -759,13 +792,15 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                 child: Text(
                                                   '${index + 1}',
                                                   style: TextStyle(
+                                                    fontSize: ResponsiveUtils
+                                                        .getOverflowSafeFontSize(
+                                                            context, 16.0),
                                                     color: Theme.of(context)
                                                                 .brightness ==
                                                             Brightness.dark
                                                         ? Colors.white
                                                         : Colors.black,
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 16,
                                                   ),
                                                 ),
                                               ),
@@ -779,9 +814,14 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                 children: [
                                                   Text(
                                                     _cleanStopName(
-                                                        stop.stopNameTc),
+                                                      isChinese
+                                                          ? stop.stopNameTc
+                                                          : stop.stopNameEn,
+                                                    ),
                                                     style: TextStyle(
-                                                      fontSize: 18,
+                                                      fontSize: ResponsiveUtils
+                                                          .getOverflowSafeFontSize(
+                                                              context, 18.0),
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       color: Theme.of(context)
@@ -803,10 +843,14 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                                         return const SizedBox
                                                             .shrink();
                                                       return Text(
-                                                        _cleanStopName(
-                                                            stop.stopNameEn),
+                                                        _cleanStopName(isChinese
+                                                            ? stop.stopNameEn
+                                                            : stop.stopNameTc),
                                                         style: TextStyle(
-                                                          fontSize: 14,
+                                                          fontSize: ResponsiveUtils
+                                                              .getOverflowSafeFontSize(
+                                                                  context,
+                                                                  14.0),
                                                           color: Theme.of(context)
                                                                       .brightness ==
                                                                   Brightness
