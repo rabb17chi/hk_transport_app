@@ -124,6 +124,8 @@
   "apiErrorExpired": "Expired",
   "apiErrorMinutes": "min",
   "apiErrorBusMayHaveLeft": "Bus may have left",
-  "etaTitle": "Arrival Time"
+  "etaTitle": "Arrival Time",
+  "routeTitleTo": "to",
+  "routeTitleSpecial": "Special"
 }
 

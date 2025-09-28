@@ -125,6 +125,8 @@
   "apiErrorExpired": "巴士可能已離站",
   "apiErrorMinutes": "分鐘",
   "apiErrorBusMayHaveLeft": "巴士可能已離站",
-  "etaTitle": "到站時間"
+  "etaTitle": "到站時間",
+  "routeTitleTo": "往",
+  "routeTitleSpecial": "特別班次"
 }
 

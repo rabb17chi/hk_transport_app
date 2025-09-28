@@ -8,6 +8,7 @@ import '../../scripts/utils/vibration_helper.dart';
 import '../../scripts/utils/responsive_utils.dart';
 import '../../scripts/utils/locale_utils.dart';
 import '../../scripts/bookmarks/bookmark_toggle_service.dart';
+import '../../scripts/utils/settings_service.dart';
 import '../ui/station_item_widget.dart';
 import '../../theme/app_color_scheme.dart';
 
@@ -204,19 +205,6 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
           .toList()
         ..sort((a, b) => a.etaSeq.compareTo(b.etaSeq));
 
-      // Debug logs for CTB ETA
-      try {
-        print('=== CTB ETA Debug ===');
-        print('Route: ${widget.routeNumber}, Stop: $stopId, Dir: $currentDir');
-        for (int i = 0; i < filtered.length && i < 3; i++) {
-          final e = filtered[i];
-          print(
-              'ETA #${e.etaSeq}: route=${e.route}, dir=${e.dir}, seq=${e.seq}, stop=${e.stop}, eta=${e.eta}, minutes=${e.minutesUntilArrival}');
-        }
-        print('Total ETAs after filter: ${filtered.length}');
-        print('======================');
-      } catch (_) {}
-
       setState(() {
         _ctbEtaData = filtered;
         _isLoadingETA = false;
@@ -360,7 +348,7 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '${widget.routeNumber} 往 ${widget.destinationTc} ${widget.isCTB ? '' : widget.serviceType == '1' ? '' : '| 特別班次'}',
+          '${widget.routeNumber} >> ${widget.isCTB ? widget.destinationTc : (Localizations.localeOf(context).languageCode == 'zh' ? widget.destinationTc : widget.destinationEn)} ${widget.isCTB ? '' : widget.serviceType == '1' ? '' : ' | ${AppLocalizations.of(context)?.routeTitleSpecial ?? 'Special'}'}',
           style: TextStyle(
             fontSize: ResponsiveUtils.getOverflowSafeFontSize(context, 16.0),
           ),
@@ -465,58 +453,63 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                   final nameTc = info?.nameTc ?? stop.stop;
                                   final nameEn = info?.nameEn ?? stop.stop;
 
-                                  return StationItemWidget(
-                                    index: index,
-                                    isSelected: isSelected,
-                                    nameTc: nameTc,
-                                    nameEn: nameEn,
-                                    isChinese: isChinese,
-                                    showSubtitle: true,
-                                    onTap: () async {
-                                      HapticFeedback.lightImpact();
-                                      await _loadCTBETA(stop.stop, stop.seq);
-                                    },
-                                    onLongPress: () async {
-                                      HapticFeedback.mediumImpact();
-                                      final item = BookmarkItem(
-                                        operator: 'CTB',
-                                        route: widget.routeNumber,
-                                        bound: widget.bound,
-                                        stopId: stop.stop,
-                                        stopNameTc: nameTc,
-                                        stopNameEn: nameEn,
-                                        serviceType: '1',
-                                        destTc: widget.destinationTc,
-                                        destEn: widget.destinationEn,
-                                      );
-                                      await BookmarkToggleService
-                                          .toggleBookmark(
-                                        context,
-                                        item,
-                                        () => setState(() {}),
-                                      );
-                                    },
-                                    isBookmarkedFuture: () =>
-                                        BookmarksService.isBookmarked(
-                                            bookmarkItem),
-                                    additionalContent: Column(
-                                      children: [
-                                        if (isSelected && _isLoadingETA)
-                                          _buildEtaLoading(),
-                                        if (isSelected && !_isLoadingETA)
-                                          _buildEtaBlock(
-                                            _ctbEtaData.map((eta) {
-                                              final label = isChinese
-                                                  ? eta.arrivalTimeStringZh
-                                                  : eta.arrivalTimeStringEn;
-                                              int displaySeq = eta.etaSeq;
-                                              if (displaySeq > 3)
-                                                displaySeq -= 3;
-                                              return _buildEtaRow(
-                                                  '第 $displaySeq 班', label);
-                                            }).toList(),
-                                          ),
-                                      ],
+                                  return ValueListenableBuilder<bool>(
+                                    valueListenable:
+                                        SettingsService.showSubtitleNotifier,
+                                    builder: (context, showSubtitle, _) =>
+                                        StationItemWidget(
+                                      index: index,
+                                      isSelected: isSelected,
+                                      nameTc: nameTc,
+                                      nameEn: nameEn,
+                                      isChinese: isChinese,
+                                      showSubtitle: showSubtitle,
+                                      onTap: () async {
+                                        HapticFeedback.lightImpact();
+                                        await _loadCTBETA(stop.stop, stop.seq);
+                                      },
+                                      onLongPress: () async {
+                                        HapticFeedback.mediumImpact();
+                                        final item = BookmarkItem(
+                                          operator: 'CTB',
+                                          route: widget.routeNumber,
+                                          bound: widget.bound,
+                                          stopId: stop.stop,
+                                          stopNameTc: nameTc,
+                                          stopNameEn: nameEn,
+                                          serviceType: '1',
+                                          destTc: widget.destinationTc,
+                                          destEn: widget.destinationEn,
+                                        );
+                                        await BookmarkToggleService
+                                            .toggleBookmark(
+                                          context,
+                                          item,
+                                          () => setState(() {}),
+                                        );
+                                      },
+                                      isBookmarkedFuture: () =>
+                                          BookmarksService.isBookmarked(
+                                              bookmarkItem),
+                                      additionalContent: Column(
+                                        children: [
+                                          if (isSelected && _isLoadingETA)
+                                            _buildEtaLoading(),
+                                          if (isSelected && !_isLoadingETA)
+                                            _buildEtaBlock(
+                                              _ctbEtaData.map((eta) {
+                                                final label = isChinese
+                                                    ? eta.arrivalTimeStringZh
+                                                    : eta.arrivalTimeStringEn;
+                                                int displaySeq = eta.etaSeq;
+                                                if (displaySeq > 3)
+                                                  displaySeq -= 3;
+                                                return _buildEtaRow(
+                                                    '$displaySeq', label);
+                                              }).toList(),
+                                            ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
@@ -537,60 +530,68 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                               destEn: widget.destinationEn,
                             );
 
-                            return StationItemWidget(
-                              index: index,
-                              isSelected: isSelected,
-                              nameTc: stop.stopNameTc,
-                              nameEn: stop.stopNameEn,
-                              isChinese: isChinese,
-                              showSubtitle: true,
-                              onTap: () async {
-                                HapticFeedback.lightImpact();
-                                _loadETA(stop.stop, stop.seq);
-                              },
-                              onLongPress: () async {
-                                HapticFeedback.mediumImpact();
-                                final item = BookmarkItem(
-                                  route: widget.routeNumber,
-                                  bound: widget.bound,
-                                  stopId: stop.stop,
-                                  stopNameTc: stop.stopNameTc,
-                                  stopNameEn: stop.stopNameEn,
-                                  serviceType: widget.serviceType ?? '1',
-                                  destTc: widget.destinationTc,
-                                  destEn: widget.destinationEn,
-                                );
-                                await BookmarkToggleService.toggleBookmark(
-                                  context,
-                                  item,
-                                  () => setState(() {}),
-                                );
-                              },
-                              isBookmarkedFuture: () =>
-                                  BookmarksService.isBookmarked(bookmarkItem),
-                              additionalContent: Column(
-                                children: [
-                                  // ETA Display Section - Only show under selected station
-                                  if (isSelected &&
-                                      _etaData.isNotEmpty &&
-                                      _etaData.any((eta) =>
-                                          eta.seq == _selectedStationSeq)) ...[
-                                    _buildEtaBlock(
-                                      _etaData
-                                          .where((eta) =>
-                                              eta.seq == _selectedStationSeq)
-                                          .map((eta) {
-                                        int displaySeq = eta.etaSeq;
-                                        if (displaySeq > 3) displaySeq -= 3;
-                                        return _buildEtaRow('$displaySeq',
-                                            eta.getArrivalTimeString(context));
-                                      }).toList(),
-                                    ),
+                            return ValueListenableBuilder<bool>(
+                              valueListenable:
+                                  SettingsService.showSubtitleNotifier,
+                              builder: (context, showSubtitle, _) =>
+                                  StationItemWidget(
+                                index: index,
+                                isSelected: isSelected,
+                                nameTc: stop.stopNameTc,
+                                nameEn: stop.stopNameEn,
+                                isChinese: isChinese,
+                                showSubtitle: showSubtitle,
+                                onTap: () async {
+                                  HapticFeedback.lightImpact();
+                                  _loadETA(stop.stop, stop.seq);
+                                },
+                                onLongPress: () async {
+                                  HapticFeedback.mediumImpact();
+                                  final item = BookmarkItem(
+                                    route: widget.routeNumber,
+                                    bound: widget.bound,
+                                    stopId: stop.stop,
+                                    stopNameTc: stop.stopNameTc,
+                                    stopNameEn: stop.stopNameEn,
+                                    serviceType: widget.serviceType ?? '1',
+                                    destTc: widget.destinationTc,
+                                    destEn: widget.destinationEn,
+                                  );
+                                  await BookmarkToggleService.toggleBookmark(
+                                    context,
+                                    item,
+                                    () => setState(() {}),
+                                  );
+                                },
+                                isBookmarkedFuture: () =>
+                                    BookmarksService.isBookmarked(bookmarkItem),
+                                additionalContent: Column(
+                                  children: [
+                                    // ETA Display Section - Only show under selected station
+                                    if (isSelected &&
+                                        _etaData.isNotEmpty &&
+                                        _etaData.any((eta) =>
+                                            eta.seq ==
+                                            _selectedStationSeq)) ...[
+                                      _buildEtaBlock(
+                                        _etaData
+                                            .where((eta) =>
+                                                eta.seq == _selectedStationSeq)
+                                            .map((eta) {
+                                          int displaySeq = eta.etaSeq;
+                                          if (displaySeq > 3) displaySeq -= 3;
+                                          return _buildEtaRow(
+                                              '$displaySeq',
+                                              eta.getArrivalTimeString(
+                                                  context));
+                                        }).toList(),
+                                      ),
+                                    ],
+                                    // Loading indicator for ETA
+                                    if (isSelected && _isLoadingETA)
+                                      _buildEtaLoading(),
                                   ],
-                                  // Loading indicator for ETA
-                                  if (isSelected && _isLoadingETA)
-                                    _buildEtaLoading(),
-                                ],
+                                ),
                               ),
                             );
                           },

@@ -385,6 +385,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get etaTitle => 'Arrival Time';
+
+  @override
+  String get routeTitleTo => 'to';
+
+  @override
+  String get routeTitleSpecial => 'Special';
 }
 
 /// The translations for Chinese, as used in Hong Kong (`zh_HK`).
@@ -759,4 +765,10 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
 
   @override
   String get etaTitle => '到站時間';
+
+  @override
+  String get routeTitleTo => '往';
+
+  @override
+  String get routeTitleSpecial => '特別班次';
 }

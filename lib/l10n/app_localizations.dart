@@ -839,6 +839,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Arrival Time'**
   String get etaTitle;
+
+  /// No description provided for @routeTitleTo.
+  ///
+  /// In en, this message translates to:
+  /// **'to'**
+  String get routeTitleTo;
+
+  /// No description provided for @routeTitleSpecial.
+  ///
+  /// In en, this message translates to:
+  /// **'Special'**
+  String get routeTitleSpecial;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

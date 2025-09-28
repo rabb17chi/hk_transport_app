@@ -25,7 +25,7 @@ class RouteBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isMainService = route.serviceType == '1';
     return TransportRouteBanner(
-      titleTop: isMainService ? route.destTc : '${route.destTc} (特別班次)',
+      titleTop: isMainService ? route.destTc : '${route.destTc} (特)',
       titleBottom: route.destEn,
       routeNumber: route.route,
       backgroundColor: isMainService

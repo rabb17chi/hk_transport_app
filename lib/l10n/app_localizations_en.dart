@@ -385,4 +385,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get etaTitle => 'Arrival Time';
+
+  @override
+  String get routeTitleTo => 'to';
+
+  @override
+  String get routeTitleSpecial => 'Special';
 }
