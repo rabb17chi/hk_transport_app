@@ -48,7 +48,8 @@ class StationItemWidget extends StatelessWidget {
               final bookmarked = snap.data == true;
               return Container(
                 margin: const EdgeInsets.only(bottom: 8),
-                padding: const EdgeInsets.all(16),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                 decoration: BoxDecoration(
                   color: bookmarked
                       ? AppColorScheme.bookmarkedColor.withOpacity(

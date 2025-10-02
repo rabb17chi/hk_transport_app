@@ -57,9 +57,9 @@ class _FirstTimeToAppState extends State<FirstTimeToApp> {
       case 0:
         return loc.firstTimeTitleWelcome;
       case 1:
-        return '${loc.firstTimeTitleSetup} - 巴士';
+        return '${loc.firstTimeTitleSetup} - BUS';
       case 2:
-        return '${loc.firstTimeTitleSetup} - 港鐵';
+        return '${loc.firstTimeTitleSetup} - MTR';
       case 3:
         return loc.firstTimeTitleTips;
       default:

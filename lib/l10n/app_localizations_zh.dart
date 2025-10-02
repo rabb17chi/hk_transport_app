@@ -669,7 +669,7 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
   String get introUseIt => '你可以用來查看';
 
   @override
-  String get introHKTransportsETA => '香港交通的到站時間';
+  String get introHKTransportsETA => '交通工具的到站時間';
 
   @override
   String get introETAFull => '（Estimated Time of Arrival）';

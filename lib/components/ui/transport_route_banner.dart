@@ -89,7 +89,7 @@ class TransportRouteBanner extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  width: ResponsiveUtils.getResponsiveSize(context, 100.0),
+                  width: ResponsiveUtils.getResponsiveSize(context, 120.0),
                   height: ResponsiveUtils.getResponsiveSize(context, 60.0),
                   alignment: Alignment.center,
                   child: Text(

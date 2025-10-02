@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../scripts/utils/responsive_utils.dart';
 
 enum IntroMode { bus, mtr }
 
@@ -46,33 +47,50 @@ class _ProjectIntroStepState extends State<ProjectIntroStep> {
         children: [
           Text(
             loc.introWelcomeTitle,
-            style: Theme.of(context).textTheme.headlineSmall,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            loc.introUseIt,
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontSize:
+                      ResponsiveUtils.getResponsiveFontSize(context, 40.0),
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 20),
           Text(
+            loc.introUseIt,
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontSize:
+                      ResponsiveUtils.getResponsiveFontSize(context, 24.0),
+                ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 12),
+          Text(
             loc.introHKTransportsETA,
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontSize:
+                      ResponsiveUtils.getResponsiveFontSize(context, 24.0),
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 4),
           Text(
             loc.introETAFull,
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontSize:
+                      ResponsiveUtils.getResponsiveFontSize(context, 24.0),
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 20),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(loc.introIfChangeMode,
-                  style: Theme.of(context).textTheme.bodyMedium),
+              Text(
+                loc.introIfChangeMode,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize:
+                          ResponsiveUtils.getResponsiveFontSize(context, 24.0),
+                    ),
+              ),
               const SizedBox(height: 8),
               _ModeToggleRow(
                 busSelected: busSelected,
@@ -85,11 +103,20 @@ class _ProjectIntroStepState extends State<ProjectIntroStep> {
             ],
           ),
           const SizedBox(height: 20),
-          Text(loc.introModeSet(_mode.name.toUpperCase())),
+          Text(
+            loc.introModeSet(_mode.name.toUpperCase()),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontSize:
+                      ResponsiveUtils.getResponsiveFontSize(context, 32.0),
+                ),
+          ),
           const SizedBox(height: 40),
           Text(
             loc.introSetupPref,
-            style: Theme.of(context).textTheme.titleMedium,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontSize:
+                      ResponsiveUtils.getResponsiveFontSize(context, 20.0),
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -148,6 +175,8 @@ class _ModeToggleRow extends StatelessWidget {
                 Text(
                   busLabel,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontSize: ResponsiveUtils.getResponsiveFontSize(
+                            context, 16.0),
                         fontWeight:
                             busSelected ? FontWeight.bold : FontWeight.normal,
                       ),
@@ -157,13 +186,14 @@ class _ModeToggleRow extends StatelessWidget {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.swap_horiz, size: 28, color: Colors.grey),
+                const Icon(Icons.swap_horiz, size: 40, color: Colors.grey),
                 Text(
                   holdLabel,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(color: Colors.grey[300]),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontSize: ResponsiveUtils.getResponsiveFontSize(
+                            context, 20.0),
+                        color: Colors.grey[300],
+                      ),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -185,6 +215,8 @@ class _ModeToggleRow extends StatelessWidget {
                 Text(
                   mtrLabel,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontSize: ResponsiveUtils.getResponsiveFontSize(
+                            context, 16.0),
                         fontWeight:
                             mtrSelected ? FontWeight.bold : FontWeight.normal,
                       ),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../scripts/utils/settings_service.dart';
+import '../../../scripts/utils/responsive_utils.dart';
 import '../../../scripts/mtr/mtr_data.dart';
 import '../../../l10n/locale_utils.dart';
 import '../../../theme/app_color_scheme.dart';
@@ -103,7 +104,13 @@ class _MTRSettingStepState extends State<MTRSettingStep> {
                       Expanded(
                         child: Text(
                           loc.dataOpsMtrReverse,
-                          style: Theme.of(context).textTheme.titleMedium,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(
+                                fontSize: ResponsiveUtils.getResponsiveFontSize(
+                                    context, 18.0),
+                              ),
                         ),
                       ),
                       Switch(
@@ -136,7 +143,13 @@ class _MTRSettingStepState extends State<MTRSettingStep> {
                       Expanded(
                         child: Text(
                           loc.dataOpsMtrAutoRefresh,
-                          style: Theme.of(context).textTheme.titleMedium,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(
+                                fontSize: ResponsiveUtils.getResponsiveFontSize(
+                                    context, 18.0),
+                              ),
                         ),
                       ),
                       Switch(
@@ -149,7 +162,8 @@ class _MTRSettingStepState extends State<MTRSettingStep> {
                       ? Text(
                           'Extra API-network will be used.',
                           style: TextStyle(
-                            fontSize: 10,
+                            fontSize: ResponsiveUtils.getResponsiveFontSize(
+                                context, 12.0),
                           ),
                         )
                       : const SizedBox.shrink(),
@@ -160,7 +174,15 @@ class _MTRSettingStepState extends State<MTRSettingStep> {
             ),
 
             const SizedBox(height: 20),
-            Center(child: Text(loc.firstTimeSettingsStored)),
+            Center(
+              child: Text(
+                loc.firstTimeSettingsStored,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize:
+                          ResponsiveUtils.getResponsiveFontSize(context, 16.0),
+                    ),
+              ),
+            ),
           ],
         ),
       ),
@@ -200,9 +222,10 @@ class _MTRSettingStepState extends State<MTRSettingStep> {
             ),
             child: Text(
               displayName,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
+                fontSize: ResponsiveUtils.getResponsiveFontSize(context, 16.0),
               ),
             ),
           );
@@ -212,7 +235,6 @@ class _MTRSettingStepState extends State<MTRSettingStep> {
   }
 
   Widget _buildAutoRefreshDemo(BuildContext context) {
-    final loc = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -230,7 +252,10 @@ class _MTRSettingStepState extends State<MTRSettingStep> {
               Expanded(
                 child: Text(
                   'Auto-refresh is ${_autoRefresh ? 'ON' : 'OFF'}.',
-                  style: Theme.of(context).textTheme.bodySmall,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontSize: ResponsiveUtils.getResponsiveFontSize(
+                            context, 14.0),
+                      ),
                 ),
               ),
             ],
@@ -247,8 +272,9 @@ class _MTRSettingStepState extends State<MTRSettingStep> {
                 ),
                 child: Text(
                   _timeToggle ? '4 min' : '5 min',
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize:
+                        ResponsiveUtils.getResponsiveFontSize(context, 16.0),
                     fontWeight: FontWeight.w600,
                     color: AppColorScheme.textDarkColor,
                   ),

@@ -160,7 +160,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
         borderRadius: BorderRadius.circular(28),
       ),
       elevation: 8,
-      backgroundColor: AppColorScheme.dialogBackgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       title: Row(
         children: [
           Container(
@@ -191,10 +191,10 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
               children: [
                 Text(
                   widget.stationName,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black),
+                      color: Theme.of(context).colorScheme.onSurface),
                 ),
               ],
             ),
@@ -207,13 +207,15 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: AppColorScheme.chipBackgroundColor,
+                  color: Theme.of(context).colorScheme.surfaceVariant,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   '${AppLocalizations.of(context)!.mtrRefreshing} ${_secondsLeft}s',
-                  style: const TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface),
                 ),
               );
             },
@@ -231,7 +233,12 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                     children: [
                       const CircularProgressIndicator(),
                       const SizedBox(height: 16),
-                      Text(AppLocalizations.of(context)!.mtrUpdating),
+                      Text(
+                        AppLocalizations.of(context)!.mtrUpdating,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -278,7 +285,9 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                     // 追加線路的時刻表（每個線路一個區塊，前置分隔線）
                     for (final entry in _additionalResponses.entries) ...[
                       const SizedBox(height: 12),
-                      const Divider(height: 1),
+                      Divider(
+                          height: 1,
+                          color: Theme.of(context).colorScheme.outline),
                       const SizedBox(height: 12),
                       Container(
                         width: double.maxFinite,
@@ -298,13 +307,18 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                     // 其他線路按鈕
                     if (selectableOtherLines.isNotEmpty) ...[
                       const SizedBox(height: 12),
-                      const Divider(height: 1),
+                      Divider(
+                          height: 1,
+                          color: Theme.of(context).colorScheme.outline),
                       const SizedBox(height: 4),
                       Text(
                         AppLocalizations.of(context)!.mtrOtherLines,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: AppColorScheme.textMediumColor,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.7),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -361,8 +375,10 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
             await VibrationHelper.mediumVibrate();
             Navigator.of(context).pop();
           },
-          child: Text(AppLocalizations.of(context)!.mtrClose,
-              style: const TextStyle(color: Colors.black)),
+          child: Text(
+            AppLocalizations.of(context)!.mtrClose,
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+          ),
         ),
         ElevatedButton(
           onPressed: isLoading
@@ -440,10 +456,10 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
             Expanded(
               child: Text(
                 '$toPrefix$destInfo',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ),
@@ -488,15 +504,15 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColorScheme.cardBackgroundColor,
+        color: Theme.of(context).colorScheme.surfaceVariant,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: const Center(
+      child: Center(
         child: Text(
           '暫無列車信息',
           style: TextStyle(
             fontSize: 16,
-            color: AppColorScheme.textMutedColor,
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
           ),
         ),
       ),
@@ -580,9 +596,9 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColorScheme.cardBackgroundColor,
+        color: Theme.of(context).colorScheme.surfaceVariant,
         border: Border.all(
-          color: AppColorScheme.cardBorderColor,
+          color: Theme.of(context).colorScheme.outline,
           width: isArrivingSoon ? 2 : 1,
         ),
         borderRadius: BorderRadius.circular(8),
@@ -597,7 +613,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: AppColorScheme.textDarkColor,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
           ),
@@ -613,10 +629,10 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
               ),
               child: Text(
                 _formatTimeDifference(train.timeDifference),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: AppColorScheme.textDarkColor,
                 ),
                 textAlign: TextAlign.center,
               ),
