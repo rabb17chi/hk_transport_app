@@ -192,7 +192,7 @@ class _ModeToggleRow extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontSize: ResponsiveUtils.getResponsiveFontSize(
                             context, 20.0),
-                        color: Colors.grey[300],
+                        color: Colors.black,
                       ),
                   textAlign: TextAlign.center,
                 ),

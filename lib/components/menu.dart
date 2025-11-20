@@ -42,7 +42,7 @@ class _MenuScreenState extends State<MenuScreen> {
   static const int _languageIndex = 7;
   static const int _resetIndex = 8;
 
-  bool get _isDev => !kReleaseMode;
+  // bool get _isDev => !kReleaseMode;
 
   @override
   void initState() {
@@ -95,7 +95,7 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
             const Divider(),
             Container(child: _buildResetTile()),
-            if (_isDev) Container(child: _buildSystemMonitorSection()),
+            // if (_isDev) Container(child: _buildSystemMonitorSection()),
           ],
         ),
       ),

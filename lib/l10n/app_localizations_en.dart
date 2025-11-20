@@ -205,7 +205,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageSectionTitle => 'Language';
 
   @override
-  String get languageSystemDefault => 'System Default';
+  String get languageSystemDefault => 'System';
 
   @override
   String get languageEnglish => 'English';
@@ -223,7 +223,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themeDark => 'Dark';
 
   @override
-  String get themeSystemDefault => 'System Default';
+  String get themeSystemDefault => 'System';
 
   @override
   String get appUseGuide => 'App Usage Guide';

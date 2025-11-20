@@ -483,7 +483,7 @@ abstract class AppLocalizations {
   /// No description provided for @languageSystemDefault.
   ///
   /// In en, this message translates to:
-  /// **'System Default'**
+  /// **'System'**
   String get languageSystemDefault;
 
   /// No description provided for @languageEnglish.
@@ -519,7 +519,7 @@ abstract class AppLocalizations {
   /// No description provided for @themeSystemDefault.
   ///
   /// In en, this message translates to:
-  /// **'System Default'**
+  /// **'System'**
   String get themeSystemDefault;
 
   /// No description provided for @appUseGuide.

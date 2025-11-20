@@ -585,7 +585,7 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
   String get languageSectionTitle => '語言';
 
   @override
-  String get languageSystemDefault => '系統預設';
+  String get languageSystemDefault => '跟隨系統';
 
   @override
   String get languageEnglish => '英文';
