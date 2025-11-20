@@ -7,7 +7,8 @@ import '../../scripts/utils/first_time_service.dart';
 import '../first_time/first_time_to_app.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  final bool allowAnimation;
+  const SplashScreen({super.key, this.allowAnimation = true});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -30,39 +31,39 @@ class _SplashScreenState extends State<SplashScreen> {
 
     // Ensure splash shows at least 2 seconds
     final elapsed = DateTime.now().difference(start);
-    const minDuration = Duration(seconds: 2);
+    final minDuration =
+        widget.allowAnimation ? const Duration(seconds: 2) : Duration.zero;
     if (elapsed < minDuration) {
       await Future.delayed(minDuration - elapsed);
     }
 
     if (!mounted) return;
-    if (isFirstTime) {
-      Navigator.of(context).pushReplacement(
-        PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 350),
-          pageBuilder: (_, __, ___) => const FirstTimeToApp(),
-          transitionsBuilder: (_, animation, __, child) {
-            return FadeTransition(
-              opacity: animation,
-              child: child,
-            );
-          },
-        ),
-      );
-    } else {
-      Navigator.of(context).pushReplacement(
-        PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 350),
-          pageBuilder: (_, __, ___) => MyHomePage(initialIsMTR: isMTR),
-          transitionsBuilder: (_, animation, __, child) {
-            return FadeTransition(
-              opacity: animation,
-              child: child,
-            );
-          },
-        ),
-      );
-    }
+    final target =
+        isFirstTime ? const FirstTimeToApp() : MyHomePage(initialIsMTR: isMTR);
+    _navigateTo(target, widget.allowAnimation);
+  }
+
+  void _navigateTo(Widget page, bool allowAnimation) {
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        transitionDuration: allowAnimation
+            ? const Duration(milliseconds: 350)
+            : Duration.zero,
+        reverseTransitionDuration: allowAnimation
+            ? const Duration(milliseconds: 350)
+            : Duration.zero,
+        pageBuilder: (_, __, ___) => page,
+        transitionsBuilder: (_, animation, __, child) {
+          if (!allowAnimation) {
+            return child;
+          }
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+      ),
+    );
   }
 
   @override

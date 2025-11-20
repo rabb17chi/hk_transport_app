@@ -17,7 +17,6 @@ class KMBApiService {
       // Try to get cached data first
       final cachedRoutes = await KMBCacheService.getCachedRoutes();
       if (cachedRoutes != null) {
-        print('Using cached routes: ${cachedRoutes.length} routes');
         return cachedRoutes;
       }
 
@@ -68,7 +67,6 @@ class KMBApiService {
       // Try to get cached data first
       final cachedStops = await KMBCacheService.getCachedStops();
       if (cachedStops != null) {
-        print('Using cached stops: ${cachedStops.length} stops');
         return cachedStops;
       }
 

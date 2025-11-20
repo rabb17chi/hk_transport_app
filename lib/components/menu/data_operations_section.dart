@@ -87,6 +87,17 @@ class DataOperationsSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
+          ValueListenableBuilder<bool>(
+            valueListenable: SettingsService.openAppAnimationEnabledNotifier,
+            builder: (context, value, _) => SwitchListTile(
+              secondary: const Icon(Icons.play_circle),
+              title:
+                  Text(AppLocalizations.of(context)!.dataOpsOpenAppAnimation),
+              value: value,
+              onChanged: (v) => SettingsService.setOpenAppAnimationEnabled(v),
+            ),
+          ),
+          const SizedBox(height: 4),
           ListTile(
             leading: const Icon(Icons.sync),
             title: Text(AppLocalizations.of(context)!.dataOpsRefreshKMB),

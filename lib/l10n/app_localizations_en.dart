@@ -342,6 +342,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dataOpsSubtitleToggle => 'Show Bus Station Subtitle';
 
   @override
+  String get dataOpsOpenAppAnimation => 'Open-App Animation';
+
+  @override
   String get apiErrorFailedToLoadRoutes => 'Failed to load routes';
 
   @override

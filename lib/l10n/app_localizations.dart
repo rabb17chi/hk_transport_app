@@ -750,6 +750,12 @@ abstract class AppLocalizations {
   /// **'Show Bus Station Subtitle'**
   String get dataOpsSubtitleToggle;
 
+  /// No description provided for @dataOpsOpenAppAnimation.
+  ///
+  /// In en, this message translates to:
+  /// **'Open-App Animation'**
+  String get dataOpsOpenAppAnimation;
+
   /// No description provided for @apiErrorFailedToLoadRoutes.
   ///
   /// In en, this message translates to:

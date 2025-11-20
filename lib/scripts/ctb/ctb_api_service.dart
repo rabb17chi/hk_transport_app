@@ -12,7 +12,6 @@ class CTBApiService {
       // Use cache first
       final cached = await CTBCacheService.getCachedRoutes();
       if (cached != null) {
-        print('[CTB] Using cached routes: ${cached.length}');
         return cached;
       }
 

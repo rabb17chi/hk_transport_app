@@ -11,6 +11,8 @@ class SettingsService {
   static const String _displayBusFullNameKey = 'display_bus_full_name_v1';
   static const String _vibrationEnabledKey = 'vibration_enabled_v1';
   static const String _showSubtitleKey = 'show_subtitle_v1';
+  static const String _openAppAnimationEnabledKey =
+      'open_app_animation_enabled_v1';
 
   // MTR station order: true = reverse order, false = normal order
   // MTR 車站順序：true = 反向順序，false = 正常順序
@@ -53,6 +55,11 @@ class SettingsService {
   static final ValueNotifier<bool> showSubtitleNotifier =
       ValueNotifier<bool>(false);
 
+  // Open-app animation: true = fade animation when entering app, false = jump directly
+  // 開啟動畫：true = 進入應用時顯示淡入動畫，false = 直接進入
+  static final ValueNotifier<bool> openAppAnimationEnabledNotifier =
+      ValueNotifier<bool>(true);
+
   // Load all settings from SharedPreferences on app startup
   // 在應用程式啟動時從 SharedPreferences 載入所有設定
   static Future<void> load() async {
@@ -94,6 +101,11 @@ class SettingsService {
     // Load show subtitle setting
     final showSubtitle = prefs.getBool(_showSubtitleKey) ?? false;
     showSubtitleNotifier.value = showSubtitle;
+
+    // Load open-app animation setting
+    final allowAnimation =
+        prefs.getBool(_openAppAnimationEnabledKey) ?? true;
+    openAppAnimationEnabledNotifier.value = allowAnimation;
   }
 
   // Set MTR station order preference
@@ -158,5 +170,13 @@ class SettingsService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_showSubtitleKey, value);
     showSubtitleNotifier.value = value;
+  }
+
+  // Set open-app animation preference
+  // 設定是否顯示開啟動畫
+  static Future<void> setOpenAppAnimationEnabled(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_openAppAnimationEnabledKey, value);
+    openAppAnimationEnabledNotifier.value = value;
   }
 }

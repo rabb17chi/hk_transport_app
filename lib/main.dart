@@ -44,7 +44,9 @@ void main() async {
   await ThemeService.initialize();
   await SettingsService.load();
   await WidgetService.initialize();
-  unawaited(CTBApiService.getAllRoutes().catchError((_) {}));
+  unawaited(
+    CTBApiService.getAllRoutes().then((_) {}, onError: (_) {}),
+  );
   runApp(const MyApp());
 }
 
@@ -93,7 +95,13 @@ class MyApp extends StatelessWidget {
                 return const Locale('en');
               },
               locale: appLocale,
-              home: const SplashScreen(),
+              home: ValueListenableBuilder<bool>(
+                valueListenable:
+                    SettingsService.openAppAnimationEnabledNotifier,
+                builder: (_, allowAnimation, __) {
+                  return SplashScreen(allowAnimation: allowAnimation);
+                },
+              ),
             );
           },
         );

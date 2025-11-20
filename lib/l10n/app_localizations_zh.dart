@@ -342,6 +342,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dataOpsSubtitleToggle => 'Show Bus Station Subtitle';
 
   @override
+  String get dataOpsOpenAppAnimation => '開屏動畫';
+
+  @override
   String get apiErrorFailedToLoadRoutes => 'Failed to load routes';
 
   @override
@@ -720,6 +723,9 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
 
   @override
   String get dataOpsSubtitleToggle => '顯示巴士站副標題';
+
+  @override
+  String get dataOpsOpenAppAnimation => '開屏動畫';
 
   @override
   String get apiErrorFailedToLoadRoutes => '載入路線失敗';

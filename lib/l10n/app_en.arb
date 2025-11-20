@@ -22,6 +22,7 @@
   "menuTutorial": "App Tutorial",
   "dataOpsMtrReverse": "Reverse MTR stations order",
   "dataOpsMtrAutoRefresh": "Auto Refresh Trains Data",
+  "dataOpsOpenAppAnimation": "Open-App Animation",
   "navBookmarks": "Bookmark",
   "navSettings": "Setting",
   "tabBus": "Bus",
