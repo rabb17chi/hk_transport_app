@@ -234,38 +234,6 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get imageLoading => '圖片載入中...';
 
-  @override
-  String get menuWidgetTitle => '桌面小工具';
-
-  @override
-  String get widgetUpdateKMB => '更新九巴小工具';
-
-  @override
-  String get widgetUpdateKMBSubtitle => '用收藏的九巴路線更新小工具';
-
-  @override
-  String get widgetUpdateMTR => '更新港鐵小工具';
-
-  @override
-  String get widgetUpdateMTRSubtitle => '用港鐵車站資訊更新小工具';
-
-  @override
-  String get widgetUpdateNow => '立即更新';
-
-  @override
-  String get widgetUpdated => '小工具更新成功';
-
-  @override
-  String get widgetClear => '清除小工具';
-
-  @override
-  String get widgetClearSubtitle => '移除所有小工具資料';
-
-  @override
-  String get widgetClearNow => '立即清除';
-
-  @override
-  String get widgetCleared => '小工具清除成功';
 
   @override
   String get kmbSearchHint => '請輸入路線號碼';
@@ -617,38 +585,6 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
   @override
   String get imageLoading => '圖片載入中...';
 
-  @override
-  String get menuWidgetTitle => '桌面小工具';
-
-  @override
-  String get widgetUpdateKMB => '更新九巴小工具';
-
-  @override
-  String get widgetUpdateKMBSubtitle => '用收藏的九巴路線更新小工具';
-
-  @override
-  String get widgetUpdateMTR => '更新港鐵小工具';
-
-  @override
-  String get widgetUpdateMTRSubtitle => '用港鐵車站資訊更新小工具';
-
-  @override
-  String get widgetUpdateNow => '立即更新';
-
-  @override
-  String get widgetUpdated => '小工具更新成功';
-
-  @override
-  String get widgetClear => '清除小工具';
-
-  @override
-  String get widgetClearSubtitle => '移除所有小工具資料';
-
-  @override
-  String get widgetClearNow => '立即清除';
-
-  @override
-  String get widgetCleared => '小工具清除成功';
 
   @override
   String get kmbSearchHint => '請輸入路線號碼';

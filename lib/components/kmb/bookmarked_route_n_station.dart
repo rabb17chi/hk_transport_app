@@ -7,7 +7,8 @@ import '../../scripts/bookmarks/bookmarks_service.dart';
 ///
 /// A widget for displaying bookmarked routes with their stations
 class BookmarkedRouteWithStation extends StatefulWidget {
-  const BookmarkedRouteWithStation({super.key});
+  final VoidCallback? onSettingsTap;
+  const BookmarkedRouteWithStation({super.key, this.onSettingsTap});
 
   @override
   State<BookmarkedRouteWithStation> createState() =>
@@ -28,7 +29,6 @@ class _BookmarkedRouteWithStationState
   @override
   void didUpdateWidget(BookmarkedRouteWithStation oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Refresh when widget updates (triggered by ValueListenableBuilder)
     _refresh();
   }
 
@@ -47,67 +47,89 @@ class _BookmarkedRouteWithStationState
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<int>(
-      valueListenable: BookmarksService.refreshTrigger,
-      builder: (context, value, child) {
-        // Only refresh if trigger value actually changed
-        if (value != _lastTriggerValue) {
-          _lastTriggerValue = value;
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) {
-              _refresh();
-            }
-          });
-        }
-        return FutureBuilder<List<BookmarkItem>>(
-          future: _bookmarksFuture,
-          builder: (context, snapshot) {
-            final items = snapshot.data ?? [];
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                child: Center(child: CircularProgressIndicator()),
-              );
-            }
-            if (items.isEmpty) {
-              return const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                child: Center(child: Text('你可以長按巴士站增加至收藏')),
-              );
-            }
-            final limited = items.length > 50 ? items.sublist(0, 50) : items;
-            return ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: limited.length,
-              separatorBuilder: (_, __) => const Divider(height: 1),
-              itemBuilder: (context, index) {
-                final b = limited[index];
-                return ListTile(
-                  title: Text('${b.route} - ${b.stopNameTc}'),
-                  subtitle: Text(b.stopNameEn),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () async {
-                    final eta = await KMBApiService.getETA(
-                        b.stopId, b.route, b.serviceType);
-                    if (!mounted) return;
-                    await EtaDialog.showWithPairs(
-                      context,
-                      title: '${b.route} - ${b.stopNameTc}',
-                      emptyText: '',
-                      rows: eta
-                          .take(5)
-                          .map((e) => MapEntry('第 ${e.etaSeq} 班',
-                              e.getArrivalTimeString(context)))
-                          .toList(),
+    return Column(
+      children: [
+        AppBar(
+          backgroundColor: Colors.yellow[700],
+          foregroundColor: Colors.black,
+          title: const Text('My Bus Bookmarks'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              tooltip: 'Refresh',
+              onPressed: _refresh,
+            ),
+            IconButton(
+              icon: const Icon(Icons.settings),
+              tooltip: 'Settings',
+              onPressed: widget.onSettingsTap,
+            ),
+          ],
+        ),
+        Expanded(
+          child: ValueListenableBuilder<int>(
+            valueListenable: BookmarksService.refreshTrigger,
+            builder: (context, value, child) {
+              // Only refresh if trigger value actually changed
+              if (value != _lastTriggerValue) {
+                _lastTriggerValue = value;
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) {
+                    _refresh();
+                  }
+                });
+              }
+              return FutureBuilder<List<BookmarkItem>>(
+                future: _bookmarksFuture,
+                builder: (context, snapshot) {
+                  final items = snapshot.data ?? [];
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: Center(child: CircularProgressIndicator()),
                     );
-                  },
-                );
-              },
-            );
-          },
-        );
-      },
+                  }
+                  if (items.isEmpty) {
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: Center(child: Text('你可以長按巴士站增加至收藏')),
+                    );
+                  }
+                  final limited =
+                      items.length > 50 ? items.sublist(0, 50) : items;
+                  return ListView.separated(
+                    itemCount: limited.length,
+                    separatorBuilder: (_, __) => const Divider(height: 1),
+                    itemBuilder: (context, index) {
+                      final b = limited[index];
+                      return ListTile(
+                        title: Text('${b.route} - ${b.stopNameTc}'),
+                        subtitle: Text(b.stopNameEn),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () async {
+                          final eta = await KMBApiService.getETA(
+                              b.stopId, b.route, b.serviceType);
+                          if (!mounted) return;
+                          await EtaDialog.showWithPairs(
+                            context,
+                            title: '${b.route} - ${b.stopNameTc}',
+                            emptyText: '',
+                            rows: eta
+                                .take(5)
+                                .map((e) => MapEntry('第 ${e.etaSeq} 班',
+                                    e.getArrivalTimeString(context)))
+                                .toList(),
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

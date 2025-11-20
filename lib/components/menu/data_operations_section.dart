@@ -4,10 +4,16 @@ import '../../scripts/utils/settings_service.dart';
 
 class DataOperationsSection extends StatelessWidget {
   final Future<void> Function() onRefreshKMB;
+  final bool expanded;
+  final ValueChanged<bool> onExpansionChanged;
+  final ExpansionTileController controller;
 
   const DataOperationsSection({
     super.key,
     required this.onRefreshKMB,
+    required this.expanded,
+    required this.onExpansionChanged,
+    required this.controller,
   });
 
   @override
@@ -22,6 +28,10 @@ class DataOperationsSection extends StatelessWidget {
         ),
       ),
       child: ExpansionTile(
+        controller: controller,
+        maintainState: true,
+        initiallyExpanded: expanded,
+        onExpansionChanged: onExpansionChanged,
         leading: const Icon(Icons.tune),
         title: Text(AppLocalizations.of(context)!.menuDataOpsTitle),
         trailing: const SizedBox.shrink(),

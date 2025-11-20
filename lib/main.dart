@@ -12,7 +12,6 @@ import 'package:hk_transport_app/l10n/app_localizations.dart';
 import 'scripts/locale/locale_service.dart';
 import 'scripts/theme/theme_service.dart';
 import 'scripts/utils/settings_service.dart';
-import 'services/widget_service.dart';
 import 'scripts/ctb/ctb_api_service.dart';
 
 // Global system info storage
@@ -43,7 +42,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ThemeService.initialize();
   await SettingsService.load();
-  await WidgetService.initialize();
   unawaited(
     CTBApiService.getAllRoutes().then((_) {}, onError: (_) {}),
   );

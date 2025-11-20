@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:hk_transport_app/l10n/app_localizations.dart';
 import '../scripts/kmb/kmb_cache_service.dart';
 import '../scripts/ctb/ctb_api_service.dart';
@@ -9,8 +8,6 @@ import 'menu/app_use_guide_dialog.dart';
 import 'menu/language_section.dart';
 import 'menu/theme_section.dart';
 import 'menu/developer_links_dialog.dart';
-import 'menu/system_monitor_section.dart';
-import 'menu/widget_settings_section.dart';
 import 'settings/reset_app_tile.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -25,28 +22,26 @@ class _MenuScreenState extends State<MenuScreen> {
   bool _isRefreshing = false;
   bool _langExpanded = false;
   bool _themeExpanded = false;
-  Key _langKey = UniqueKey();
-  Key _themeKey = UniqueKey();
+  bool _dataOpsExpanded = false;
 
-  // Index-based expansion system
-  int? _selectedIndex;
-
-  // Menu item indices
-  static const int _dataOperationsIndex = 0;
-  static const int _systemMonitorIndex = 1;
-  static const int _widgetIndex = 2;
-  static const int _themeIndex = 3;
-  static const int _styleIndex = 4;
-  static const int _termsIndex = 5;
-  static const int _devLinksIndex = 6;
-  static const int _languageIndex = 7;
-  static const int _resetIndex = 8;
-
-  // bool get _isDev => !kReleaseMode;
+  late final ExpansibleController _dataOpsController;
+  late final ExpansibleController _themeController;
+  late final ExpansibleController _languageController;
 
   @override
   void initState() {
     super.initState();
+    _dataOpsController = ExpansibleController();
+    _themeController = ExpansibleController();
+    _languageController = ExpansibleController();
+  }
+
+  @override
+  void dispose() {
+    _dataOpsController.dispose();
+    _themeController.dispose();
+    _languageController.dispose();
+    super.dispose();
   }
 
   Future<void> _refreshCache() async {
@@ -77,8 +72,6 @@ class _MenuScreenState extends State<MenuScreen> {
             Container(child: _buildLanguageSection()),
             const Divider(),
             Container(child: _buildDataOperationsSection()),
-            // const Divider(),
-            // Container(color: Colors.grey[300], child: _buildWidgetSection()),
             const Divider(),
             Container(
               child: _buildAppUseGuide(),
@@ -95,52 +88,72 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
             const Divider(),
             Container(child: _buildResetTile()),
-            // if (_isDev) Container(child: _buildSystemMonitorSection()),
           ],
         ),
       ),
     );
   }
 
-  void _onItemTap(int index) {
+  void _onSectionExpansionChanged(_TrackedSection section, bool expanded) {
+    if (expanded) {
+      switch (section) {
+        case _TrackedSection.dataOps:
+          if (_themeExpanded) {
+            _themeController.collapse();
+          }
+          if (_langExpanded) {
+            _languageController.collapse();
+          }
+          break;
+        case _TrackedSection.theme:
+          if (_dataOpsExpanded) {
+            _dataOpsController.collapse();
+          }
+          if (_langExpanded) {
+            _languageController.collapse();
+          }
+          break;
+        case _TrackedSection.language:
+          if (_dataOpsExpanded) {
+            _dataOpsController.collapse();
+          }
+          if (_themeExpanded) {
+            _themeController.collapse();
+          }
+          break;
+      }
+    }
+
     setState(() {
-      if (_selectedIndex == index) {
-        _selectedIndex = null;
-        _langExpanded = false;
-        _themeExpanded = false;
-      } else {
-        _selectedIndex = index;
-        _langExpanded = false;
-        _themeExpanded = false;
-        if (index == _languageIndex) {
-          _langExpanded = true;
-        } else if (index == _themeIndex) {
-          _themeExpanded = true;
+      if (section == _TrackedSection.dataOps) {
+        _dataOpsExpanded = expanded;
+        if (expanded) {
+          _themeExpanded = false;
+          _langExpanded = false;
+        }
+      } else if (section == _TrackedSection.theme) {
+        _themeExpanded = expanded;
+        if (expanded) {
+          _dataOpsExpanded = false;
+          _langExpanded = false;
+        }
+      } else if (section == _TrackedSection.language) {
+        _langExpanded = expanded;
+        if (expanded) {
+          _dataOpsExpanded = false;
+          _themeExpanded = false;
         }
       }
     });
   }
 
   Widget _buildDataOperationsSection() {
-    return GestureDetector(
-      onTap: () => _onItemTap(_dataOperationsIndex),
-      child: DataOperationsSection(
-        onRefreshKMB: _refreshCache,
-      ),
-    );
-  }
-
-  Widget _buildSystemMonitorSection() {
-    return GestureDetector(
-      onTap: () => _onItemTap(_systemMonitorIndex),
-      child: const SystemMonitorSection(),
-    );
-  }
-
-  Widget _buildWidgetSection() {
-    return GestureDetector(
-      onTap: () => _onItemTap(_widgetIndex),
-      child: const WidgetSettingsSection(),
+    return DataOperationsSection(
+      controller: _dataOpsController,
+      expanded: _dataOpsExpanded,
+      onExpansionChanged: (expanded) =>
+          _onSectionExpansionChanged(_TrackedSection.dataOps, expanded),
+      onRefreshKMB: _refreshCache,
     );
   }
 
@@ -149,7 +162,7 @@ class _MenuScreenState extends State<MenuScreen> {
       title: Text(AppLocalizations.of(context)!.menuStyle),
       subtitle: Text(AppLocalizations.of(context)!.menuStyleSubtitle),
       leading: const Icon(Icons.format_paint),
-      onTap: () => _onItemTap(_styleIndex),
+      onTap: () {},
     );
   }
 
@@ -158,7 +171,7 @@ class _MenuScreenState extends State<MenuScreen> {
       title: Text(AppLocalizations.of(context)!.menuTerms),
       subtitle: Text(AppLocalizations.of(context)!.menuTermsSubtitle),
       leading: const Icon(Icons.description),
-      onTap: () => _onItemTap(_termsIndex),
+      onTap: () {},
     );
   }
 
@@ -168,32 +181,30 @@ class _MenuScreenState extends State<MenuScreen> {
       // subtitle: Text(AppLocalizations.of(context)!.menuDevLinksSubtitle),
       leading: const Icon(Icons.code),
       onTap: () {
-        _onItemTap(_devLinksIndex);
         DeveloperLinksDialog.show(context);
       },
     );
   }
 
   Widget _buildResetTile() {
-    return GestureDetector(
-      onTap: () => _onItemTap(_resetIndex),
-      child: const ResetAppTile(),
-    );
+    return const ResetAppTile();
   }
 
   Widget _buildLanguageSection() {
     return LanguageSection(
-      langKey: _langKey,
       langExpanded: _langExpanded,
-      onTap: () => _onItemTap(_languageIndex),
+      controller: _languageController,
+      onExpansionChanged: (expanded) =>
+          _onSectionExpansionChanged(_TrackedSection.language, expanded),
     );
   }
 
   Widget _buildThemeSection() {
     return ThemeSection(
-      themeKey: _themeKey,
       themeExpanded: _themeExpanded,
-      onTap: () => _onItemTap(_themeIndex),
+      controller: _themeController,
+      onExpansionChanged: (expanded) =>
+          _onSectionExpansionChanged(_TrackedSection.theme, expanded),
     );
   }
 
@@ -214,3 +225,5 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 }
+
+enum _TrackedSection { dataOps, theme, language }

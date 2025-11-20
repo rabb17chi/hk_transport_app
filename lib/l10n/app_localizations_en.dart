@@ -235,39 +235,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get imageLoading => 'Loading image...';
 
   @override
-  String get menuWidgetTitle => 'Desktop Widgets';
-
-  @override
-  String get widgetUpdateKMB => 'Update KMB Widget';
-
-  @override
-  String get widgetUpdateKMBSubtitle => 'Update widget with favorite KMB route';
-
-  @override
-  String get widgetUpdateMTR => 'Update MTR Widget';
-
-  @override
-  String get widgetUpdateMTRSubtitle => 'Update widget with MTR station info';
-
-  @override
-  String get widgetUpdateNow => 'Update Now';
-
-  @override
-  String get widgetUpdated => 'Widget updated successfully';
-
-  @override
-  String get widgetClear => 'Clear Widget';
-
-  @override
-  String get widgetClearSubtitle => 'Remove all widget data';
-
-  @override
-  String get widgetClearNow => 'Clear Now';
-
-  @override
-  String get widgetCleared => 'Widget cleared successfully';
-
-  @override
   String get kmbSearchHint => 'Enter route number';
 
   @override
