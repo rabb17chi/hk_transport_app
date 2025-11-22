@@ -1,0 +1,5 @@
+/* Localized versions of Info.plist keys */
+
+CFBundleDisplayName = "下班幾時";
+CFBundleName = "下班幾時";
+
