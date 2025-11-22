@@ -58,6 +58,7 @@
   "dataOpsMtrReverse": "反轉港鐵站序",
   "dataOpsMtrAutoRefresh": "自動更新港鐵班次時間",
   "dataOpsOpenAppAnimation": "開屏動畫",
+  "dataOpsApiReviewToggle": "API 審查",
   "devLinksDialogTitle": "開發者連結",
   "devLinksDialogContent": "前往 GitHub",
   "back": "返回",

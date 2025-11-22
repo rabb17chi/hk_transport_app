@@ -78,7 +78,7 @@ class MyApp extends StatelessWidget {
               ],
               supportedLocales: const [
                 Locale('en'),
-                Locale('zh', 'HK'),
+                Locale('zh'),
               ],
               localeResolutionCallback: (deviceLocale, supportedLocales) {
                 final l = deviceLocale;
@@ -88,7 +88,7 @@ class MyApp extends StatelessWidget {
                     .contains(l.countryCode?.toUpperCase());
                 final isHantScript = (l.scriptCode?.toLowerCase() == 'hant');
                 if (isChinese && (isChineseRegion || isHantScript)) {
-                  return const Locale('zh', 'HK');
+                  return const Locale('zh');
                 }
                 return const Locale('en');
               },

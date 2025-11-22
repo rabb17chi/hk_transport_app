@@ -108,6 +108,16 @@ class DataOperationsSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
+          ValueListenableBuilder<bool>(
+            valueListenable: SettingsService.apiReviewEnabledNotifier,
+            builder: (context, value, _) => SwitchListTile(
+              secondary: const Icon(Icons.api),
+              title: Text(AppLocalizations.of(context)!.dataOpsApiReviewToggle),
+              value: value,
+              onChanged: (v) => SettingsService.setApiReviewEnabled(v),
+            ),
+          ),
+          const SizedBox(height: 4),
           ListTile(
             leading: const Icon(Icons.sync),
             title: Text(AppLocalizations.of(context)!.dataOpsRefreshKMB),

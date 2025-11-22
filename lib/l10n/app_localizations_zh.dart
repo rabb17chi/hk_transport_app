@@ -313,6 +313,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dataOpsOpenAppAnimation => '開屏動畫';
 
   @override
+  String get dataOpsApiReviewToggle => 'API 審查';
+
+  @override
   String get apiErrorFailedToLoadRoutes => 'Failed to load routes';
 
   @override
@@ -662,6 +665,9 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
 
   @override
   String get dataOpsOpenAppAnimation => '開屏動畫';
+
+  @override
+  String get dataOpsApiReviewToggle => 'API 審查';
 
   @override
   String get apiErrorFailedToLoadRoutes => '載入路線失敗';

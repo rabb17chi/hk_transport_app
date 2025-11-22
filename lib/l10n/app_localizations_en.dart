@@ -312,6 +312,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dataOpsOpenAppAnimation => 'Open-App Animation';
 
   @override
+  String get dataOpsApiReviewToggle => 'API Review';
+
+  @override
   String get apiErrorFailedToLoadRoutes => 'Failed to load routes';
 
   @override

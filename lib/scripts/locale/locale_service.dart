@@ -17,8 +17,8 @@ class LocaleService {
       case 'en':
         localeNotifier.value = const Locale('en');
         break;
-      case 'zh_HK':
-        localeNotifier.value = const Locale('zh', 'HK');
+      case 'zh':
+        localeNotifier.value = const Locale('zh');
         break;
       default:
         localeNotifier.value = null;
@@ -35,7 +35,7 @@ class LocaleService {
     if (locale.languageCode == 'en') {
       await prefs.setString(_key, 'en');
     } else if (locale.languageCode == 'zh') {
-      await prefs.setString(_key, 'zh_HK');
+      await prefs.setString(_key, 'zh');
     }
     localeNotifier.value = locale;
   }

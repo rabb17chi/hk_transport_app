@@ -99,6 +99,7 @@
   "firstTimeFinalThanks": "Thanks for using the app!",
   "dataOpsVibrationToggle": "Vibration",
   "dataOpsSubtitleToggle": "Show Bus Station Subtitle",
+  "dataOpsApiReviewToggle": "API Review",
   
   "apiErrorFailedToLoadRoutes": "Failed to load routes",
   "apiErrorFailedToLoadStops": "Failed to load stops", 

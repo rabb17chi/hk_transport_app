@@ -53,7 +53,7 @@ class LanguageSection extends StatelessWidget {
             Expanded(
               child: TextButton(
                 onPressed: () async {
-                  await LocaleService.setLocale(const Locale('zh', 'HK'));
+                  await LocaleService.setLocale(const Locale('zh'));
                 },
                 child: const Text('繁體中文'),
               ),

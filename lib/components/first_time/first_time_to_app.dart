@@ -57,9 +57,9 @@ class _FirstTimeToAppState extends State<FirstTimeToApp> {
       case 0:
         return loc.firstTimeTitleWelcome;
       case 1:
-        return '${loc.firstTimeTitleSetup} - BUS';
+        return loc.firstTimeTitleSetup;
       case 2:
-        return '${loc.firstTimeTitleSetup} - MTR';
+        return loc.firstTimeTitleSetup;
       case 3:
         return loc.firstTimeTitleTips;
       default:
@@ -73,12 +73,16 @@ class _FirstTimeToAppState extends State<FirstTimeToApp> {
     final Color emptyColor = Colors.grey.shade300;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_titleForStep(_currentStep)),
-      ),
       body: SafeArea(
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                _titleForStep(_currentStep),
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: ClipRRect(
@@ -102,7 +106,7 @@ class _FirstTimeToAppState extends State<FirstTimeToApp> {
                 behavior: HitTestBehavior.opaque,
                 onTap: _goNext,
                 child: Container(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(12.0),
                   child: PageView.builder(
                     controller: _pageController,
                     itemCount: _totalSteps,
@@ -127,8 +131,7 @@ class _FirstTimeToAppState extends State<FirstTimeToApp> {
               padding: const EdgeInsets.only(bottom: 16),
               child: Center(
                 child: Text(
-                  'Tap to ' +
-                      (_currentStep == _totalSteps - 1 ? 'finish' : 'continue'),
+                  'Tap to ${_currentStep == _totalSteps - 1 ? 'finish' : 'continue'}',
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),

@@ -690,6 +690,12 @@ abstract class AppLocalizations {
   /// **'Open-App Animation'**
   String get dataOpsOpenAppAnimation;
 
+  /// No description provided for @dataOpsApiReviewToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'API Review'**
+  String get dataOpsApiReviewToggle;
+
   /// No description provided for @apiErrorFailedToLoadRoutes.
   ///
   /// In en, this message translates to:
@@ -809,16 +815,6 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-  // Lookup logic when language+country codes are specified.
-  switch (locale.languageCode) {
-    case 'zh': {
-  switch (locale.countryCode) {
-    case 'HK': return AppLocalizationsZhHk();
-   }
-  break;
-   }
-  }
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
