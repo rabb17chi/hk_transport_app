@@ -4,6 +4,8 @@ import '../../scripts/kmb/kmb_cache_service.dart';
 import '../ui/splash_screen.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
 import '../../scripts/utils/first_time_service.dart';
+// TODO: Uncomment after running flutter gen-l10n
+import '../../l10n/app_localizations.dart';
 
 class ResetAppTile extends StatefulWidget {
   const ResetAppTile({super.key});
@@ -17,10 +19,11 @@ class _ResetAppTileState extends State<ResetAppTile> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return Column(
       children: [
         ListTile(
-          title: const Text('Reset App'),
+          title: Text(loc.resetAppTitle),
           leading: const Icon(Icons.delete_forever, color: Colors.red),
           trailing: _isResetting
               ? const SizedBox(
@@ -30,9 +33,9 @@ class _ResetAppTileState extends State<ResetAppTile> {
                 )
               : TextButton(
                   onPressed: _confirmAndReset,
-                  child: const Text(
-                    'Reset',
-                    style: TextStyle(color: Colors.red),
+                  child: Text(
+                    loc.resetButton,
+                    style: const TextStyle(color: Colors.red),
                   ),
                 ),
         ),
@@ -42,22 +45,32 @@ class _ResetAppTileState extends State<ResetAppTile> {
   }
 
   Future<void> _confirmAndReset() async {
+    final loc = AppLocalizations.of(context)!;
+    // TODO: Replace with loc.resetAppDialogTitle after running flutter gen-l10n
+    final dialogTitle = 'Reset App'; // loc.resetAppDialogTitle
+    // TODO: Replace with loc.resetAppDialogContent after running flutter gen-l10n
+    final dialogContent =
+        'This will clear caches, bookmarks and preferences.'; // loc.resetAppDialogContent
+    // TODO: Replace with loc.cancel after running flutter gen-l10n
+    final cancelText = 'Cancel'; // loc.cancel
+
     final shouldReset = await showDialog<bool>(
           context: context,
           builder: (ctx) {
             return AlertDialog(
-              title: const Text('Reset App'),
-              content: const Text(
-                  'This will clear caches, bookmarks and preferences.'),
+              title: Text(dialogTitle),
+              content: Text(dialogContent),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(ctx).pop(false),
-                  child: const Text('Cancel'),
+                  child: Text(cancelText),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(ctx).pop(true),
-                  child:
-                      const Text('Reset', style: TextStyle(color: Colors.red)),
+                  child: Text(
+                    loc.resetButton,
+                    style: const TextStyle(color: Colors.red),
+                  ),
                 ),
               ],
             );

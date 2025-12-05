@@ -115,8 +115,39 @@ class _BookmarkPageState extends State<BookmarkPage>
                 ],
               ),
             ),
+            // Edit button at the bottom
+            Container(
+              padding: const EdgeInsets.all(16),
+              child: ElevatedButton.icon(
+                onPressed: () => _showEditDialog(),
+                icon: const Icon(Icons.edit),
+                label: const Text('Edit Items'), // loc.editItems
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 48),
+                ),
+              ),
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showEditDialog() {
+    // TODO: Implement edit dialog for reordering and deleting bookmarks
+    final loc = AppLocalizations.of(context)!;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        // TODO: Replace with loc.editItems after running flutter gen-l10n
+        title: const Text('Edit Items'), // loc.editItems
+        content: const Text('Edit mode coming soon'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(loc.close),
+          ),
+        ],
       ),
     );
   }
@@ -125,7 +156,6 @@ class _BookmarkPageState extends State<BookmarkPage>
     return KMBBookmarksWidget(
       kmbBookmarks: _kmbBookmarks,
       isLoading: _isLoading,
-      onRemoveBookmark: _removeKMBBookmark,
     );
   }
 
@@ -133,35 +163,6 @@ class _BookmarkPageState extends State<BookmarkPage>
     return MTRBookmarksWidget(
       mtrBookmarks: _mtrBookmarks,
       isLoading: _isLoading,
-      onRemoveBookmark: _removeMTRBookmark,
     );
-  }
-
-  Future<void> _removeKMBBookmark(BookmarkItem bookmark) async {
-    final loc = AppLocalizations.of(context)!;
-    try {
-      await BookmarksService.removeBookmark(bookmark);
-      await _loadBookmarks();
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${loc.removeBookmarkError}: $e')),
-        );
-      }
-    }
-  }
-
-  Future<void> _removeMTRBookmark(MTRBookmarkItem bookmark) async {
-    final loc = AppLocalizations.of(context)!;
-    try {
-      await MTRBookmarksService.removeBookmark(bookmark);
-      await _loadBookmarks();
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${loc.removeBookmarkError}: $e')),
-        );
-      }
-    }
   }
 }

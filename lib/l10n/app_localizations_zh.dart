@@ -54,7 +54,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dataOpsSpecialToggle => '（九巴）顯示特別班次';
 
   @override
-  String get dataOpsDisplayBusFullName => 'Display Bus Full Name (stop codes)';
+  String get dataOpsDisplayBusFullName => '顯示巴士完整名稱（站碼）';
 
   @override
   String get dataOpsRefreshKMB => '手動更新巴士資料';
@@ -78,6 +78,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get dataOpsMtrAutoRefresh => '自動更新港鐵班次時間';
+
+  @override
+  String get dataOpsOpenAppAnimation => '開屏動畫';
 
   @override
   String get navBookmarks => '收藏';
@@ -234,7 +237,6 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get imageLoading => '圖片載入中...';
 
-
   @override
   String get kmbSearchHint => '請輸入路線號碼';
 
@@ -251,376 +253,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get kmbEmptySubtitle => '例如: 1A';
 
   @override
-  String get introWelcomeTitle => 'Welcome to App';
+  String get introWelcomeTitle => '歡迎使用應用程式';
 
   @override
-  String get introUseIt => 'You can use it to check';
+  String get introUseIt => '您可以使用它來查詢';
 
   @override
-  String get introHKTransportsETA => 'HK transports\' ETA';
+  String get introHKTransportsETA => '香港交通的到站時間';
 
   @override
-  String get introETAFull => '(Estimated Time of Arrival)';
+  String get introETAFull => '（預計到達時間）';
 
   @override
-  String get introIfChangeMode => 'If you change mode...';
+  String get introIfChangeMode => '如果您要切換模式...';
 
   @override
-  String get holdToChange => 'Hold to change';
-
-  @override
-  String get busLabel => 'Bus';
-
-  @override
-  String get mtrLabel => 'MTR';
-
-  @override
-  String get introSetupPref => 'Let\'s set up the preference!';
-
-  @override
-  String introModeSet(Object mode) {
-    return 'Mode Set: $mode';
-  }
-
-  @override
-  String get firstTimeSettingsStored => 'Settings will be stored.';
-
-  @override
-  String get firstTimeTitleWelcome => 'App Introduction';
-
-  @override
-  String get firstTimeTitleSetup => 'Setup';
-
-  @override
-  String get firstTimeTitleTips => 'Tips';
-
-  @override
-  String get firstTimeTitleReady => 'Ready';
-
-  @override
-  String get firstTimeFinalAdjustSettings => 'You can adjust your settings in Menu';
-
-  @override
-  String get firstTimeFinalThanks => 'Thanks for using the app!';
-
-  @override
-  String get dataOpsVibrationToggle => 'Vibration';
-
-  @override
-  String get dataOpsSubtitleToggle => 'Show Bus Station Subtitle';
-
-  @override
-  String get dataOpsOpenAppAnimation => '開屏動畫';
-
-  @override
-  String get dataOpsApiReviewToggle => 'API 審查';
-
-  @override
-  String get apiErrorFailedToLoadRoutes => 'Failed to load routes';
-
-  @override
-  String get apiErrorFailedToLoadStops => 'Failed to load stops';
-
-  @override
-  String get apiErrorFailedToLoadRouteStops => 'Failed to load route stops';
-
-  @override
-  String get apiErrorFailedToLoadETA => 'Failed to load ETA';
-
-  @override
-  String get apiErrorFetchingRoutes => 'Error fetching routes';
-
-  @override
-  String get apiErrorFetchingStops => 'Error fetching stops';
-
-  @override
-  String get apiErrorFetchingRouteStops => 'Error fetching route stops';
-
-  @override
-  String get apiErrorFetchingETA => 'Error fetching ETA';
-
-  @override
-  String get apiErrorUnknownStop => 'Unknown Stop';
-
-  @override
-  String get apiErrorNoData => 'No Data';
-
-  @override
-  String get apiErrorArrivingNow => 'Arriving now';
-
-  @override
-  String get apiErrorExpired => 'Expired';
-
-  @override
-  String get apiErrorMinutes => 'min';
-
-  @override
-  String get apiErrorBusMayHaveLeft => 'Bus may have left';
-
-  @override
-  String get etaTitle => 'Arrival Time';
-
-  @override
-  String get routeTitleTo => 'to';
-
-  @override
-  String get routeTitleSpecial => 'Special';
-}
-
-/// The translations for Chinese, as used in Hong Kong (`zh_HK`).
-class AppLocalizationsZhHk extends AppLocalizationsZh {
-  AppLocalizationsZhHk(): super('zh_HK');
-
-  @override
-  String get appTitle => '香港交通應用';
-
-  @override
-  String get menuTitle => '菜單';
-
-  @override
-  String get menuTheme => '主題';
-
-  @override
-  String get menuThemeSubtitle => '亮/暗（即將推出）';
-
-  @override
-  String get menuStyle => '風格';
-
-  @override
-  String get menuStyleSubtitle => '字體、顏色、大小（即將推出）';
-
-  @override
-  String get menuUpdateKMB => '手動更新九巴資料';
-
-  @override
-  String get menuRefresh => '刷新';
-
-  @override
-  String get menuReset => '重設應用（清除資料與偏好）';
-
-  @override
-  String get menuTerms => '服務條款';
-
-  @override
-  String get menuTermsSubtitle => '查看條款與私隱（即將推出）';
-
-  @override
-  String get menuDevLinks => '開發者連結';
-
-  @override
-  String get menuDevLinksSubtitle => 'GitHub 專案頁';
-
-  @override
-  String get menuDataOpsTitle => '更多資料操作';
-
-  @override
-  String get dataOpsSpecialToggle => '（九巴）顯示特別班次';
-
-  @override
-  String get dataOpsDisplayBusFullName => '顯示完整巴士站名（代碼）';
-
-  @override
-  String get dataOpsRefreshKMB => '手動更新巴士資料';
-
-  @override
-  String get dataOpsRefreshNow => '立即更新';
-
-  @override
-  String dataOpsLastUpdate(Object time) {
-    return '最後更新：$time';
-  }
-
-  @override
-  String get dataOpsNeverUpdated => '從未更新';
-
-  @override
-  String get menuTutorial => 'APP使用教程';
-
-  @override
-  String get dataOpsMtrReverse => '反轉港鐵站序';
-
-  @override
-  String get dataOpsMtrAutoRefresh => '自動更新港鐵班次時間';
-
-  @override
-  String get navBookmarks => '收藏';
-
-  @override
-  String get navSettings => '設定';
-
-  @override
-  String get tabBus => '巴士';
-
-  @override
-  String get tabMTR => '港鐵';
-
-  @override
-  String get toWord => '往';
-
-  @override
-  String get etaEmpty => '暫無到站時間';
-
-  @override
-  String get close => '關閉';
-
-  @override
-  String get errorLoadBookmarks => '載入書籤時發生錯誤';
-
-  @override
-  String get etaLoadFailed => '載入 ETA 失敗';
-
-  @override
-  String get mtrEmptyTitle => '沒有港鐵書籤';
-
-  @override
-  String get mtrEmptySubtitle => '港鐵車站可加入收藏';
-
-  @override
-  String get longPress => '長按';
-
-  @override
-  String get mtrNoTrainInfo => '暫無列車信息';
-
-  @override
-  String get mtrOtherLines => '其他線路';
-
-  @override
-  String get mtrUpdateFailed => '無法更新時刻表，請稍後重試';
-
-  @override
-  String get mtrUpdateError => '更新失敗';
-
-  @override
-  String get mtrRefreshing => '刷新';
-
-  @override
-  String get mtrUpDirection => '上行方向';
-
-  @override
-  String get mtrDownDirection => '下行方向';
-
-  @override
-  String get mtrUpdating => '正在更新時刻表...';
-
-  @override
-  String get mtrClose => '關閉';
-
-  @override
-  String get mtrRefresh => '刷新';
-
-  @override
-  String get mtrUnknownLine => '未知線路';
-
-  @override
-  String get mtrTimeError => '時間錯誤';
-
-  @override
-  String get mtrArrivingSoon => '即將到達';
-
-  @override
-  String get mtrMinutes => '分鐘';
-
-  @override
-  String get mtrHours => '小時';
-
-  @override
-  String mtrHoursMinutes(Object hours, Object minutes) {
-    return '$hours小時$minutes分鐘';
-  }
-
-  @override
-  String get timetableUnavailable => '無法獲取時刻表，請稍後重試';
-
-  @override
-  String get removeBookmarkSuccess => '已移除書籤';
-
-  @override
-  String get removeBookmarkError => '移除書籤時發生錯誤';
-
-  @override
-  String get etaSeqPrefix => '第 ';
-
-  @override
-  String get etaSeqSuffix => ' 班';
-
-  @override
-  String get devLinksDialogTitle => '開發者連結';
-
-  @override
-  String get devLinksDialogContent => '前往 GitHub';
-
-  @override
-  String get back => '返回';
-
-  @override
-  String get github => 'GitHub';
-
-  @override
-  String get languageSectionTitle => '語言';
-
-  @override
-  String get languageSystemDefault => '跟隨系統';
-
-  @override
-  String get languageEnglish => '英文';
-
-  @override
-  String get languageChinese => '中文';
-
-  @override
-  String get themeSectionTitle => '主題';
-
-  @override
-  String get themeLight => '亮色';
-
-  @override
-  String get themeDark => '暗色';
-
-  @override
-  String get themeSystemDefault => '跟隨系統';
-
-  @override
-  String get appUseGuide => 'App使用指南';
-
-  @override
-  String get appUseGuideSubtitle => '查看應用程式使用說明';
-
-  @override
-  String get imageLoading => '圖片載入中...';
-
-
-  @override
-  String get kmbSearchHint => '請輸入路線號碼';
-
-  @override
-  String get kmbNoMatchTitle => '沒有相應路線';
-
-  @override
-  String get kmbNoMatchSubtitle => '請重新檢查路線號碼';
-
-  @override
-  String get kmbEmptyTitle => '請輸入路線號碼';
-
-  @override
-  String get kmbEmptySubtitle => '例如: 1A';
-
-  @override
-  String get introWelcomeTitle => '歡迎使用本應用';
-
-  @override
-  String get introUseIt => '你可以用來查看';
-
-  @override
-  String get introHKTransportsETA => '交通工具的到站時間';
-
-  @override
-  String get introETAFull => '（Estimated Time of Arrival）';
-
-  @override
-  String get introIfChangeMode => '如需切換模式...';
-
-  @override
-  String get holdToChange => '長按切換';
+  String get holdToChange => '長按以切換';
 
   @override
   String get busLabel => '巴士';
@@ -629,42 +277,39 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
   String get mtrLabel => '港鐵';
 
   @override
-  String get introSetupPref => '先設定你的偏好！';
+  String get introSetupPref => '讓我們設定偏好設定！';
 
   @override
   String introModeSet(Object mode) {
-    return '當前模式：$mode';
+    return '模式設定：$mode';
   }
 
   @override
-  String get firstTimeSettingsStored => '設定將會被儲存';
+  String get firstTimeSettingsStored => '設定將會被儲存。';
 
   @override
-  String get firstTimeTitleWelcome => '應用介紹';
+  String get firstTimeTitleWelcome => '應用程式介紹';
 
   @override
-  String get firstTimeTitleSetup => '偏好設定';
+  String get firstTimeTitleSetup => '設定';
 
   @override
-  String get firstTimeTitleTips => '開始使用';
+  String get firstTimeTitleTips => '提示';
 
   @override
-  String get firstTimeTitleReady => '開始';
+  String get firstTimeTitleReady => '準備就緒';
 
   @override
-  String get firstTimeFinalAdjustSettings => '你可以在「菜單」中調整設定';
+  String get firstTimeFinalAdjustSettings => '您可以在菜單中調整設定';
 
   @override
-  String get firstTimeFinalThanks => '感謝使用本應用！';
+  String get firstTimeFinalThanks => '感謝使用本應用程式！';
 
   @override
   String get dataOpsVibrationToggle => '震動';
 
   @override
   String get dataOpsSubtitleToggle => '顯示巴士站副標題';
-
-  @override
-  String get dataOpsOpenAppAnimation => '開屏動畫';
 
   @override
   String get dataOpsApiReviewToggle => 'API 審查';
@@ -703,20 +348,59 @@ class AppLocalizationsZhHk extends AppLocalizationsZh {
   String get apiErrorArrivingNow => '即將到達';
 
   @override
-  String get apiErrorExpired => '巴士可能已離站';
+  String get apiErrorExpired => '已過期';
 
   @override
   String get apiErrorMinutes => '分鐘';
 
   @override
-  String get apiErrorBusMayHaveLeft => '巴士可能已離站';
+  String get apiErrorBusMayHaveLeft => '巴士可能已離開';
 
   @override
-  String get etaTitle => '到站時間';
+  String get etaTitle => '到達時間';
 
   @override
   String get routeTitleTo => '往';
 
   @override
   String get routeTitleSpecial => '特別班次';
+
+  @override
+  String get appInfoSectionTitle => '應用程式資訊';
+
+  @override
+  String get appInfoVersion => '版本';
+
+  @override
+  String get appInfoBuildNumber => '建置編號';
+
+  @override
+  String get appInfoPackageName => '套件名稱';
+
+  @override
+  String get appInfoDescription => '描述';
+
+  @override
+  String get appInfoDescriptionText => '香港交通應用 - 查詢巴士及港鐵到站時間';
+
+  @override
+  String get appInfoCopied => '已複製';
+
+  @override
+  String get resetAppTitle => '重設應用';
+
+  @override
+  String get resetButton => '重設';
+
+  @override
+  String get resetAppDialogTitle => '重設應用';
+
+  @override
+  String get resetAppDialogContent => '這將清除快取、書籤和偏好設定。';
+
+  @override
+  String get cancel => '取消';
+
+  @override
+  String get editItems => '編輯項目';
 }

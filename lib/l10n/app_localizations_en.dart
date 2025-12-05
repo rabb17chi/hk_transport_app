@@ -80,6 +80,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dataOpsMtrAutoRefresh => 'Auto Refresh Trains Data';
 
   @override
+  String get dataOpsOpenAppAnimation => 'Open-App Animation';
+
+  @override
   String get navBookmarks => 'Bookmark';
 
   @override
@@ -309,9 +312,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dataOpsSubtitleToggle => 'Show Bus Station Subtitle';
 
   @override
-  String get dataOpsOpenAppAnimation => 'Open-App Animation';
-
-  @override
   String get dataOpsApiReviewToggle => 'API Review';
 
   @override
@@ -364,4 +364,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get routeTitleSpecial => 'Special';
+
+  @override
+  String get appInfoSectionTitle => 'App Information';
+
+  @override
+  String get appInfoVersion => 'Version';
+
+  @override
+  String get appInfoBuildNumber => 'Build Number';
+
+  @override
+  String get appInfoPackageName => 'Package Name';
+
+  @override
+  String get appInfoDescription => 'Description';
+
+  @override
+  String get appInfoDescriptionText => 'HK Transport App - Check bus and MTR ETA';
+
+  @override
+  String get appInfoCopied => 'Copied';
+
+  @override
+  String get resetAppTitle => 'Reset App';
+
+  @override
+  String get resetButton => 'Reset';
+
+  @override
+  String get resetAppDialogTitle => 'Reset App';
+
+  @override
+  String get resetAppDialogContent => 'This will clear caches, bookmarks and preferences.';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get editItems => 'Edit Items';
 }

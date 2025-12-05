@@ -18,6 +18,7 @@ class LocaleService {
         localeNotifier.value = const Locale('en');
         break;
       case 'zh':
+      case 'zh_HK': // Handle old saves with zh_HK
         localeNotifier.value = const Locale('zh');
         break;
       default:
@@ -34,9 +35,10 @@ class LocaleService {
     }
     if (locale.languageCode == 'en') {
       await prefs.setString(_key, 'en');
+      localeNotifier.value = const Locale('en');
     } else if (locale.languageCode == 'zh') {
       await prefs.setString(_key, 'zh');
+      localeNotifier.value = const Locale('zh');
     }
-    localeNotifier.value = locale;
   }
 }

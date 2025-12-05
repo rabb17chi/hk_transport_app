@@ -8,6 +8,7 @@ import 'menu/app_use_guide_dialog.dart';
 import 'menu/language_section.dart';
 import 'menu/theme_section.dart';
 import 'menu/developer_links_dialog.dart';
+import 'menu/app_info_section.dart';
 import 'settings/reset_app_tile.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -86,6 +87,8 @@ class _MenuScreenState extends State<MenuScreen> {
             Container(
               child: _buildTermsTile(),
             ),
+            const Divider(),
+            Container(child: _buildAppInfoSection()),
             const Divider(),
             Container(child: _buildResetTile()),
           ],
@@ -223,6 +226,10 @@ class _MenuScreenState extends State<MenuScreen> {
       context: context,
       builder: (context) => const AppUseGuideDialog(),
     );
+  }
+
+  Widget _buildAppInfoSection() {
+    return const AppInfoSection();
   }
 }
 

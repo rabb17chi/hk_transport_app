@@ -4,7 +4,6 @@ import '../../scripts/mtr/mtr_schedule_service.dart';
 import '../../scripts/mtr/mtr_data.dart';
 import '../../l10n/locale_utils.dart';
 import '../../l10n/app_localizations.dart';
-import '../../theme/app_color_scheme.dart';
 import '../mtr/mtr_schedule_dialog.dart';
 import 'bookmarks_empty_state.dart';
 
@@ -14,13 +13,11 @@ import 'bookmarks_empty_state.dart';
 class MTRBookmarksWidget extends StatelessWidget {
   final List<MTRBookmarkItem> mtrBookmarks;
   final bool isLoading;
-  final Function(MTRBookmarkItem) onRemoveBookmark;
 
   const MTRBookmarksWidget({
     super.key,
     required this.mtrBookmarks,
     required this.isLoading,
-    required this.onRemoveBookmark,
   });
 
   @override
@@ -85,10 +82,6 @@ class MTRBookmarksWidget extends StatelessWidget {
                   ),
                 ],
               ],
-            ),
-            trailing: IconButton(
-              icon: const Icon(Icons.delete, color: AppColorScheme.dangerColor),
-              onPressed: () => onRemoveBookmark(bookmark),
             ),
             onTap: () async {
               try {

@@ -117,6 +117,19 @@
   "apiErrorBusMayHaveLeft": "Bus may have left",
   "etaTitle": "Arrival Time",
   "routeTitleTo": "to",
-  "routeTitleSpecial": "Special"
+  "routeTitleSpecial": "Special",
+  "appInfoSectionTitle": "App Information",
+  "appInfoVersion": "Version",
+  "appInfoBuildNumber": "Build Number",
+  "appInfoPackageName": "Package Name",
+  "appInfoDescription": "Description",
+  "appInfoDescriptionText": "HK Transport App - Check bus and MTR ETA",
+  "appInfoCopied": "Copied",
+  "resetAppTitle": "Reset App",
+  "resetButton": "Reset",
+  "resetAppDialogTitle": "Reset App",
+  "resetAppDialogContent": "This will clear caches, bookmarks and preferences.",
+  "cancel": "Cancel",
+  "editItems": "Edit Items"
 }
 

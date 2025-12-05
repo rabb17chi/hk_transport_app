@@ -80,18 +80,21 @@ class MyApp extends StatelessWidget {
                 Locale('en'),
                 Locale('zh'),
               ],
-              localeResolutionCallback: (deviceLocale, supportedLocales) {
-                final l = deviceLocale;
-                if (l == null) return const Locale('en');
-                final isChinese = l.languageCode == 'zh';
-                final isChineseRegion = const {'CN', 'TW', 'HK', 'MO'}
-                    .contains(l.countryCode?.toUpperCase());
-                final isHantScript = (l.scriptCode?.toLowerCase() == 'hant');
-                if (isChinese && (isChineseRegion || isHantScript)) {
-                  return const Locale('zh');
-                }
-                return const Locale('en');
-              },
+              localeResolutionCallback: appLocale == null
+                  ? (deviceLocale, supportedLocales) {
+                      final l = deviceLocale;
+                      if (l == null) return const Locale('en');
+                      final isChinese = l.languageCode == 'zh';
+                      final isChineseRegion = const {'CN', 'TW', 'HK', 'MO'}
+                          .contains(l.countryCode?.toUpperCase());
+                      final isHantScript =
+                          (l.scriptCode?.toLowerCase() == 'hant');
+                      if (isChinese && (isChineseRegion || isHantScript)) {
+                        return const Locale('zh');
+                      }
+                      return const Locale('en');
+                    }
+                  : null,
               locale: appLocale,
               home: ValueListenableBuilder<bool>(
                 valueListenable:

@@ -92,8 +92,7 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('zh'),
-    Locale('zh', 'HK')
+    Locale('zh')
   ];
 
   /// No description provided for @appTitle.
@@ -233,6 +232,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Auto Refresh Trains Data'**
   String get dataOpsMtrAutoRefresh;
+
+  /// No description provided for @dataOpsOpenAppAnimation.
+  ///
+  /// In en, this message translates to:
+  /// **'Open-App Animation'**
+  String get dataOpsOpenAppAnimation;
 
   /// No description provided for @navBookmarks.
   ///
@@ -684,12 +689,6 @@ abstract class AppLocalizations {
   /// **'Show Bus Station Subtitle'**
   String get dataOpsSubtitleToggle;
 
-  /// No description provided for @dataOpsOpenAppAnimation.
-  ///
-  /// In en, this message translates to:
-  /// **'Open-App Animation'**
-  String get dataOpsOpenAppAnimation;
-
   /// No description provided for @dataOpsApiReviewToggle.
   ///
   /// In en, this message translates to:
@@ -797,6 +796,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Special'**
   String get routeTitleSpecial;
+
+  /// No description provided for @appInfoSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'App Information'**
+  String get appInfoSectionTitle;
+
+  /// No description provided for @appInfoVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get appInfoVersion;
+
+  /// No description provided for @appInfoBuildNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Build Number'**
+  String get appInfoBuildNumber;
+
+  /// No description provided for @appInfoPackageName.
+  ///
+  /// In en, this message translates to:
+  /// **'Package Name'**
+  String get appInfoPackageName;
+
+  /// No description provided for @appInfoDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get appInfoDescription;
+
+  /// No description provided for @appInfoDescriptionText.
+  ///
+  /// In en, this message translates to:
+  /// **'HK Transport App - Check bus and MTR ETA'**
+  String get appInfoDescriptionText;
+
+  /// No description provided for @appInfoCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get appInfoCopied;
+
+  /// No description provided for @resetAppTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset App'**
+  String get resetAppTitle;
+
+  /// No description provided for @resetButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get resetButton;
+
+  /// No description provided for @resetAppDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset App'**
+  String get resetAppDialogTitle;
+
+  /// No description provided for @resetAppDialogContent.
+  ///
+  /// In en, this message translates to:
+  /// **'This will clear caches, bookmarks and preferences.'**
+  String get resetAppDialogContent;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @editItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Items'**
+  String get editItems;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
@@ -815,6 +892,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
 
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
