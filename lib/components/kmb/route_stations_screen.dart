@@ -329,304 +329,332 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            _appBarTitle,
-            style: _styles.getTitleStyle(context),
-          ),
-          backgroundColor: _colors.getBackgroundColor(widget.isCTB),
-          foregroundColor: _colors.getForegroundColor(widget.isCTB),
-          actions: _availableBounds.length > 1 && widget.serviceType == '1'
-              ? [
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Custom header bar
+            Container(
+              color: _colors.getBackgroundColor(widget.isCTB),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                children: [
                   IconButton(
-                    icon: const Icon(Icons.swap_horiz),
-                    onPressed: _switchToOtherBound,
-                    tooltip: 'Switch to other bound',
+                    icon: const Icon(Icons.arrow_back),
+                    color: _colors.getForegroundColor(widget.isCTB),
+                    onPressed: () => Navigator.of(context).pop(),
                   ),
-                ]
-              : null,
-        ),
-        body: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(
-                  color: _RouteColors.loadingIndicator,
-                ),
-              )
-            : _errorMessage.isNotEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.error_outline,
-                          size: 64,
-                          color: AppColorScheme.errorIconColor,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          _errorMessage,
-                          style: TextStyle(
-                            fontSize: ResponsiveUtils.getOverflowSafeFontSize(
-                                context, 16.0),
+                  Expanded(
+                    child: Text(
+                      _appBarTitle,
+                      style: _styles.getTitleStyle(context).copyWith(
+                            color: _colors.getForegroundColor(widget.isCTB),
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: _loadRouteStops,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFF7A925),
-                            foregroundColor: Colors.white,
-                          ),
-                          child: Text(
-                            'Retry',
-                            style: TextStyle(
-                              fontSize: ResponsiveUtils.getOverflowSafeFontSize(
-                                  context, 14.0),
-                            ),
-                          ),
-                        ),
-                      ],
                     ),
-                  )
-                : SafeArea(
-                    child: (widget.isCTB
-                            ? _ctbRouteStops.isEmpty
-                            : _routeStops.isEmpty)
-                        ? Center(
-                            child: Text(
-                              'No stations found',
-                              style: TextStyle(
-                                fontSize:
-                                    ResponsiveUtils.getOverflowSafeFontSize(
-                                        context, 18.0),
+                  ),
+                  if (_availableBounds.length > 1 && widget.serviceType == '1')
+                    IconButton(
+                      icon: const Icon(Icons.swap_horiz),
+                      color: _colors.getForegroundColor(widget.isCTB),
+                      onPressed: _switchToOtherBound,
+                      tooltip: 'Switch to other bound',
+                    ),
+                ],
+              ),
+            ),
+            // Body content
+            Expanded(
+              child: _isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: _RouteColors.loadingIndicator,
+                      ),
+                    )
+                  : _errorMessage.isNotEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.error_outline,
+                                size: 64,
+                                color: AppColorScheme.errorIconColor,
                               ),
-                            ),
-                          )
-                        : Column(children: [
-                            Expanded(
-                              child: ListView.builder(
-                                  padding: const EdgeInsets.all(16),
-                                  itemCount: widget.isCTB
-                                      ? _ctbRouteStops.length
-                                      : _routeStops.length,
-                                  itemBuilder: (context, index) {
-                                    final isChinese =
-                                        LocaleUtils.isChinese(context);
-                                    if (widget.isCTB) {
-                                      final stop = _ctbRouteStops[index];
+                              const SizedBox(height: 16),
+                              Text(
+                                _errorMessage,
+                                style: TextStyle(
+                                  fontSize:
+                                      ResponsiveUtils.getOverflowSafeFontSize(
+                                          context, 16.0),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 16),
+                              ElevatedButton(
+                                onPressed: _loadRouteStops,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFFF7A925),
+                                  foregroundColor: Colors.white,
+                                ),
+                                child: Text(
+                                  'Retry',
+                                  style: TextStyle(
+                                    fontSize:
+                                        ResponsiveUtils.getOverflowSafeFontSize(
+                                            context, 14.0),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : (widget.isCTB
+                              ? _ctbRouteStops.isEmpty
+                              : _routeStops.isEmpty)
+                          ? Center(
+                              child: Text(
+                                'No stations found',
+                                style: TextStyle(
+                                  fontSize:
+                                      ResponsiveUtils.getOverflowSafeFontSize(
+                                          context, 18.0),
+                                ),
+                              ),
+                            )
+                          : Column(children: [
+                              Expanded(
+                                child: ListView.builder(
+                                    padding: const EdgeInsets.all(16),
+                                    itemCount: widget.isCTB
+                                        ? _ctbRouteStops.length
+                                        : _routeStops.length,
+                                    itemBuilder: (context, index) {
+                                      final isChinese =
+                                          LocaleUtils.isChinese(context);
+                                      if (widget.isCTB) {
+                                        final stop = _ctbRouteStops[index];
+                                        final isSelected =
+                                            _selectedStopId == stop.stop &&
+                                                _selectedStationSeq == stop.seq;
+                                        final bookmarkItem = BookmarkItem(
+                                          operator: 'CTB',
+                                          route: widget.routeNumber,
+                                          bound: widget.bound,
+                                          stopId: stop.stop,
+                                          stopNameTc: '',
+                                          stopNameEn: '',
+                                          serviceType: '1',
+                                          destTc: widget.destinationTc,
+                                          destEn: widget.destinationEn,
+                                        );
+
+                                        return FutureBuilder<CTBStopInfo>(
+                                          future: _getCtbStopInfo(stop.stop),
+                                          builder: (context, snap) {
+                                            final info = snap.data;
+                                            final nameTc =
+                                                info?.nameTc ?? stop.stop;
+                                            final nameEn =
+                                                info?.nameEn ?? stop.stop;
+
+                                            return ValueListenableBuilder<bool>(
+                                              valueListenable: SettingsService
+                                                  .showSubtitleNotifier,
+                                              builder:
+                                                  (context, showSubtitle, _) =>
+                                                      StationItemWidget(
+                                                index: index,
+                                                isSelected: isSelected,
+                                                nameTc: nameTc,
+                                                nameEn: nameEn,
+                                                isChinese: isChinese,
+                                                showSubtitle: showSubtitle,
+                                                onTap: () async {
+                                                  HapticFeedback.lightImpact();
+                                                  await _loadETA(
+                                                      stop.stop, stop.seq);
+                                                },
+                                                onLongPress: () async {
+                                                  HapticFeedback.mediumImpact();
+                                                  final item = BookmarkItem(
+                                                    operator: 'CTB',
+                                                    route: widget.routeNumber,
+                                                    bound: widget.bound,
+                                                    stopId: stop.stop,
+                                                    stopNameTc: nameTc,
+                                                    stopNameEn: nameEn,
+                                                    serviceType: '1',
+                                                    destTc:
+                                                        widget.destinationTc,
+                                                    destEn:
+                                                        widget.destinationEn,
+                                                  );
+                                                  await BookmarkToggleService
+                                                      .toggleBookmark(
+                                                    context,
+                                                    item,
+                                                    () => setState(() {}),
+                                                  );
+                                                },
+                                                isBookmarkedFuture: () =>
+                                                    BookmarksService
+                                                        .isBookmarked(
+                                                            bookmarkItem),
+                                                additionalContent: Column(
+                                                  children: [
+                                                    if (isSelected &&
+                                                        _isLoadingETA)
+                                                      _buildEtaLoading(),
+                                                    if (isSelected &&
+                                                        !_isLoadingETA)
+                                                      _buildEtaBlock(
+                                                        _ctbEtaData.map((eta) {
+                                                          final label = isChinese
+                                                              ? eta
+                                                                  .arrivalTimeStringZh
+                                                              : eta
+                                                                  .arrivalTimeStringEn;
+                                                          int displaySeq =
+                                                              eta.etaSeq;
+                                                          if (displaySeq > 3)
+                                                            displaySeq -= 3;
+                                                          return _buildEtaRow(
+                                                              '$displaySeq',
+                                                              label);
+                                                        }).toList(),
+                                                      ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
+
+                                      final stop = _routeStops[index];
                                       final isSelected =
                                           _selectedStopId == stop.stop &&
                                               _selectedStationSeq == stop.seq;
                                       final bookmarkItem = BookmarkItem(
-                                        operator: 'CTB',
                                         route: widget.routeNumber,
                                         bound: widget.bound,
                                         stopId: stop.stop,
-                                        stopNameTc: '',
-                                        stopNameEn: '',
-                                        serviceType: '1',
+                                        stopNameTc: stop.stopNameTc,
+                                        stopNameEn: stop.stopNameEn,
+                                        serviceType: widget.serviceType ?? '1',
                                         destTc: widget.destinationTc,
                                         destEn: widget.destinationEn,
                                       );
 
-                                      return FutureBuilder<CTBStopInfo>(
-                                        future: _getCtbStopInfo(stop.stop),
-                                        builder: (context, snap) {
-                                          final info = snap.data;
-                                          final nameTc =
-                                              info?.nameTc ?? stop.stop;
-                                          final nameEn =
-                                              info?.nameEn ?? stop.stop;
-
-                                          return ValueListenableBuilder<bool>(
-                                            valueListenable: SettingsService
-                                                .showSubtitleNotifier,
-                                            builder:
-                                                (context, showSubtitle, _) =>
-                                                    StationItemWidget(
-                                              index: index,
-                                              isSelected: isSelected,
-                                              nameTc: nameTc,
-                                              nameEn: nameEn,
-                                              isChinese: isChinese,
-                                              showSubtitle: showSubtitle,
-                                              onTap: () async {
-                                                HapticFeedback.lightImpact();
-                                                await _loadETA(
-                                                    stop.stop, stop.seq);
-                                              },
-                                              onLongPress: () async {
-                                                HapticFeedback.mediumImpact();
-                                                final item = BookmarkItem(
-                                                  operator: 'CTB',
-                                                  route: widget.routeNumber,
-                                                  bound: widget.bound,
-                                                  stopId: stop.stop,
-                                                  stopNameTc: nameTc,
-                                                  stopNameEn: nameEn,
-                                                  serviceType: '1',
-                                                  destTc: widget.destinationTc,
-                                                  destEn: widget.destinationEn,
-                                                );
-                                                await BookmarkToggleService
-                                                    .toggleBookmark(
-                                                  context,
-                                                  item,
-                                                  () => setState(() {}),
-                                                );
-                                              },
-                                              isBookmarkedFuture: () =>
-                                                  BookmarksService.isBookmarked(
-                                                      bookmarkItem),
-                                              additionalContent: Column(
-                                                children: [
-                                                  if (isSelected &&
-                                                      _isLoadingETA)
-                                                    _buildEtaLoading(),
-                                                  if (isSelected &&
-                                                      !_isLoadingETA)
-                                                    _buildEtaBlock(
-                                                      _ctbEtaData.map((eta) {
-                                                        final label = isChinese
-                                                            ? eta
-                                                                .arrivalTimeStringZh
-                                                            : eta
-                                                                .arrivalTimeStringEn;
-                                                        int displaySeq =
-                                                            eta.etaSeq;
-                                                        if (displaySeq > 3)
-                                                          displaySeq -= 3;
-                                                        return _buildEtaRow(
-                                                            '$displaySeq',
-                                                            label);
-                                                      }).toList(),
-                                                    ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    }
-
-                                    final stop = _routeStops[index];
-                                    final isSelected =
-                                        _selectedStopId == stop.stop &&
-                                            _selectedStationSeq == stop.seq;
-                                    final bookmarkItem = BookmarkItem(
-                                      route: widget.routeNumber,
-                                      bound: widget.bound,
-                                      stopId: stop.stop,
-                                      stopNameTc: stop.stopNameTc,
-                                      stopNameEn: stop.stopNameEn,
-                                      serviceType: widget.serviceType ?? '1',
-                                      destTc: widget.destinationTc,
-                                      destEn: widget.destinationEn,
-                                    );
-
-                                    return ValueListenableBuilder<bool>(
-                                      valueListenable:
-                                          SettingsService.showSubtitleNotifier,
-                                      builder: (context, showSubtitle, _) =>
-                                          StationItemWidget(
-                                        index: index,
-                                        isSelected: isSelected,
-                                        nameTc: stop.stopNameTc,
-                                        nameEn: stop.stopNameEn,
-                                        isChinese: isChinese,
-                                        showSubtitle: showSubtitle,
-                                        onTap: () async {
-                                          HapticFeedback.lightImpact();
-                                          _loadETA(stop.stop, stop.seq);
-                                        },
-                                        onLongPress: () async {
-                                          HapticFeedback.mediumImpact();
-                                          final item = BookmarkItem(
-                                            route: widget.routeNumber,
-                                            bound: widget.bound,
-                                            stopId: stop.stop,
-                                            stopNameTc: stop.stopNameTc,
-                                            stopNameEn: stop.stopNameEn,
-                                            serviceType:
-                                                widget.serviceType ?? '1',
-                                            destTc: widget.destinationTc,
-                                            destEn: widget.destinationEn,
-                                          );
-                                          await BookmarkToggleService
-                                              .toggleBookmark(
-                                            context,
-                                            item,
-                                            () => setState(() {}),
-                                          );
-                                        },
-                                        isBookmarkedFuture: () =>
-                                            BookmarksService.isBookmarked(
-                                                bookmarkItem),
-                                        additionalContent: Column(
-                                          children: [
-                                            // ETA Display Section - Only show under selected station
-                                            if (isSelected &&
-                                                _etaData.isNotEmpty &&
-                                                _etaData.any((eta) =>
-                                                    eta.seq ==
-                                                    _selectedStationSeq)) ...[
-                                              _buildEtaBlock(
-                                                _etaData
-                                                    .where((eta) =>
-                                                        eta.seq ==
-                                                        _selectedStationSeq)
-                                                    .map((eta) {
-                                                  int displaySeq = eta.etaSeq;
-                                                  if (displaySeq > 3)
-                                                    displaySeq -= 3;
-                                                  return _buildEtaRow(
-                                                      '$displaySeq',
-                                                      eta.getArrivalTimeString(
-                                                          context));
-                                                }).toList(),
-                                              ),
+                                      return ValueListenableBuilder<bool>(
+                                        valueListenable: SettingsService
+                                            .showSubtitleNotifier,
+                                        builder: (context, showSubtitle, _) =>
+                                            StationItemWidget(
+                                          index: index,
+                                          isSelected: isSelected,
+                                          nameTc: stop.stopNameTc,
+                                          nameEn: stop.stopNameEn,
+                                          isChinese: isChinese,
+                                          showSubtitle: showSubtitle,
+                                          onTap: () async {
+                                            HapticFeedback.lightImpact();
+                                            _loadETA(stop.stop, stop.seq);
+                                          },
+                                          onLongPress: () async {
+                                            HapticFeedback.mediumImpact();
+                                            final item = BookmarkItem(
+                                              route: widget.routeNumber,
+                                              bound: widget.bound,
+                                              stopId: stop.stop,
+                                              stopNameTc: stop.stopNameTc,
+                                              stopNameEn: stop.stopNameEn,
+                                              serviceType:
+                                                  widget.serviceType ?? '1',
+                                              destTc: widget.destinationTc,
+                                              destEn: widget.destinationEn,
+                                            );
+                                            await BookmarkToggleService
+                                                .toggleBookmark(
+                                              context,
+                                              item,
+                                              () => setState(() {}),
+                                            );
+                                          },
+                                          isBookmarkedFuture: () =>
+                                              BookmarksService.isBookmarked(
+                                                  bookmarkItem),
+                                          additionalContent: Column(
+                                            children: [
+                                              // ETA Display Section - Only show under selected station
+                                              if (isSelected &&
+                                                  _etaData.isNotEmpty &&
+                                                  _etaData.any((eta) =>
+                                                      eta.seq ==
+                                                      _selectedStationSeq)) ...[
+                                                _buildEtaBlock(
+                                                  _etaData
+                                                      .where((eta) =>
+                                                          eta.seq ==
+                                                          _selectedStationSeq)
+                                                      .map((eta) {
+                                                    int displaySeq = eta.etaSeq;
+                                                    if (displaySeq > 3)
+                                                      displaySeq -= 3;
+                                                    return _buildEtaRow(
+                                                        '$displaySeq',
+                                                        eta.getArrivalTimeString(
+                                                            context));
+                                                  }).toList(),
+                                                ),
+                                              ],
+                                              // Loading indicator for ETA
+                                              if (isSelected && _isLoadingETA)
+                                                _buildEtaLoading(),
                                             ],
-                                            // Loading indicator for ETA
-                                            if (isSelected && _isLoadingETA)
-                                              _buildEtaLoading(),
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  }),
-                            ),
-                            // API-Review button right under the ListView
-                            // Debug: Show current state
-                            if (_selectedStopId != null) ...[
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: ElevatedButton.icon(
-                                        onPressed: _openApiReview,
-                                        icon: const Icon(Icons.open_in_new),
-                                        label: const Text('API-Review'),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: _colors
-                                              .getBackgroundColor(widget.isCTB),
-                                          foregroundColor: _colors
-                                              .getForegroundColor(widget.isCTB),
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 12, horizontal: 16),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                      );
+                                    }),
+                              ),
+                              // API-Review button right under the ListView
+                              // Debug: Show current state
+                              if (_selectedStopId != null) ...[
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: ElevatedButton.icon(
+                                          onPressed: _openApiReview,
+                                          icon: const Icon(Icons.open_in_new),
+                                          label: const Text('API-Review'),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                _colors.getBackgroundColor(
+                                                    widget.isCTB),
+                                            foregroundColor:
+                                                _colors.getForegroundColor(
+                                                    widget.isCTB),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 12, horizontal: 16),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ])));
+                              ],
+                            ]),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   // Helper methods for cleaner code

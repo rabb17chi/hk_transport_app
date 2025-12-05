@@ -115,33 +115,22 @@ class _BookmarkPageState extends State<BookmarkPage>
                 ],
               ),
             ),
-            // Edit button at the bottom
-            Container(
-              padding: const EdgeInsets.all(16),
-              child: ElevatedButton.icon(
-                onPressed: () => _showEditDialog(),
-                icon: const Icon(Icons.edit),
-                label: const Text('Edit Items'), // loc.editItems
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 48),
-                ),
-              ),
-            ),
           ],
         ),
       ),
     );
   }
 
-  void _showEditDialog() {
+  void _showEditDialog({required bool isKMB}) {
     // TODO: Implement edit dialog for reordering and deleting bookmarks
     final loc = AppLocalizations.of(context)!;
+    final itemList = isKMB ? _kmbBookmarks : _mtrBookmarks;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         // TODO: Replace with loc.editItems after running flutter gen-l10n
-        title: const Text('Edit Items'), // loc.editItems
-        content: const Text('Edit mode coming soon'),
+        title: Text('Edit Items (${isKMB ? 'KMB' : 'MTR'})'), // loc.editItems
+        content: Text('Edit mode coming soon. ${itemList.length} items.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -153,16 +142,54 @@ class _BookmarkPageState extends State<BookmarkPage>
   }
 
   Widget _buildKMBBookmarks() {
-    return KMBBookmarksWidget(
-      kmbBookmarks: _kmbBookmarks,
-      isLoading: _isLoading,
+    return Column(
+      children: [
+        Expanded(
+          child: KMBBookmarksWidget(
+            kmbBookmarks: _kmbBookmarks,
+            isLoading: _isLoading,
+          ),
+        ),
+        // Edit button for KMB tab - only show if there's at least 1 bookmark
+        if (_kmbBookmarks.length >= 1)
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: ElevatedButton.icon(
+              onPressed: () => _showEditDialog(isKMB: true),
+              icon: const Icon(Icons.edit),
+              label: const Text('Edit Items'), // loc.editItems
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 48),
+              ),
+            ),
+          ),
+      ],
     );
   }
 
   Widget _buildMTRBookmarks() {
-    return MTRBookmarksWidget(
-      mtrBookmarks: _mtrBookmarks,
-      isLoading: _isLoading,
+    return Column(
+      children: [
+        Expanded(
+          child: MTRBookmarksWidget(
+            mtrBookmarks: _mtrBookmarks,
+            isLoading: _isLoading,
+          ),
+        ),
+        // Edit button for MTR tab - only show if there's at least 1 bookmark
+        if (_mtrBookmarks.length >= 1)
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: ElevatedButton.icon(
+              onPressed: () => _showEditDialog(isKMB: false),
+              icon: const Icon(Icons.edit),
+              label: const Text('Edit Items'), // loc.editItems
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 48),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

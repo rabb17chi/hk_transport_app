@@ -47,27 +47,42 @@ class _BookmarkedRouteWithStationState
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        AppBar(
-          backgroundColor: Colors.yellow[700],
-          foregroundColor: Colors.black,
-          title: const Text('My Bus Bookmarks'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              tooltip: 'Refresh',
-              onPressed: _refresh,
+    return SafeArea(
+      child: Column(
+        children: [
+          // Custom header bar
+          Container(
+            color: Colors.yellow[700],
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'My Bus Bookmarks',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.refresh),
+                  color: Colors.black,
+                  tooltip: 'Refresh',
+                  onPressed: _refresh,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.settings),
+                  color: Colors.black,
+                  tooltip: 'Settings',
+                  onPressed: widget.onSettingsTap,
+                ),
+              ],
             ),
-            IconButton(
-              icon: const Icon(Icons.settings),
-              tooltip: 'Settings',
-              onPressed: widget.onSettingsTap,
-            ),
-          ],
-        ),
-        Expanded(
-          child: ValueListenableBuilder<int>(
+          ),
+          Expanded(
+            child: ValueListenableBuilder<int>(
             valueListenable: BookmarksService.refreshTrigger,
             builder: (context, value, child) {
               // Only refresh if trigger value actually changed
@@ -127,9 +142,10 @@ class _BookmarkedRouteWithStationState
                 },
               );
             },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
