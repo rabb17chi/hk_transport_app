@@ -14,6 +14,8 @@ class SettingsService {
   static const String _openAppAnimationEnabledKey =
       'open_app_animation_enabled_v1';
   static const String _apiReviewEnabledKey = 'api_review_enabled_v1';
+  static const String _notificationPermissionEnabledKey =
+      'notification_permission_enabled_v1';
 
   // MTR station order: true = reverse order, false = normal order
   // MTR 車站順序：true = 反向順序，false = 正常順序
@@ -67,6 +69,12 @@ class SettingsService {
   static final ValueNotifier<bool> apiReviewEnabledNotifier =
       ValueNotifier<bool>(false);
 
+  // Notification permission: true = enabled, false = disabled
+  // 通知權限：true = 啟用，false = 停用
+  // Default: disabled / 預設：停用
+  static final ValueNotifier<bool> notificationPermissionEnabledNotifier =
+      ValueNotifier<bool>(false);
+
   // Load all settings from SharedPreferences on app startup
   // 在應用程式啟動時從 SharedPreferences 載入所有設定
   static Future<void> load() async {
@@ -118,6 +126,11 @@ class SettingsService {
     final apiReviewEnabled =
         prefs.getBool(_apiReviewEnabledKey) ?? false;
     apiReviewEnabledNotifier.value = apiReviewEnabled;
+
+    // Load notification permission setting
+    final notificationPermissionEnabled =
+        prefs.getBool(_notificationPermissionEnabledKey) ?? false;
+    notificationPermissionEnabledNotifier.value = notificationPermissionEnabled;
   }
 
   // Set MTR station order preference
@@ -198,5 +211,13 @@ class SettingsService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_apiReviewEnabledKey, value);
     apiReviewEnabledNotifier.value = value;
+  }
+
+  // Set notification permission preference
+  // 設定通知權限偏好
+  static Future<void> setNotificationPermissionEnabled(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_notificationPermissionEnabledKey, value);
+    notificationPermissionEnabledNotifier.value = value;
   }
 }

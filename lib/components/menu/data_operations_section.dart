@@ -1,6 +1,10 @@
 import 'package:hk_transport_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import '../../scripts/utils/settings_service.dart';
+import '../../scripts/notifications/notification_service.dart';
+import '../../scripts/notifications/notification_tracking_service.dart';
+import '../../scripts/notifications/notification_preferences_service.dart';
+import '../../l10n/locale_utils.dart';
 
 class DataOperationsSection extends StatelessWidget {
   final Future<void> Function() onRefreshKMB;
@@ -118,6 +122,24 @@ class DataOperationsSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
+          ValueListenableBuilder<bool>(
+            valueListenable: SettingsService.notificationPermissionEnabledNotifier,
+            builder: (context, value, _) {
+              final isZh = LocaleUtils.isChinese(context);
+              return SwitchListTile(
+                secondary: const Icon(Icons.notifications),
+                title: Text(isZh ? '通知權限' : 'Notification Permission'),
+                subtitle: Text(
+                  isZh
+                      ? '允許應用程式發送通知'
+                      : 'Allow app to send notifications',
+                ),
+                value: value,
+                onChanged: (v) => _handleNotificationPermissionToggle(context, v),
+              );
+            },
+          ),
+          const SizedBox(height: 4),
           ListTile(
             leading: const Icon(Icons.sync),
             title: Text(AppLocalizations.of(context)!.dataOpsRefreshKMB),
@@ -130,5 +152,50 @@ class DataOperationsSection extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _handleNotificationPermissionToggle(
+      BuildContext context, bool enabled) async {
+    if (enabled) {
+      // Request permission when enabling
+      final notificationService = NotificationService();
+      final hasPermission = await notificationService.hasPermission();
+      
+      if (!hasPermission) {
+        final granted = await notificationService.requestPermission();
+        if (!granted) {
+          // Permission denied, don't enable the toggle
+          if (context.mounted) {
+            final isZh = LocaleUtils.isChinese(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(isZh
+                    ? '需要通知權限才能啟用此功能'
+                    : 'Notification permission is required to enable this feature'),
+              ),
+            );
+          }
+          return;
+        }
+      }
+      
+      // Permission granted, enable the setting
+      await SettingsService.setNotificationPermissionEnabled(true);
+      
+      // Start tracking if there are tracked bookmarks
+      final trackingService = NotificationTrackingService();
+      final trackedBookmarks = await NotificationPreferencesService.getTrackedBookmarks();
+      final trackedMTRBookmarks = await NotificationPreferencesService.getTrackedMTRBookmarks();
+      if (trackedBookmarks.isNotEmpty || trackedMTRBookmarks.isNotEmpty) {
+        await trackingService.startTracking();
+      }
+    } else {
+      // Disable notification permission
+      await SettingsService.setNotificationPermissionEnabled(false);
+      
+      // Stop tracking
+      final trackingService = NotificationTrackingService();
+      trackingService.stopTracking();
+    }
   }
 }

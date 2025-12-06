@@ -10,7 +10,7 @@ import 'bookmarks_empty_state.dart';
 /// MTR Bookmarks Widget
 ///
 /// Displays a list of MTR bookmarked stations with schedule functionality
-class MTRBookmarksWidget extends StatelessWidget {
+class MTRBookmarksWidget extends StatefulWidget {
   final List<MTRBookmarkItem> mtrBookmarks;
   final bool isLoading;
 
@@ -21,24 +21,31 @@ class MTRBookmarksWidget extends StatelessWidget {
   });
 
   @override
+  State<MTRBookmarksWidget> createState() => _MTRBookmarksWidgetState();
+}
+
+class _MTRBookmarksWidgetState extends State<MTRBookmarksWidget> {
+
+  @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     // no-op
 
-    if (isLoading) {
+    if (widget.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (mtrBookmarks.isEmpty) {
+    if (widget.mtrBookmarks.isEmpty) {
       return const BookmarksEmptyState();
     }
 
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: mtrBookmarks.length,
+      itemCount: widget.mtrBookmarks.length,
       itemBuilder: (context, index) {
-        final bookmark = mtrBookmarks[index];
+        final bookmark = widget.mtrBookmarks[index];
         final stationLines = MTRData.getStationLines(bookmark.stationId);
+        final isZh = LocaleUtils.isChinese(context);
         return Card(
           margin: const EdgeInsets.only(bottom: 8),
           child: ListTile(
@@ -47,9 +54,7 @@ class MTRBookmarksWidget extends StatelessWidget {
                 // Station name
                 Expanded(
                   child: Text(
-                    LocaleUtils.isChinese(context)
-                        ? bookmark.stationNameTc
-                        : bookmark.stationNameEn,
+                    isZh ? bookmark.stationNameTc : bookmark.stationNameEn,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),

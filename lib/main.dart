@@ -13,6 +13,9 @@ import 'scripts/locale/locale_service.dart';
 import 'scripts/theme/theme_service.dart';
 import 'scripts/utils/settings_service.dart';
 import 'scripts/ctb/ctb_api_service.dart';
+import 'scripts/notifications/notification_service.dart';
+import 'scripts/notifications/notification_tracking_service.dart';
+import 'scripts/notifications/notification_preferences_service.dart';
 
 // Global system info storage
 class SystemInfo {
@@ -42,6 +45,24 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ThemeService.initialize();
   await SettingsService.load();
+  
+  // Initialize notification service
+  await NotificationService().initialize();
+  
+  // Start tracking if notification permission is enabled and there are tracked bookmarks
+  final notificationPermissionEnabled = SettingsService.notificationPermissionEnabledNotifier.value;
+  if (notificationPermissionEnabled) {
+    final trackingService = NotificationTrackingService();
+    final trackedBookmarks = await NotificationPreferencesService.getTrackedBookmarks();
+    final trackedMTRBookmarks = await NotificationPreferencesService.getTrackedMTRBookmarks();
+    if (trackedBookmarks.isNotEmpty || trackedMTRBookmarks.isNotEmpty) {
+      final hasPermission = await NotificationService().hasPermission();
+      if (hasPermission) {
+        await trackingService.startTracking();
+      }
+    }
+  }
+  
   unawaited(
     CTBApiService.getAllRoutes().then((_) {}, onError: (_) {}),
   );

@@ -7,12 +7,14 @@ import '../../l10n/locale_utils.dart';
 import '../../l10n/app_localizations.dart';
 import '../../theme/app_color_scheme.dart';
 import '../../scripts/utils/text_utils.dart';
+import '../../scripts/utils/settings_service.dart';
+import '../../scripts/utils/responsive_utils.dart';
 import 'bookmarks_empty_state.dart';
 
 /// KMB Bookmarks Widget
 ///
 /// Displays a list of KMB bookmarked routes with ETA functionality
-class KMBBookmarksWidget extends StatelessWidget {
+class KMBBookmarksWidget extends StatefulWidget {
   final List<BookmarkItem> kmbBookmarks;
   final bool isLoading;
 
@@ -23,22 +25,25 @@ class KMBBookmarksWidget extends StatelessWidget {
   });
 
   @override
+  State<KMBBookmarksWidget> createState() => _KMBBookmarksWidgetState();
+}
+
+class _KMBBookmarksWidgetState extends State<KMBBookmarksWidget> {
+  @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    String cleanStopName(String name) => TextUtils.cleanupStopDisplayName(name);
-    // no-op
 
-    if (isLoading) {
+    if (widget.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (kmbBookmarks.isEmpty) {
+    if (widget.kmbBookmarks.isEmpty) {
       return const BookmarksEmptyState();
     }
 
     // Group bookmarks by route + bound + serviceType
     final Map<String, List<BookmarkItem>> groupedBookmarks = {};
-    for (final bookmark in kmbBookmarks) {
+    for (final bookmark in widget.kmbBookmarks) {
       final key =
           '${bookmark.operator}|${bookmark.route}|${bookmark.bound}|${bookmark.serviceType}';
       groupedBookmarks.putIfAbsent(key, () => []).add(bookmark);
@@ -60,12 +65,12 @@ class KMBBookmarksWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(12.0),
                 child: Row(
                   children: [
                     Container(
-                      width: 60,
-                      height: 50,
+                      width: 100,
+                      height: 40,
                       child: Center(
                         child: Text(
                           firstBookmark.route,
@@ -74,45 +79,29 @@ class KMBBookmarksWidget extends StatelessWidget {
                                 ? AppColorScheme.ctbBannerBackgroundColor
                                 : AppColorScheme.kmbColor,
                             fontWeight: FontWeight.bold,
-                            fontSize: 24,
+                            fontSize: 28,
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    // const SizedBox(width: 0),
                     Expanded(
                       child: Text(
                         '${loc.toWord} ${isZh ? firstBookmark.destTc : firstBookmark.destEn}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
                       ),
                     ),
                   ],
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: groupBookmarks.map((bookmark) {
-                    final stopName = isCTB
-                        ? (isZh ? bookmark.stopNameTc : bookmark.stopNameEn)
-                            .trim()
-                        : cleanStopName(
-                            isZh ? bookmark.stopNameTc : bookmark.stopNameEn);
-                    return TextButton(
-                      onPressed: () => _showETA(context, bookmark, loc),
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
-                        minimumSize: Size.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        alignment: Alignment.centerLeft,
-                      ),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(stopName),
-                      ),
-                    );
+                    return _buildStationItem(
+                        context, bookmark, isZh, isCTB, loc);
                   }).toList(),
                 ),
               ),
@@ -174,5 +163,74 @@ class KMBBookmarksWidget extends StatelessWidget {
         SnackBar(content: Text('${loc.etaLoadFailed}: $e')),
       );
     }
+  }
+
+  Widget _buildStationItem(BuildContext context, BookmarkItem bookmark,
+      bool isZh, bool isCTB, AppLocalizations loc) {
+    // Get station name based on language
+    String stationName = isCTB
+        ? (isZh ? bookmark.stopNameTc : bookmark.stopNameEn).trim()
+        : TextUtils.cleanupStopDisplayName(
+            isZh ? bookmark.stopNameTc : bookmark.stopNameEn);
+
+    // Get station code if displayBusFullName is enabled
+    String? stationCode;
+    if (SettingsService.displayBusFullNameNotifier.value) {
+      // Extract station code from stopId or name
+      if (bookmark.stopId.isNotEmpty) {
+        stationCode = bookmark.stopId;
+      }
+    }
+
+    return ValueListenableBuilder<bool>(
+      valueListenable: SettingsService.displayBusFullNameNotifier,
+      builder: (context, showFullName, _) {
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.grey[850]
+                : Colors.grey[100],
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.grey[700]!
+                  : Colors.grey[300]!,
+              width: 1,
+            ),
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => _showETA(context, bookmark, loc),
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Station name
+                    Text(
+                      stationName,
+                      style: TextStyle(
+                        fontSize: ResponsiveUtils.getOverflowSafeFontSize(
+                            context, 18.0),
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 }
