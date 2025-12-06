@@ -90,9 +90,12 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
   }
 
   Future<CTBStopInfo> _getCtbStopInfo(String stopId) async {
+    // Check memory cache first
     final cached = _ctbStopInfoCache[stopId];
     if (cached != null) return cached;
-    final info = await CTBRouteStopsService.getStopInfo(stopId);
+
+    // Use persistent cache service (fetches from API if not cached)
+    final info = await CTBRouteStopsService.getStopInfoCached(stopId);
     _ctbStopInfoCache[stopId] = info;
     return info;
   }
@@ -161,10 +164,20 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
 
   Future<List<CTBRouteStop>> _loadCTBRouteStops() async {
     final dir = widget.bound == 'I' ? 'inbound' : 'outbound';
-    return await CTBRouteStopsService.getRouteStops(
+    final routeStops = await CTBRouteStopsService.getRouteStops(
       route: widget.routeNumber,
       bound: dir,
     );
+
+    // Cache all stop info after loading route stops
+    // This ensures stop names are available even when offline
+    if (routeStops.isNotEmpty) {
+      final stopIds = routeStops.map((stop) => stop.stop).toList();
+      // Use ensureStopsCached to fetch and cache missing stop info
+      await CTBRouteStopsService.ensureStopsCached(stopIds);
+    }
+
+    return routeStops;
   }
 
   Future<List<KMBRouteStop>> _loadKMBRouteStops() async {
@@ -628,7 +641,9 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                                         child: ElevatedButton.icon(
                                           onPressed: _openApiReview,
                                           icon: const Icon(Icons.open_in_new),
-                                          label: const Text('API-Review'),
+                                          label: Text(
+                                              AppLocalizations.of(context)!
+                                                  .apiReview),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor:
                                                 _colors.getBackgroundColor(

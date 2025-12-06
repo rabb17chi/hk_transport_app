@@ -63,6 +63,7 @@ class CTBRouteStopsService {
     final mem = _memoryStopCache[stopId];
     if (mem != null) return mem;
 
+    // Try SharedPreferences cache
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getString(_stopInfoPrefsKey);
     if (raw == null || raw.isEmpty) return null;
@@ -98,6 +99,7 @@ class CTBRouteStopsService {
         map = json.decode(raw) as Map<String, dynamic>;
       } catch (_) {}
     }
+    // Update memory cache and persistent storage
     for (final info in infos) {
       _memoryStopCache[info.stop] = info;
       map[info.stop] = info.toJson();
@@ -120,6 +122,16 @@ class CTBRouteStopsService {
     final futures = missing.map((id) => getStopInfo(id));
     final results = await Future.wait(futures);
     await cacheStopInfos(results);
+  }
+
+  /// Clear all CTB stop info cache (both memory and persistent storage)
+  static Future<void> clearCache() async {
+    // Clear memory cache
+    _memoryStopCache.clear();
+    
+    // Clear SharedPreferences cache
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_stopInfoPrefsKey);
   }
 
   /// Fetch ETA for a specific stop and route (Citybus)

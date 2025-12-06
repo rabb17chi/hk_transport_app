@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// TODO: Re-enable after running flutter gen-l10n
-// import '../../l10n/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 
 class AppInfoSection extends StatelessWidget {
   const AppInfoSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Replace with loc.appInfoSectionTitle after running flutter gen-l10n
-    return ExpansionTile(
-      maintainState: true,
-      leading: const Icon(Icons.info_outline),
-      title: const Text('App Information'),
+      final loc = AppLocalizations.of(context)!;
+      return ExpansionTile(
+        maintainState: true,
+        leading: const Icon(Icons.info_outline),
+        title: Text(loc.appInfoSectionTitle),
       trailing: const SizedBox.shrink(),
       shape: const RoundedRectangleBorder(
         side: BorderSide(color: Colors.transparent, width: 0),
@@ -29,19 +28,17 @@ class AppInfoSection extends StatelessWidget {
       childrenPadding:
           const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
       children: [
-        // TODO: Replace with loc.appInfoVersion after running flutter gen-l10n
         _buildInfoRow(
           context,
-          'Version',
+          loc.appInfoVersion,
           '1.0.0',
           Icons.tag,
         ),
         const SizedBox(height: 8),
-        // TODO: Replace with loc.appInfoDescription and loc.appInfoDescriptionText after running flutter gen-l10n
         _buildInfoRow(
           context,
-          'Description',
-          'HK Transport App - Check bus and MTR ETA',
+          loc.appInfoDescription,
+          loc.appInfoDescriptionText,
           Icons.description,
         ),
         const SizedBox(height: 8),
@@ -59,10 +56,10 @@ class AppInfoSection extends StatelessWidget {
     return InkWell(
       onTap: () {
         Clipboard.setData(ClipboardData(text: value));
-        // TODO: Replace with loc.appInfoCopied after running flutter gen-l10n
+        final loc = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Copied: $value'),
+            content: Text(loc.appInfoCopiedMessage(value)),
             duration: const Duration(seconds: 1),
           ),
         );

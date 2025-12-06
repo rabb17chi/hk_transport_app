@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../main.dart';
+import '../../l10n/app_localizations.dart';
 
 /// System Monitor Section
 ///
@@ -9,6 +10,7 @@ class SystemMonitorSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return ExpansionTileTheme(
       data: const ExpansionTileThemeData(
         shape: RoundedRectangleBorder(
@@ -20,57 +22,57 @@ class SystemMonitorSection extends StatelessWidget {
       ),
       child: ExpansionTile(
         leading: const Icon(Icons.monitor),
-        title: const Text('系統監控'),
-        subtitle: const Text('設備縮放與屏幕信息'),
+        title: Text(loc.systemMonitorTitle),
+        subtitle: Text(loc.systemMonitorSubtitle),
         trailing: const SizedBox.shrink(),
         children: [
           if (SystemInfo.hasLogged) ...[
             _buildInfoCard(
-              '屏幕縮放',
+              loc.systemMonitorScreenScaling,
               [
-                _buildInfoRow('文字縮放',
+                _buildInfoRow(loc.systemMonitorTextScaling,
                     '${SystemInfo.textScaleFactor?.toStringAsFixed(2) ?? 'N/A'}x'),
-                _buildInfoRow('像素密度',
+                _buildInfoRow(loc.systemMonitorPixelDensity,
                     '${SystemInfo.devicePixelRatio?.toStringAsFixed(2) ?? 'N/A'}x'),
               ],
             ),
             const SizedBox(height: 8),
             _buildInfoCard(
-              '屏幕尺寸',
+              loc.systemMonitorScreenSize,
               [
-                _buildInfoRow('寬度',
+                _buildInfoRow(loc.systemMonitorWidth,
                     '${SystemInfo.screenSize?.width.toStringAsFixed(1) ?? 'N/A'}px'),
-                _buildInfoRow('高度',
+                _buildInfoRow(loc.systemMonitorHeight,
                     '${SystemInfo.screenSize?.height.toStringAsFixed(1) ?? 'N/A'}px'),
-                _buildInfoRow('可用高度', '${_getAvailableHeight()}px'),
+                _buildInfoRow(loc.systemMonitorAvailableHeight, '${_getAvailableHeight()}px'),
               ],
             ),
             const SizedBox(height: 8),
             _buildInfoCard(
-              '系統信息',
+              loc.systemMonitorSystemInfo,
               [
-                _buildInfoRow('主題模式', _getBrightnessText()),
-                _buildInfoRow('狀態欄',
+                _buildInfoRow(loc.systemMonitorThemeMode, _getBrightnessText(context)),
+                _buildInfoRow(loc.systemMonitorStatusBar,
                     '${SystemInfo.padding?.top.toStringAsFixed(1) ?? 'N/A'}px'),
-                _buildInfoRow('底部安全區',
+                _buildInfoRow(loc.systemMonitorBottomSafeArea,
                     '${SystemInfo.padding?.bottom.toStringAsFixed(1) ?? 'N/A'}px'),
               ],
             ),
             const SizedBox(height: 8),
             _buildInfoCard(
-              '縮放狀態',
+              loc.systemMonitorScalingStatus,
               [
-                _buildInfoRow('文字縮放狀態', _getTextScaleStatus()),
-                _buildInfoRow('建議', _getRecommendation()),
+                _buildInfoRow(loc.systemMonitorTextScaleStatus, _getTextScaleStatus(context)),
+                _buildInfoRow(loc.systemMonitorRecommendation, _getRecommendation(context)),
               ],
             ),
           ] else ...[
-            const Padding(
-              padding: EdgeInsets.all(16.0),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Center(
                 child: Text(
-                  '系統信息載入中...',
-                  style: TextStyle(color: Colors.grey),
+                  loc.systemMonitorLoading,
+                  style: const TextStyle(color: Colors.grey),
                 ),
               ),
             ),
@@ -136,40 +138,44 @@ class SystemMonitorSection extends StatelessWidget {
     return availableHeight.toStringAsFixed(1);
   }
 
-  String _getBrightnessText() {
+  String _getBrightnessText(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     switch (SystemInfo.platformBrightness) {
       case Brightness.light:
-        return '淺色模式';
+        return loc.systemMonitorLightMode;
       case Brightness.dark:
-        return '深色模式';
+        return loc.systemMonitorDarkMode;
       default:
-        return '未知';
+        return loc.systemMonitorUnknown;
     }
   }
 
-  String _getTextScaleStatus() {
+  String _getTextScaleStatus(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final scale = SystemInfo.textScaleFactor ?? 1.0;
+    final scaleStr = scale.toStringAsFixed(1);
     if (scale <= 1.0) {
-      return '正常 (${scale.toStringAsFixed(1)}x)';
+      return loc.systemMonitorNormal(scaleStr);
     } else if (scale <= 1.3) {
-      return '輕微放大 (${scale.toStringAsFixed(1)}x)';
+      return loc.systemMonitorSlightZoom(scaleStr);
     } else if (scale <= 1.5) {
-      return '中等放大 (${scale.toStringAsFixed(1)}x)';
+      return loc.systemMonitorMediumZoom(scaleStr);
     } else {
-      return '高度放大 (${scale.toStringAsFixed(1)}x)';
+      return loc.systemMonitorHighZoom(scaleStr);
     }
   }
 
-  String _getRecommendation() {
+  String _getRecommendation(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     final scale = SystemInfo.textScaleFactor ?? 1.0;
     if (scale <= 1.0) {
-      return 'UI 顯示正常';
+      return loc.systemMonitorUINormal;
     } else if (scale <= 1.3) {
-      return 'UI 可能略有影響';
+      return loc.systemMonitorUISlightImpact;
     } else if (scale <= 1.5) {
-      return '建議檢查 UI 佈局';
+      return loc.systemMonitorUICheckLayout;
     } else {
-      return '需要優化 UI 響應式設計';
+      return loc.systemMonitorUIOptimize;
     }
   }
 }

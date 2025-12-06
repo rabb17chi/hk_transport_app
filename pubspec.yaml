@@ -37,10 +37,8 @@ dependencies:
   # HTTP requests for API calls
   http: ^1.1.0
 
-  # Local storage for caching KMB data
+  # Local storage for caching data
   shared_preferences: ^2.2.2
-  sqflite: ^2.3.0
-  path: ^1.8.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -56,6 +54,9 @@ dependencies:
   # Local notifications for ETA tracking
   flutter_local_notifications: ^17.2.2
   permission_handler: ^11.3.1
+
+  # Network connectivity checking
+  connectivity_plus: ^6.0.5
 
 dev_dependencies:
   flutter_test:

@@ -59,57 +59,115 @@ class _KMBBookmarksWidgetState extends State<KMBBookmarksWidget> {
         final isZh = LocaleUtils.isChinese(context);
         final isCTB = firstBookmark.operator.toUpperCase() == 'CTB';
 
-        return Card(
-          margin: const EdgeInsets.only(bottom: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 40,
-                      child: Center(
-                        child: Text(
-                          firstBookmark.route,
-                          style: TextStyle(
-                            color: isCTB
-                                ? AppColorScheme.ctbBannerBackgroundColor
-                                : AppColorScheme.kmbColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 28,
+        return FutureBuilder<Map<String, int>>(
+          future: _getStopSequences(firstBookmark, isCTB),
+          builder: (context, snapshot) {
+            // Sort bookmarks by sequence if we have the data
+            List<BookmarkItem> sortedBookmarks = groupBookmarks;
+            if (snapshot.hasData) {
+              final seqMap = snapshot.data!;
+              sortedBookmarks = List<BookmarkItem>.from(groupBookmarks)
+                ..sort((a, b) {
+                  final seqA = seqMap[a.stopId] ?? 9999;
+                  final seqB = seqMap[b.stopId] ?? 9999;
+                  return seqA.compareTo(seqB);
+                });
+            }
+
+            return Card(
+              margin: const EdgeInsets.only(bottom: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 120,
+                          height: 48,
+                          decoration: isCTB
+                              ? BoxDecoration(
+                                  color: AppColorScheme.ctbBannerBackgroundColor
+                                      .withOpacity(0.8),
+                                  borderRadius: BorderRadius.circular(4),
+                                )
+                              : null,
+                          child: Center(
+                            child: Text(
+                              firstBookmark.route,
+                              style: TextStyle(
+                                color: isCTB
+                                    ? AppColorScheme.ctbBannerTextColor
+                                    : AppColorScheme.kmbColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 28,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            '${loc.toWord} ${isZh ? firstBookmark.destTc : firstBookmark.destEn}',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20),
+                          ),
+                        ),
+                      ],
                     ),
-                    // const SizedBox(width: 0),
-                    Expanded(
-                      child: Text(
-                        '${loc.toWord} ${isZh ? firstBookmark.destTc : firstBookmark.destEn}',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: sortedBookmarks.map((bookmark) {
+                        return _buildStationItem(
+                            context, bookmark, isZh, isCTB, loc);
+                      }).toList(),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: groupBookmarks.map((bookmark) {
-                    return _buildStationItem(
-                        context, bookmark, isZh, isCTB, loc);
-                  }).toList(),
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
+  }
+
+  /// Fetch route stops and create a map of stopId -> sequence number
+  Future<Map<String, int>> _getStopSequences(
+      BookmarkItem bookmark, bool isCTB) async {
+    try {
+      final Map<String, int> seqMap = {};
+
+      if (isCTB) {
+        final dir = bookmark.bound == 'I' ? 'inbound' : 'outbound';
+        final routeStops = await CTBRouteStopsService.getRouteStops(
+          route: bookmark.route,
+          bound: dir,
+        );
+        for (final stop in routeStops) {
+          seqMap[stop.stop] = stop.seq;
+        }
+      } else {
+        final routeStops = await KMBApiService.getRouteStops(
+          bookmark.route,
+          bookmark.bound,
+          bookmark.serviceType,
+        );
+        for (final stop in routeStops) {
+          seqMap[stop.stop] = stop.seq;
+        }
+      }
+
+      return seqMap;
+    } catch (e) {
+      // Return empty map on error - bookmarks will maintain original order
+      return {};
+    }
   }
 
   Future<void> _showETA(
@@ -173,15 +231,6 @@ class _KMBBookmarksWidgetState extends State<KMBBookmarksWidget> {
         : TextUtils.cleanupStopDisplayName(
             isZh ? bookmark.stopNameTc : bookmark.stopNameEn);
 
-    // Get station code if displayBusFullName is enabled
-    String? stationCode;
-    if (SettingsService.displayBusFullNameNotifier.value) {
-      // Extract station code from stopId or name
-      if (bookmark.stopId.isNotEmpty) {
-        stationCode = bookmark.stopId;
-      }
-    }
-
     return ValueListenableBuilder<bool>(
       valueListenable: SettingsService.displayBusFullNameNotifier,
       builder: (context, showFullName, _) {
@@ -217,7 +266,7 @@ class _KMBBookmarksWidgetState extends State<KMBBookmarksWidget> {
                       stationName,
                       style: TextStyle(
                         fontSize: ResponsiveUtils.getOverflowSafeFontSize(
-                            context, 18.0),
+                            context, 20.0),
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).brightness == Brightness.dark
                             ? Colors.white

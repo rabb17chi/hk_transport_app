@@ -3,6 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'ctb_api_service.dart';
 
 /// CTB Cache Service
+///
+/// Handles local caching of CTB routes data using SharedPreferences
 class CTBCacheService {
   static const String _routesKey = 'ctb_routes';
   static const String _routesTimestampKey = 'ctb_routes_timestamp';
@@ -41,6 +43,18 @@ class CTBCacheService {
       print('[CTB] Cached routes: ${routes.length}');
     } catch (e) {
       print('[CTB] cacheRoutes error: $e');
+    }
+  }
+
+  /// Clear all CTB cache (routes)
+  static Future<void> clearCache() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_routesKey);
+      await prefs.remove(_routesTimestampKey);
+      print('[CTB] Cache cleared');
+    } catch (e) {
+      print('[CTB] Error clearing cache: $e');
     }
   }
 }

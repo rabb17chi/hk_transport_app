@@ -4,7 +4,8 @@ import '../../scripts/utils/settings_service.dart';
 import '../../scripts/notifications/notification_service.dart';
 import '../../scripts/notifications/notification_tracking_service.dart';
 import '../../scripts/notifications/notification_preferences_service.dart';
-import '../../l10n/locale_utils.dart';
+import '../../scripts/ctb/ctb_cache_service.dart';
+import '../../scripts/ctb/ctb_route_stops_service.dart';
 
 class DataOperationsSection extends StatelessWidget {
   final Future<void> Function() onRefreshKMB;
@@ -125,15 +126,11 @@ class DataOperationsSection extends StatelessWidget {
           ValueListenableBuilder<bool>(
             valueListenable: SettingsService.notificationPermissionEnabledNotifier,
             builder: (context, value, _) {
-              final isZh = LocaleUtils.isChinese(context);
+              final loc = AppLocalizations.of(context)!;
               return SwitchListTile(
                 secondary: const Icon(Icons.notifications),
-                title: Text(isZh ? '通知權限' : 'Notification Permission'),
-                subtitle: Text(
-                  isZh
-                      ? '允許應用程式發送通知'
-                      : 'Allow app to send notifications',
-                ),
+                title: Text(loc.dataOpsNotificationPermission),
+                subtitle: Text(loc.dataOpsNotificationPermissionSubtitle),
                 value: value,
                 onChanged: (v) => _handleNotificationPermissionToggle(context, v),
               );
@@ -149,13 +146,76 @@ class DataOperationsSection extends StatelessWidget {
               tooltip: AppLocalizations.of(context)!.dataOpsRefreshNow,
             ),
           ),
+          const SizedBox(height: 4),
+          ListTile(
+            leading: const Icon(Icons.delete_outline),
+            title: Text(AppLocalizations.of(context)!.dataOpsResetCTB),
+            subtitle: Text(AppLocalizations.of(context)!.dataOpsResetCTBSubtitle),
+            trailing: IconButton(
+              onPressed: () => _handleResetCTBData(context),
+              icon: const Icon(Icons.delete),
+              tooltip: AppLocalizations.of(context)!.dataOpsResetCTB,
+            ),
+          ),
         ],
       ),
     );
   }
 
+  Future<void> _handleResetCTBData(BuildContext context) async {
+    final loc = AppLocalizations.of(context)!;
+    
+    // Show confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(loc.resetCTBDialogTitle),
+        content: Text(loc.resetCTBDialogContent),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(loc.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+            child: Text(loc.confirm),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      try {
+        // Clear both routes cache and stop info cache
+        await CTBCacheService.clearCache();
+        await CTBRouteStopsService.clearCache();
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(loc.resetCTBSuccess),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${loc.resetCTBFailedPlaceholder}: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+
   Future<void> _handleNotificationPermissionToggle(
       BuildContext context, bool enabled) async {
+    final loc = AppLocalizations.of(context)!;
     if (enabled) {
       // Request permission when enabling
       final notificationService = NotificationService();
@@ -166,12 +226,9 @@ class DataOperationsSection extends StatelessWidget {
         if (!granted) {
           // Permission denied, don't enable the toggle
           if (context.mounted) {
-            final isZh = LocaleUtils.isChinese(context);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(isZh
-                    ? '需要通知權限才能啟用此功能'
-                    : 'Notification permission is required to enable this feature'),
+                content: Text(loc.notificationPermissionDenied),
               ),
             );
           }

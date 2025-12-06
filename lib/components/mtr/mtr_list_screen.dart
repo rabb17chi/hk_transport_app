@@ -6,6 +6,7 @@ import '../../scripts/utils/vibration_helper.dart';
 import 'mtr_schedule_dialog.dart';
 import '../../scripts/bookmarks/mtr_bookmarks_service.dart';
 import '../../l10n/locale_utils.dart';
+import '../../l10n/app_localizations.dart';
 import '../../scripts/utils/settings_service.dart';
 
 /// MTR 列表式車站選擇界面
@@ -355,9 +356,9 @@ class _MTRListScreenState extends State<MTRListScreen> {
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('無法獲取時刻表，請稍後重試'),
-              duration: Duration(seconds: 3),
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.mtrTimetableUnavailable),
+              duration: const Duration(seconds: 3),
               backgroundColor: Colors.red,
             ),
           );
@@ -365,9 +366,9 @@ class _MTRListScreenState extends State<MTRListScreen> {
       } else {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('找不到車站資料'),
-            duration: Duration(seconds: 2),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.mtrStationNotFound),
+            duration: const Duration(seconds: 2),
             backgroundColor: Colors.orange,
           ),
         );

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import '../../main.dart';
-// import '../scripts/locale/locale_service.dart';
 import '../../scripts/utils/startup_service.dart';
 import '../../scripts/utils/first_time_service.dart';
+import '../../l10n/app_localizations.dart';
 import '../first_time/first_time_to_app.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -22,6 +22,10 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _bootstrap() async {
+    // Check network connectivity first
+    final connectivityResult = await Connectivity().checkConnectivity();
+    final hasNetwork = connectivityResult != ConnectivityResult.none;
+
     // Simulate/perform initialization: load last-used platform
     final start = DateTime.now();
     final isMTR = await StartupService.loadInitialPlatformIsMTR();
@@ -38,9 +42,95 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     if (!mounted) return;
+
     final target =
         isFirstTime ? const FirstTimeToApp() : MyHomePage(initialIsMTR: isMTR);
     _navigateTo(target, widget.allowAnimation);
+
+    // Show network status after navigation
+    if (hasNetwork) {
+      // Show snackbar for good network connection
+      _showNetworkConnectedSnackbar();
+    } else {
+      // Show alert dialog for no network
+      _showNoNetworkAlert();
+    }
+  }
+
+  void _showNetworkConnectedSnackbar() {
+    // Use a post-frame callback to ensure context is available after navigation
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final loc = AppLocalizations.of(context);
+      if (loc == null) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(
+                Icons.wifi,
+                color: Colors.green,
+                size: 20,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  loc.networkConnected,
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.green[700],
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    });
+  }
+
+  void _showNoNetworkAlert() {
+    // Use a post-frame callback to ensure context is available after navigation
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final loc = AppLocalizations.of(context);
+      if (loc == null) return;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+          title: Row(
+            children: [
+              Icon(
+                Icons.wifi_off,
+                color: Colors.red,
+                size: 28,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  loc.noNetworkConnection,
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            loc.noNetworkMessage,
+            style: const TextStyle(fontSize: 16),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                loc.confirm,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   void _navigateTo(Widget page, bool allowAnimation) {

@@ -47,7 +47,7 @@ class LanguageSection extends StatelessWidget {
                 onPressed: () async {
                   await LocaleService.setLocale(const Locale('en'));
                 },
-                child: const Text('English'),
+                child: Text(loc.languageEnglishLabel),
               ),
             ),
             Expanded(
@@ -55,7 +55,7 @@ class LanguageSection extends StatelessWidget {
                 onPressed: () async {
                   await LocaleService.setLocale(const Locale('zh'));
                 },
-                child: const Text('繁體中文'),
+                child: Text(loc.languageChineseLabel),
               ),
             ),
             Expanded(

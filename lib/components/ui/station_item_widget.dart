@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../scripts/bookmarks/bookmarks_service.dart';
 import '../../scripts/utils/responsive_utils.dart';
 import '../../scripts/utils/text_utils.dart';
 import '../../theme/app_color_scheme.dart';

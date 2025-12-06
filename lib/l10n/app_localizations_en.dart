@@ -403,4 +403,182 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editItems => 'Edit Items';
+
+  @override
+  String get dataOpsNotificationPermission => 'Notification Permission';
+
+  @override
+  String get dataOpsNotificationPermissionSubtitle => 'Allow app to send notifications';
+
+  @override
+  String get notificationPermissionRequired => 'Notification permission is required';
+
+  @override
+  String get notificationPermissionDenied => 'Notification permission is required to enable this feature';
+
+  @override
+  String get dataOpsResetCTB => 'Reset CTB Data';
+
+  @override
+  String get dataOpsResetCTBSubtitle => 'Clear all CTB stop information cache';
+
+  @override
+  String get resetCTBDialogTitle => 'Reset CTB Data';
+
+  @override
+  String get resetCTBDialogContent => 'Are you sure you want to clear all CTB stop information cache? This action cannot be undone.';
+
+  @override
+  String get resetCTBSuccess => 'CTB data cleared successfully';
+
+  @override
+  String resetCTBFailed(Object error) {
+    return 'Failed to clear: $error';
+  }
+
+  @override
+  String get resetCTBFailedPlaceholder => 'Failed to clear';
+
+  @override
+  String get networkConnected => 'Network Connected';
+
+  @override
+  String get noNetworkConnection => 'No Network Connection';
+
+  @override
+  String get noNetworkMessage => 'Please check your network connection settings. The app requires an internet connection to fetch real-time transport information.';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String editItemsDialogTitle(Object type) {
+    return 'Edit Items ($type)';
+  }
+
+  @override
+  String editItemsDialogContent(Object count) {
+    return 'Edit mode coming soon. $count items.';
+  }
+
+  @override
+  String get editItemsPlaceholder => 'Edit Items';
+
+  @override
+  String get longPressToBookmark => 'You can long press bus stations to add to bookmarks';
+
+  @override
+  String appInfoCopiedMessage(Object value) {
+    return 'Copied: $value';
+  }
+
+  @override
+  String get languageEnglishLabel => 'English';
+
+  @override
+  String get languageChineseLabel => '繁體中文';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get apiReview => 'API-Review';
+
+  @override
+  String get mtrTimetableUnavailable => 'Unable to fetch timetable, please try again later';
+
+  @override
+  String get mtrStationNotFound => 'Station data not found';
+
+  @override
+  String get systemMonitorTitle => 'System Monitor';
+
+  @override
+  String get systemMonitorSubtitle => 'Device scaling and screen information';
+
+  @override
+  String get systemMonitorLoading => 'Loading system information...';
+
+  @override
+  String get systemMonitorScreenScaling => 'Screen Scaling';
+
+  @override
+  String get systemMonitorScreenSize => 'Screen Size';
+
+  @override
+  String get systemMonitorSystemInfo => 'System Information';
+
+  @override
+  String get systemMonitorScalingStatus => 'Scaling Status';
+
+  @override
+  String get systemMonitorTextScaling => 'Text Scaling';
+
+  @override
+  String get systemMonitorPixelDensity => 'Pixel Density';
+
+  @override
+  String get systemMonitorWidth => 'Width';
+
+  @override
+  String get systemMonitorHeight => 'Height';
+
+  @override
+  String get systemMonitorAvailableHeight => 'Available Height';
+
+  @override
+  String get systemMonitorThemeMode => 'Theme Mode';
+
+  @override
+  String get systemMonitorStatusBar => 'Status Bar';
+
+  @override
+  String get systemMonitorBottomSafeArea => 'Bottom Safe Area';
+
+  @override
+  String get systemMonitorTextScaleStatus => 'Text Scale Status';
+
+  @override
+  String get systemMonitorRecommendation => 'Recommendation';
+
+  @override
+  String get systemMonitorLightMode => 'Light Mode';
+
+  @override
+  String get systemMonitorDarkMode => 'Dark Mode';
+
+  @override
+  String get systemMonitorUnknown => 'Unknown';
+
+  @override
+  String systemMonitorNormal(Object scale) {
+    return 'Normal (${scale}x)';
+  }
+
+  @override
+  String systemMonitorSlightZoom(Object scale) {
+    return 'Slight Zoom (${scale}x)';
+  }
+
+  @override
+  String systemMonitorMediumZoom(Object scale) {
+    return 'Medium Zoom (${scale}x)';
+  }
+
+  @override
+  String systemMonitorHighZoom(Object scale) {
+    return 'High Zoom (${scale}x)';
+  }
+
+  @override
+  String get systemMonitorUINormal => 'UI display normal';
+
+  @override
+  String get systemMonitorUISlightImpact => 'UI may have slight impact';
+
+  @override
+  String get systemMonitorUICheckLayout => 'Recommend checking UI layout';
+
+  @override
+  String get systemMonitorUIOptimize => 'Need to optimize UI responsive design';
 }

@@ -122,15 +122,13 @@ class _BookmarkPageState extends State<BookmarkPage>
   }
 
   void _showEditDialog({required bool isKMB}) {
-    // TODO: Implement edit dialog for reordering and deleting bookmarks
     final loc = AppLocalizations.of(context)!;
     final itemList = isKMB ? _kmbBookmarks : _mtrBookmarks;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        // TODO: Replace with loc.editItems after running flutter gen-l10n
-        title: Text('Edit Items (${isKMB ? 'KMB' : 'MTR'})'), // loc.editItems
-        content: Text('Edit mode coming soon. ${itemList.length} items.'),
+        title: Text(loc.editItemsDialogTitle(isKMB ? 'KMB' : 'MTR')),
+        content: Text(loc.editItemsDialogContent(itemList.length.toString())),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -157,7 +155,7 @@ class _BookmarkPageState extends State<BookmarkPage>
             child: ElevatedButton.icon(
               onPressed: () => _showEditDialog(isKMB: true),
               icon: const Icon(Icons.edit),
-              label: const Text('Edit Items'), // loc.editItems
+              label: Text(AppLocalizations.of(context)!.editItemsPlaceholder),
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
               ),
@@ -183,7 +181,7 @@ class _BookmarkPageState extends State<BookmarkPage>
             child: ElevatedButton.icon(
               onPressed: () => _showEditDialog(isKMB: false),
               icon: const Icon(Icons.edit),
-              label: const Text('Edit Items'), // loc.editItems
+              label: Text(AppLocalizations.of(context)!.editItemsPlaceholder),
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
               ),

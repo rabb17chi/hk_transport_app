@@ -55,15 +55,30 @@ class TransportRouteBanner extends StatelessWidget {
             ),
             child: Row(
               children: [
+                Container(
+                  width: ResponsiveUtils.getResponsiveSize(context, 120.0),
+                  height: ResponsiveUtils.getResponsiveSize(context, 60.0),
+                  alignment: Alignment.center,
+                  child: Text(
+                    routeNumber,
+                    style: TextStyle(
+                      fontSize: ResponsiveUtils.getOverflowSafeFontSize(
+                          context, 30.0),
+                      fontWeight: FontWeight.bold,
+                      color: textColor,
+                    ),
+                  ),
+                ),
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         titleTop,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: ResponsiveUtils.getOverflowSafeFontSize(
                               context, 24.0),
@@ -78,6 +93,7 @@ class TransportRouteBanner extends StatelessWidget {
                         titleBottom,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: ResponsiveUtils.getOverflowSafeFontSize(
                               context, 14.0),
@@ -86,20 +102,6 @@ class TransportRouteBanner extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ),
-                ),
-                Container(
-                  width: ResponsiveUtils.getResponsiveSize(context, 120.0),
-                  height: ResponsiveUtils.getResponsiveSize(context, 60.0),
-                  alignment: Alignment.center,
-                  child: Text(
-                    routeNumber,
-                    style: TextStyle(
-                      fontSize: ResponsiveUtils.getOverflowSafeFontSize(
-                          context, 30.0),
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
-                    ),
                   ),
                 ),
               ],

@@ -239,7 +239,7 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
                         ElevatedButton.icon(
                           onPressed: _loadInitialData,
                           icon: const Icon(Icons.refresh),
-                          label: const Text('Retry'),
+                          label: Text(AppLocalizations.of(context)!.retry),
                         ),
                       ],
                     ),

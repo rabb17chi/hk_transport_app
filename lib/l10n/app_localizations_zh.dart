@@ -403,4 +403,182 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get editItems => '編輯項目';
+
+  @override
+  String get dataOpsNotificationPermission => '通知權限';
+
+  @override
+  String get dataOpsNotificationPermissionSubtitle => '允許應用程式發送通知';
+
+  @override
+  String get notificationPermissionRequired => '需要通知權限';
+
+  @override
+  String get notificationPermissionDenied => '需要通知權限才能啟用此功能';
+
+  @override
+  String get dataOpsResetCTB => '重置 CTB 資料';
+
+  @override
+  String get dataOpsResetCTBSubtitle => '清除所有 CTB 車站資訊快取';
+
+  @override
+  String get resetCTBDialogTitle => '重置 CTB 資料';
+
+  @override
+  String get resetCTBDialogContent => '確定要清除所有 CTB 車站資訊快取嗎？此操作無法復原。';
+
+  @override
+  String get resetCTBSuccess => 'CTB 資料已清除';
+
+  @override
+  String resetCTBFailed(Object error) {
+    return '清除失敗：$error';
+  }
+
+  @override
+  String get resetCTBFailedPlaceholder => '清除失敗';
+
+  @override
+  String get networkConnected => '網絡連接正常';
+
+  @override
+  String get noNetworkConnection => '無網絡連接';
+
+  @override
+  String get noNetworkMessage => '請檢查您的網絡連接設置。應用程式需要網絡連接才能獲取實時交通資訊。';
+
+  @override
+  String get confirm => '確定';
+
+  @override
+  String editItemsDialogTitle(Object type) {
+    return '編輯項目 ($type)';
+  }
+
+  @override
+  String editItemsDialogContent(Object count) {
+    return '編輯模式即將推出。$count 個項目。';
+  }
+
+  @override
+  String get editItemsPlaceholder => '編輯項目';
+
+  @override
+  String get longPressToBookmark => '你可以長按巴士站增加至收藏';
+
+  @override
+  String appInfoCopiedMessage(Object value) {
+    return '已複製：$value';
+  }
+
+  @override
+  String get languageEnglishLabel => 'English';
+
+  @override
+  String get languageChineseLabel => '繁體中文';
+
+  @override
+  String get retry => '重試';
+
+  @override
+  String get apiReview => 'API-審查';
+
+  @override
+  String get mtrTimetableUnavailable => '無法獲取時刻表，請稍後重試';
+
+  @override
+  String get mtrStationNotFound => '找不到車站資料';
+
+  @override
+  String get systemMonitorTitle => '系統監控';
+
+  @override
+  String get systemMonitorSubtitle => '設備縮放與屏幕信息';
+
+  @override
+  String get systemMonitorLoading => '系統信息載入中...';
+
+  @override
+  String get systemMonitorScreenScaling => '屏幕縮放';
+
+  @override
+  String get systemMonitorScreenSize => '屏幕尺寸';
+
+  @override
+  String get systemMonitorSystemInfo => '系統信息';
+
+  @override
+  String get systemMonitorScalingStatus => '縮放狀態';
+
+  @override
+  String get systemMonitorTextScaling => '文字縮放';
+
+  @override
+  String get systemMonitorPixelDensity => '像素密度';
+
+  @override
+  String get systemMonitorWidth => '寬度';
+
+  @override
+  String get systemMonitorHeight => '高度';
+
+  @override
+  String get systemMonitorAvailableHeight => '可用高度';
+
+  @override
+  String get systemMonitorThemeMode => '主題模式';
+
+  @override
+  String get systemMonitorStatusBar => '狀態欄';
+
+  @override
+  String get systemMonitorBottomSafeArea => '底部安全區';
+
+  @override
+  String get systemMonitorTextScaleStatus => '文字縮放狀態';
+
+  @override
+  String get systemMonitorRecommendation => '建議';
+
+  @override
+  String get systemMonitorLightMode => '淺色模式';
+
+  @override
+  String get systemMonitorDarkMode => '深色模式';
+
+  @override
+  String get systemMonitorUnknown => '未知';
+
+  @override
+  String systemMonitorNormal(Object scale) {
+    return '正常 (${scale}x)';
+  }
+
+  @override
+  String systemMonitorSlightZoom(Object scale) {
+    return '輕微放大 (${scale}x)';
+  }
+
+  @override
+  String systemMonitorMediumZoom(Object scale) {
+    return '中等放大 (${scale}x)';
+  }
+
+  @override
+  String systemMonitorHighZoom(Object scale) {
+    return '高度放大 (${scale}x)';
+  }
+
+  @override
+  String get systemMonitorUINormal => 'UI 顯示正常';
+
+  @override
+  String get systemMonitorUISlightImpact => 'UI 可能略有影響';
+
+  @override
+  String get systemMonitorUICheckLayout => '建議檢查 UI 佈局';
+
+  @override
+  String get systemMonitorUIOptimize => '需要優化 UI 響應式設計';
 }
