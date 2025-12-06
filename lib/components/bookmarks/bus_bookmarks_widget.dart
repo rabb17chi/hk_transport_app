@@ -86,12 +86,12 @@ class _KMBBookmarksWidgetState extends State<KMBBookmarksWidget> {
                       children: [
                         Container(
                           width: 120,
-                          height: 48,
+                          height: 56,
                           decoration: isCTB
                               ? BoxDecoration(
                                   color: AppColorScheme.ctbBannerBackgroundColor
                                       .withOpacity(0.8),
-                                  borderRadius: BorderRadius.circular(4),
+                                  borderRadius: BorderRadius.circular(8),
                                 )
                               : null,
                           child: Center(
