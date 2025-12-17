@@ -29,7 +29,11 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
   }
 
   void _handleModeToggleLongPress() async {
+    // Change the mode
     widget.onModeToggle?.call();
+
+    // Navigate to the mode page (index 1)
+    widget.onTap(1);
 
     // Provide heavy vibration feedback for mode change
     await VibrationHelper.strongVibrate();

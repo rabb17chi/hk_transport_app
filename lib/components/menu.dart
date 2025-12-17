@@ -181,7 +181,6 @@ class _MenuScreenState extends State<MenuScreen> {
   Widget _buildDevLinksTile() {
     return ListTile(
       title: Text(AppLocalizations.of(context)!.menuDevLinks),
-      // subtitle: Text(AppLocalizations.of(context)!.menuDevLinksSubtitle),
       leading: const Icon(Icons.code),
       onTap: () {
         DeveloperLinksDialog.show(context);

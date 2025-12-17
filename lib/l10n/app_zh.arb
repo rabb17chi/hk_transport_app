@@ -126,7 +126,7 @@
   "resetAppTitle": "重設應用",
   "resetButton": "重設",
   "resetAppDialogTitle": "重設應用",
-  "resetAppDialogContent": "這將清除快取、書籤和偏好設定。",
+  "resetAppDialogContent": "將會移除所有收藏的資料",
   "cancel": "取消",
   "editItems": "編輯項目",
   "dataOpsNotificationPermission": "通知權限",

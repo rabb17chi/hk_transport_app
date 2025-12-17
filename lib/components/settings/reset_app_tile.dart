@@ -4,7 +4,6 @@ import '../../scripts/kmb/kmb_cache_service.dart';
 import '../ui/splash_screen.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
 import '../../scripts/utils/first_time_service.dart';
-// TODO: Uncomment after running flutter gen-l10n
 import '../../l10n/app_localizations.dart';
 
 class ResetAppTile extends StatefulWidget {
@@ -46,13 +45,9 @@ class _ResetAppTileState extends State<ResetAppTile> {
 
   Future<void> _confirmAndReset() async {
     final loc = AppLocalizations.of(context)!;
-    // TODO: Replace with loc.resetAppDialogTitle after running flutter gen-l10n
-    final dialogTitle = 'Reset App'; // loc.resetAppDialogTitle
-    // TODO: Replace with loc.resetAppDialogContent after running flutter gen-l10n
-    final dialogContent =
-        'This will clear caches, bookmarks and preferences.'; // loc.resetAppDialogContent
-    // TODO: Replace with loc.cancel after running flutter gen-l10n
-    final cancelText = 'Cancel'; // loc.cancel
+    final dialogTitle = loc.resetAppDialogTitle;
+    final dialogContent = loc.resetAppDialogContent;
+    final cancelText = loc.cancel;
 
     final shouldReset = await showDialog<bool>(
           context: context,

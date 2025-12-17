@@ -396,7 +396,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get resetAppDialogTitle => '重設應用';
 
   @override
-  String get resetAppDialogContent => '這將清除快取、書籤和偏好設定。';
+  String get resetAppDialogContent => '將會移除所有收藏的資料';
 
   @override
   String get cancel => '取消';
