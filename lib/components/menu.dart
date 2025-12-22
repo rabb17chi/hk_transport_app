@@ -19,8 +19,6 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
-  // ignore: unused_field
-  bool _isRefreshing = false;
   bool _langExpanded = false;
   bool _themeExpanded = false;
   bool _dataOpsExpanded = false;
@@ -46,19 +44,12 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   Future<void> _refreshCache() async {
-    setState(() {
-      _isRefreshing = true;
-    });
     await KMBCacheService.clearCache();
-    // Immediately fetch fresh data to warm cache and make data available now
     try {
       await KMBApiService.getAllRoutes();
       await KMBApiService.getAllStops();
       await CTBApiService.getAllRoutes();
     } catch (_) {}
-    setState(() {
-      _isRefreshing = false;
-    });
   }
 
   @override

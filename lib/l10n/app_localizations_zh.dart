@@ -27,7 +27,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get menuStyleSubtitle => '字體、顏色、大小（即將推出）';
 
   @override
-  String get menuUpdateKMB => '手動更新巴士資料';
+  String get menuUpdateKMB => '手動更新九巴資料';
 
   @override
   String get menuRefresh => '刷新';
@@ -57,7 +57,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dataOpsDisplayBusFullName => '顯示巴士完整名稱（站碼）';
 
   @override
-  String get dataOpsRefreshKMB => '手動更新巴士資料';
+  String get dataOpsRefreshKMB => '手動更新九巴資料';
 
   @override
   String get dataOpsRefreshNow => '立即更新';
@@ -417,19 +417,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get notificationPermissionDenied => '需要通知權限才能啟用此功能';
 
   @override
-  String get dataOpsResetCTB => '重置 CTB 資料';
+  String get dataOpsResetCTB => '重置 城巴 資料';
 
   @override
-  String get dataOpsResetCTBSubtitle => '清除所有 CTB 車站資訊快取';
+  String get dataOpsResetCTBSubtitle => '清除所有 城巴 車站資訊快取';
 
   @override
-  String get resetCTBDialogTitle => '重置 CTB 資料';
+  String get resetCTBDialogTitle => '重置 城巴 資料';
 
   @override
-  String get resetCTBDialogContent => '確定要清除所有 CTB 車站資訊快取嗎？此操作無法復原。';
+  String get resetCTBDialogContent => '確定要清除所有 城巴 車站資訊快取嗎？此操作無法復原。';
 
   @override
-  String get resetCTBSuccess => 'CTB 資料已清除';
+  String get resetCTBSuccess => '城巴 資料已清除';
 
   @override
   String resetCTBFailed(Object error) {
