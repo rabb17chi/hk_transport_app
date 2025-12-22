@@ -57,6 +57,15 @@
   "timetableUnavailable": "Unable to fetch timetable, please try again later",
   "removeBookmarkSuccess": "Bookmark removed",
   "removeBookmarkError": "Error removing bookmark",
+  "deleteBookmarkConfirm": "Are you sure you want to delete: {bookmark}?",
+  "@deleteBookmarkConfirm": {
+    "placeholders": {
+      "bookmark": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteBookmarkConfirmPlaceholder": "Are you sure you want to delete this bookmark?",
   "etaSeqPrefix": "Trip ",
   "etaSeqSuffix": "",
   "devLinksDialogTitle": "Project's GitHub Link",

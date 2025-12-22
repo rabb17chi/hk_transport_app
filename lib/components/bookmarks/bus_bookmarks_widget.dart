@@ -19,11 +19,15 @@ import 'bookmarks_empty_state.dart';
 class KMBBookmarksWidget extends StatefulWidget {
   final List<BookmarkItem> kmbBookmarks;
   final bool isLoading;
+  final bool isEditMode;
+  final Future<void> Function(BookmarkItem) onDelete;
 
   const KMBBookmarksWidget({
     super.key,
     required this.kmbBookmarks,
     required this.isLoading,
+    this.isEditMode = false,
+    required this.onDelete,
   });
 
   @override
@@ -268,28 +272,45 @@ class _KMBBookmarksWidgetState extends State<KMBBookmarksWidget> {
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: () => _showETA(context, bookmark, loc),
+              onTap: widget.isEditMode
+                  ? null
+                  : () => _showETA(context, bookmark, loc),
               borderRadius: BorderRadius.circular(12),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 16,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
                   children: [
-                    // Station name
-                    Text(
-                      stationName,
-                      style: TextStyle(
-                        fontSize: ResponsiveUtils.getOverflowSafeFontSize(
-                            context, 20.0),
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? AppColorScheme.white
-                            : AppColorScheme.black87,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Station name
+                          Text(
+                            stationName,
+                            style: TextStyle(
+                              fontSize: ResponsiveUtils.getOverflowSafeFontSize(
+                                  context, 20.0),
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? AppColorScheme.white
+                                  : AppColorScheme.black87,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+                    // Trash icon in edit mode
+                    if (widget.isEditMode)
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        color: AppColorScheme.dangerColor,
+                        onPressed: () => widget.onDelete(bookmark),
+                        tooltip: loc.removeBookmarkSuccess,
+                      ),
                   ],
                 ),
               ),

@@ -53,6 +53,15 @@
   "timetableUnavailable": "無法獲取時刻表，請稍後重試",
   "removeBookmarkSuccess": "已移除書籤",
   "removeBookmarkError": "移除書籤時發生錯誤",
+  "deleteBookmarkConfirm": "確定要刪除：{bookmark}？",
+  "@deleteBookmarkConfirm": {
+    "placeholders": {
+      "bookmark": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteBookmarkConfirmPlaceholder": "確定要刪除這個書籤嗎？",
   "etaSeqPrefix": "第 ",
   "etaSeqSuffix": " 班",
   "dataOpsMtrReverse": "反轉港鐵站序",

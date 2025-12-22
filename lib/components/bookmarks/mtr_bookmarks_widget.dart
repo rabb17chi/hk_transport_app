@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../scripts/bookmarks/mtr_bookmarks_service.dart';
 import '../../scripts/mtr/mtr_schedule_service.dart';
 import '../../scripts/mtr/mtr_data.dart';
+import '../../theme/app_color_scheme.dart';
 import '../../l10n/locale_utils.dart';
 import '../../l10n/app_localizations.dart';
 import '../mtr/mtr_schedule_dialog.dart';
@@ -13,11 +14,15 @@ import 'bookmarks_empty_state.dart';
 class MTRBookmarksWidget extends StatefulWidget {
   final List<MTRBookmarkItem> mtrBookmarks;
   final bool isLoading;
+  final bool isEditMode;
+  final Future<void> Function(MTRBookmarkItem) onDelete;
 
   const MTRBookmarksWidget({
     super.key,
     required this.mtrBookmarks,
     required this.isLoading,
+    this.isEditMode = false,
+    required this.onDelete,
   });
 
   @override
@@ -86,9 +91,19 @@ class _MTRBookmarksWidgetState extends State<MTRBookmarksWidget> {
                     }).toList(),
                   ),
                 ],
+                // Trash icon in edit mode
+                if (widget.isEditMode) ...[
+                  const SizedBox(width: 8),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    color: AppColorScheme.dangerColor,
+                    onPressed: () => widget.onDelete(bookmark),
+                    tooltip: loc.removeBookmarkSuccess,
+                  ),
+                ],
               ],
             ),
-            onTap: () async {
+            onTap: widget.isEditMode ? null : () async {
               try {
                 final resp = await MTRScheduleService.getSchedule(
                   lineCode: bookmark.lineCode,

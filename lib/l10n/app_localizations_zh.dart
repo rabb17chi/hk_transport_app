@@ -187,6 +187,14 @@ class AppLocalizationsZh extends AppLocalizations {
   String get removeBookmarkError => '移除書籤時發生錯誤';
 
   @override
+  String deleteBookmarkConfirm(String bookmark) {
+    return '確定要刪除：$bookmark？';
+  }
+
+  @override
+  String get deleteBookmarkConfirmPlaceholder => '確定要刪除這個書籤嗎？';
+
+  @override
   String get etaSeqPrefix => '第 ';
 
   @override

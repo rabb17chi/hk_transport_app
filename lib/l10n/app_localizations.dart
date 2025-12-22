@@ -443,6 +443,18 @@ abstract class AppLocalizations {
   /// **'Error removing bookmark'**
   String get removeBookmarkError;
 
+  /// No description provided for @deleteBookmarkConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete: {bookmark}?'**
+  String deleteBookmarkConfirm(String bookmark);
+
+  /// No description provided for @deleteBookmarkConfirmPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this bookmark?'**
+  String get deleteBookmarkConfirmPlaceholder;
+
   /// No description provided for @etaSeqPrefix.
   ///
   /// In en, this message translates to:

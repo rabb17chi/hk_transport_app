@@ -187,6 +187,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get removeBookmarkError => 'Error removing bookmark';
 
   @override
+  String deleteBookmarkConfirm(String bookmark) {
+    return 'Are you sure you want to delete: $bookmark?';
+  }
+
+  @override
+  String get deleteBookmarkConfirmPlaceholder => 'Are you sure you want to delete this bookmark?';
+
+  @override
   String get etaSeqPrefix => 'Trip ';
 
   @override

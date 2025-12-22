@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../scripts/bookmarks/bookmarks_service.dart';
 import '../../scripts/bookmarks/mtr_bookmarks_service.dart';
+import '../../theme/app_color_scheme.dart';
+import '../../l10n/locale_utils.dart';
 import '../../l10n/app_localizations.dart';
 import 'bus_bookmarks_widget.dart';
 import 'mtr_bookmarks_widget.dart';
@@ -20,6 +22,7 @@ class _BookmarkPageState extends State<BookmarkPage>
   bool _isLoading = true;
   int _kmbTrigger = 0;
   int _mtrTrigger = 0;
+  bool _isEditMode = false;
 
   @override
   void initState() {
@@ -121,43 +124,158 @@ class _BookmarkPageState extends State<BookmarkPage>
     );
   }
 
-  void _showEditDialog({required bool isKMB}) {
+  void _toggleEditMode() {
+    setState(() {
+      _isEditMode = !_isEditMode;
+    });
+  }
+
+  Future<void> _deleteKMBBookmark(BookmarkItem bookmark) async {
     final loc = AppLocalizations.of(context)!;
-    final itemList = isKMB ? _kmbBookmarks : _mtrBookmarks;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(loc.editItemsDialogTitle(isKMB ? 'KMB' : 'MTR')),
-        content: Text(loc.editItemsDialogContent(itemList.length.toString())),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(loc.close),
+    final isZh = LocaleUtils.isChinese(context);
+    final stationName = isZh ? bookmark.stopNameTc : bookmark.stopNameEn;
+    final bookmarkInfo = '${bookmark.route} - $stationName';
+    final confirmed = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(loc.removeBookmarkSuccess),
+            content: Text(
+              loc.deleteBookmarkConfirm(bookmarkInfo),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(loc.cancel),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColorScheme.dangerColor,
+                ),
+                child: Text(loc.confirm),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ) ??
+        false;
+
+    if (confirmed == true) {
+      try {
+        await BookmarksService.removeBookmark(bookmark);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(loc.removeBookmarkSuccess),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+        // Reload bookmarks to refresh the list
+        await _loadBookmarks();
+        // Check if we should exit edit mode
+        if (_kmbBookmarks.isEmpty) {
+          setState(() {
+            _isEditMode = false;
+          });
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${loc.removeBookmarkError}: $e'),
+              backgroundColor: AppColorScheme.snackbarErrorColor,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _deleteMTRBookmark(MTRBookmarkItem bookmark) async {
+    final loc = AppLocalizations.of(context)!;
+    final isZh = LocaleUtils.isChinese(context);
+    final stationName = isZh ? bookmark.stationNameTc : bookmark.stationNameEn;
+    final confirmed = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(loc.removeBookmarkSuccess),
+            content: Text(
+              loc.deleteBookmarkConfirm(stationName),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(loc.cancel),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColorScheme.dangerColor,
+                ),
+                child: Text(loc.confirm),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+
+    if (confirmed == true) {
+      try {
+        await MTRBookmarksService.removeBookmark(bookmark);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(loc.removeBookmarkSuccess),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+        // Reload bookmarks to refresh the list
+        await _loadBookmarks();
+        // Check if we should exit edit mode
+        if (_mtrBookmarks.isEmpty) {
+          setState(() {
+            _isEditMode = false;
+          });
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${loc.removeBookmarkError}: $e'),
+              backgroundColor: AppColorScheme.snackbarErrorColor,
+            ),
+          );
+        }
+      }
+    }
   }
 
   Widget _buildKMBBookmarks() {
+    final loc = AppLocalizations.of(context)!;
     return Column(
       children: [
         Expanded(
           child: KMBBookmarksWidget(
             kmbBookmarks: _kmbBookmarks,
             isLoading: _isLoading,
+            isEditMode: _isEditMode,
+            onDelete: _deleteKMBBookmark,
           ),
         ),
         // Edit button for KMB tab - only show if there's at least 1 bookmark
-        if (_kmbBookmarks.length >= 1)
+        if (_kmbBookmarks.isNotEmpty)
           Container(
             padding: const EdgeInsets.all(16),
             child: ElevatedButton.icon(
-              onPressed: () => _showEditDialog(isKMB: true),
-              icon: const Icon(Icons.edit),
-              label: Text(AppLocalizations.of(context)!.editItemsPlaceholder),
+              onPressed: _toggleEditMode,
+              icon: Icon(_isEditMode ? Icons.done : Icons.edit),
+              label: Text(_isEditMode ? loc.close : loc.editItemsPlaceholder),
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
+                backgroundColor: _isEditMode
+                    ? AppColorScheme.successStateColor
+                    : AppColorScheme.buttonColor,
               ),
             ),
           ),
@@ -166,24 +284,30 @@ class _BookmarkPageState extends State<BookmarkPage>
   }
 
   Widget _buildMTRBookmarks() {
+    final loc = AppLocalizations.of(context)!;
     return Column(
       children: [
         Expanded(
           child: MTRBookmarksWidget(
             mtrBookmarks: _mtrBookmarks,
             isLoading: _isLoading,
+            isEditMode: _isEditMode,
+            onDelete: _deleteMTRBookmark,
           ),
         ),
         // Edit button for MTR tab - only show if there's at least 1 bookmark
-        if (_mtrBookmarks.length >= 1)
+        if (_mtrBookmarks.isNotEmpty)
           Container(
             padding: const EdgeInsets.all(16),
             child: ElevatedButton.icon(
-              onPressed: () => _showEditDialog(isKMB: false),
-              icon: const Icon(Icons.edit),
-              label: Text(AppLocalizations.of(context)!.editItemsPlaceholder),
+              onPressed: _toggleEditMode,
+              icon: Icon(_isEditMode ? Icons.done : Icons.edit),
+              label: Text(_isEditMode ? loc.close : loc.editItemsPlaceholder),
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
+                backgroundColor: _isEditMode
+                    ? AppColorScheme.successStateColor
+                    : AppColorScheme.buttonColor,
               ),
             ),
           ),

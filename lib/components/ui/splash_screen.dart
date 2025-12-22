@@ -49,45 +49,10 @@ class _SplashScreenState extends State<SplashScreen> {
     _navigateTo(target, widget.allowAnimation);
 
     // Show network status after navigation
-    if (hasNetwork) {
-      // Show snackbar for good network connection
-      _showNetworkConnectedSnackbar();
-    } else {
+    if (!hasNetwork) {
       // Show alert dialog for no network
       _showNoNetworkAlert();
     }
-  }
-
-  void _showNetworkConnectedSnackbar() {
-    // Use a post-frame callback to ensure context is available after navigation
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      final loc = AppLocalizations.of(context);
-      if (loc == null) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(
-                Icons.wifi,
-                color: AppColorScheme.successStateColor,
-                size: 20,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  loc.networkConnected,
-                  style: const TextStyle(fontSize: 14),
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: AppColorScheme.successStateColor,
-          duration: const Duration(seconds: 2),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-    });
   }
 
   void _showNoNetworkAlert() {
