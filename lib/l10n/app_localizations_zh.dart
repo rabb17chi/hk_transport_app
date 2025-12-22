@@ -253,7 +253,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get kmbEmptySubtitle => '例如: 1A';
 
   @override
-  String get introWelcomeTitle => '歡迎使用應用程式';
+  String get introWelcomeTitle => '歡迎使用‘下班幾時’';
 
   @override
   String get introUseIt => '您可以使用它來查詢';
@@ -581,4 +581,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get systemMonitorUIOptimize => '需要優化 UI 響應式設計';
+
+  @override
+  String get noNetworkReturnMessage => '請檢查您的設備網絡狀態（流動數據/WiFi 已開啟）';
 }

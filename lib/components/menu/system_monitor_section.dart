@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../main.dart';
+import '../../theme/app_color_scheme.dart';
 import '../../l10n/app_localizations.dart';
 
 /// System Monitor Section
@@ -72,7 +73,7 @@ class SystemMonitorSection extends StatelessWidget {
               child: Center(
                 child: Text(
                   loc.systemMonitorLoading,
-                  style: const TextStyle(color: Colors.grey),
+                  style: const TextStyle(color: AppColorScheme.grey500),
                 ),
               ),
             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../scripts/utils/first_time_service.dart';
+import '../../theme/app_color_scheme.dart';
 import '../ui/splash_screen.dart';
 import 'steps/project_intro.dart';
 import 'steps/bus_setting.dart';
@@ -69,8 +70,8 @@ class _FirstTimeToAppState extends State<FirstTimeToApp> {
 
   @override
   Widget build(BuildContext context) {
-    final Color filledColor = Colors.green;
-    final Color emptyColor = Colors.grey.shade300;
+    final Color filledColor = AppColorScheme.successStateColor;
+    final Color emptyColor = AppColorScheme.grey300;
 
     return Scaffold(
       body: SafeArea(

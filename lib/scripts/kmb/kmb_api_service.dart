@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
+import '../../scripts/utils/network_error_helper.dart';
 import 'kmb_cache_service.dart';
 
 /// KMB API Service for Hong Kong Bus Data
@@ -53,6 +54,13 @@ class KMBApiService {
       }
     } catch (e) {
       print('Error in getAllRoutes: $e');
+      // Check if it's a network error
+      if (NetworkErrorHelper.isNetworkError(e)) {
+        throw NetworkException(
+          NetworkErrorHelper.getNetworkErrorMessage(e),
+          e,
+        );
+      }
       final errorMessage = context != null
           ? AppLocalizations.of(context)?.apiErrorFetchingRoutes ??
               'Error fetching routes'
@@ -102,6 +110,13 @@ class KMBApiService {
       }
     } catch (e) {
       print('Error in getAllStops: $e');
+      // Check if it's a network error
+      if (NetworkErrorHelper.isNetworkError(e)) {
+        throw NetworkException(
+          NetworkErrorHelper.getNetworkErrorMessage(e),
+          e,
+        );
+      }
       final errorMessage = context != null
           ? AppLocalizations.of(context)?.apiErrorFetchingStops ??
               'Error fetching stops'
@@ -231,6 +246,13 @@ class KMBApiService {
         throw Exception('$errorMessage: ${response.statusCode}');
       }
     } catch (e) {
+      // Check if it's a network error
+      if (NetworkErrorHelper.isNetworkError(e)) {
+        throw NetworkException(
+          NetworkErrorHelper.getNetworkErrorMessage(e),
+          e,
+        );
+      }
       final errorMessage = context != null
           ? AppLocalizations.of(context)?.apiErrorFetchingRouteStops ??
               'Error fetching route stops'
@@ -261,6 +283,13 @@ class KMBApiService {
         throw Exception('$errorMessage: ${response.statusCode}');
       }
     } catch (e) {
+      // Check if it's a network error
+      if (NetworkErrorHelper.isNetworkError(e)) {
+        throw NetworkException(
+          NetworkErrorHelper.getNetworkErrorMessage(e),
+          e,
+        );
+      }
       final errorMessage = context != null
           ? AppLocalizations.of(context)?.apiErrorFetchingETA ??
               'Error fetching ETA'

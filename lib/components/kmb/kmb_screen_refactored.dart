@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hk_transport_app/components/kmb/input_keyboard.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
 import '../../scripts/ctb/ctb_api_service.dart';
+import '../../scripts/utils/network_error_helper.dart';
+import '../../widgets/no_network_return.dart';
 import 'package:hk_transport_app/l10n/app_localizations.dart';
 import '../../scripts/utils/settings_service.dart';
 import '../../scripts/utils/responsive_utils.dart';
@@ -103,7 +105,11 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
       });
     } catch (e) {
       setState(() {
-        _errorMessage = 'Error loading data: $e';
+        if (e is NetworkException) {
+          _errorMessage = e.toString();
+        } else {
+          _errorMessage = 'Error loading data: $e';
+        }
         _isLoading = false;
       });
     }
@@ -212,38 +218,40 @@ class _KMBTestScreenRefactoredState extends State<KMBTestScreenRefactored> {
         child: _isLoading && _routes.isEmpty && _stops.isEmpty
             ? const Center(child: CircularProgressIndicator())
             : _errorMessage.isNotEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.error_outline,
-                          size: 64,
-                          color: AppColorScheme.errorIconColor,
+                ? (NetworkErrorHelper.isNetworkError(_errorMessage)
+                    ? NoNetworkReturn(onRetry: _loadInitialData)
+                    : Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.error_outline,
+                              size: 64,
+                              color: AppColorScheme.errorIconColor,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Error Loading Data',
+                              style: Theme.of(context).textTheme.headlineSmall,
+                            ),
+                            const SizedBox(height: 8),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 32),
+                              child: Text(
+                                _errorMessage,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            ElevatedButton.icon(
+                              onPressed: _loadInitialData,
+                              icon: const Icon(Icons.refresh),
+                              label: Text(AppLocalizations.of(context)!.retry),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Error Loading Data',
-                          style: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                        const SizedBox(height: 8),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 32),
-                          child: Text(
-                            _errorMessage,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        ElevatedButton.icon(
-                          onPressed: _loadInitialData,
-                          icon: const Icon(Icons.refresh),
-                          label: Text(AppLocalizations.of(context)!.retry),
-                        ),
-                      ],
-                    ),
-                  )
+                      ))
                 : Column(
                     children: [
                       // Search Field - Fixed height

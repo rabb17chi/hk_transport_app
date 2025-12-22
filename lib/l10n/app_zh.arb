@@ -82,7 +82,7 @@
   "kmbNoMatchSubtitle": "請重新檢查路線號碼",
   "kmbEmptyTitle": "請輸入路線號碼",
   "kmbEmptySubtitle": "例如: 1A",
-  "introWelcomeTitle": "歡迎使用應用程式",
+  "introWelcomeTitle": "歡迎使用‘下班幾時’",
   "introUseIt": "您可以使用它來查詢",
   "introHKTransportsETA": "香港交通的到站時間",
   "introETAFull": "（預計到達時間）",
@@ -182,7 +182,8 @@
   "systemMonitorUINormal": "UI 顯示正常",
   "systemMonitorUISlightImpact": "UI 可能略有影響",
   "systemMonitorUICheckLayout": "建議檢查 UI 佈局",
-  "systemMonitorUIOptimize": "需要優化 UI 響應式設計"
+  "systemMonitorUIOptimize": "需要優化 UI 響應式設計",
+  "noNetworkReturnMessage": "請檢查您的設備網絡狀態（流動數據/WiFi 已開啟）"
 }
 
 

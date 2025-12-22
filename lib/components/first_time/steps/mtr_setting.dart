@@ -94,7 +94,7 @@ class _MTRSettingStepState extends State<MTRSettingStep> {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey.shade300),
+                border: Border.all(color: AppColorScheme.grey300),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,7 +133,7 @@ class _MTRSettingStepState extends State<MTRSettingStep> {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey.shade300),
+                border: Border.all(color: AppColorScheme.grey300),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,7 +223,7 @@ class _MTRSettingStepState extends State<MTRSettingStep> {
             child: Text(
               displayName,
               style: TextStyle(
-                color: Colors.white,
+                color: AppColorScheme.white,
                 fontWeight: FontWeight.bold,
                 fontSize: ResponsiveUtils.getResponsiveFontSize(context, 16.0),
               ),
@@ -247,7 +247,7 @@ class _MTRSettingStepState extends State<MTRSettingStep> {
           Row(
             children: [
               Icon(_autoRefresh ? Icons.autorenew : Icons.autorenew_outlined,
-                  color: _autoRefresh ? Colors.green : Colors.grey),
+                  color: _autoRefresh ? AppColorScheme.successStateColor : AppColorScheme.grey500),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(

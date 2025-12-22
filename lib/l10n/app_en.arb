@@ -184,6 +184,7 @@
   "systemMonitorUINormal": "UI display normal",
   "systemMonitorUISlightImpact": "UI may have slight impact",
   "systemMonitorUICheckLayout": "Recommend checking UI layout",
-  "systemMonitorUIOptimize": "Need to optimize UI responsive design"
+  "systemMonitorUIOptimize": "Need to optimize UI responsive design",
+  "noNetworkReturnMessage": "Please check your device network status(mobile-data/wifi is on)"
 }
 

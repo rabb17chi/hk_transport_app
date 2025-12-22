@@ -1198,6 +1198,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Need to optimize UI responsive design'**
   String get systemMonitorUIOptimize;
+
+  /// No description provided for @noNetworkReturnMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your device network status(mobile-data/wifi is on)'**
+  String get noNetworkReturnMessage;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -581,4 +581,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get systemMonitorUIOptimize => 'Need to optimize UI responsive design';
+
+  @override
+  String get noNetworkReturnMessage => 'Please check your device network status(mobile-data/wifi is on)';
 }

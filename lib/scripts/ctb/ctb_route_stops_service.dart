@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../utils/network_error_helper.dart';
 
 /// CTB (Citybus) Route-Stops Service
 ///
@@ -25,10 +26,11 @@ class CTBRouteStopsService {
     final normalized = _normalizeBound(bound);
     final url = Uri.parse('$baseUrl/route-stop/ctb/$route/$normalized');
 
-    final response = await http.get(url);
-    if (response.statusCode != 200) {
-      throw Exception('CTB route-stops failed: ${response.statusCode}');
-    }
+    try {
+      final response = await http.get(url);
+      if (response.statusCode != 200) {
+        throw Exception('CTB route-stops failed: ${response.statusCode}');
+      }
 
     final body = json.decode(response.body) as Map<String, dynamic>;
     final List<dynamic> list = (body['data'] as List<dynamic>? ?? <dynamic>[]);
@@ -36,6 +38,16 @@ class CTBRouteStopsService {
     return list
         .map((e) => CTBRouteStop.fromJson(e as Map<String, dynamic>))
         .toList();
+    } catch (e) {
+      // Check if it's a network error
+      if (NetworkErrorHelper.isNetworkError(e)) {
+        throw NetworkException(
+          NetworkErrorHelper.getNetworkErrorMessage(e),
+          e,
+        );
+      }
+      rethrow;
+    }
   }
 
   static String _normalizeBound(String bound) {
@@ -47,14 +59,25 @@ class CTBRouteStopsService {
 
   /// Fetch CTB stop information by stop id
   static Future<CTBStopInfo> getStopInfo(String stopId) async {
-    final url = Uri.parse('$baseUrl/stop/$stopId');
-    final response = await http.get(url);
-    if (response.statusCode != 200) {
-      throw Exception('CTB stop info failed: ${response.statusCode}');
+    try {
+      final url = Uri.parse('$baseUrl/stop/$stopId');
+      final response = await http.get(url);
+      if (response.statusCode != 200) {
+        throw Exception('CTB stop info failed: ${response.statusCode}');
+      }
+      final body = json.decode(response.body) as Map<String, dynamic>;
+      final data = body['data'] as Map<String, dynamic>? ?? <String, dynamic>{};
+      return CTBStopInfo.fromJson(data);
+    } catch (e) {
+      // Check if it's a network error
+      if (NetworkErrorHelper.isNetworkError(e)) {
+        throw NetworkException(
+          NetworkErrorHelper.getNetworkErrorMessage(e),
+          e,
+        );
+      }
+      rethrow;
     }
-    final body = json.decode(response.body) as Map<String, dynamic>;
-    final data = body['data'] as Map<String, dynamic>? ?? <String, dynamic>{};
-    return CTBStopInfo.fromJson(data);
   }
 
   /// Load stop info from persistent cache if available
@@ -139,14 +162,25 @@ class CTBRouteStopsService {
     required String stopId,
     required String route,
   }) async {
-    final url = Uri.parse('$baseUrl/eta/ctb/$stopId/$route');
-    final response = await http.get(url);
-    if (response.statusCode != 200) {
-      throw Exception('CTB ETA failed: ${response.statusCode}');
+    try {
+      final url = Uri.parse('$baseUrl/eta/ctb/$stopId/$route');
+      final response = await http.get(url);
+      if (response.statusCode != 200) {
+        throw Exception('CTB ETA failed: ${response.statusCode}');
+      }
+      final body = json.decode(response.body) as Map<String, dynamic>;
+      final List<dynamic> list = (body['data'] as List<dynamic>? ?? <dynamic>[]);
+      return list.map((e) => CTBETA.fromJson(e as Map<String, dynamic>)).toList();
+    } catch (e) {
+      // Check if it's a network error
+      if (NetworkErrorHelper.isNetworkError(e)) {
+        throw NetworkException(
+          NetworkErrorHelper.getNetworkErrorMessage(e),
+          e,
+        );
+      }
+      rethrow;
     }
-    final body = json.decode(response.body) as Map<String, dynamic>;
-    final List<dynamic> list = (body['data'] as List<dynamic>? ?? <dynamic>[]);
-    return list.map((e) => CTBETA.fromJson(e as Map<String, dynamic>)).toList();
   }
 }
 

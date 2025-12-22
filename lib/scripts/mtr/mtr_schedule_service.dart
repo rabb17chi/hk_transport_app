@@ -5,6 +5,7 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../utils/network_error_helper.dart';
 import 'mtr_data.dart';
 
 class MTRScheduleService {
@@ -28,6 +29,13 @@ class MTRScheduleService {
         return null;
       }
     } catch (e) {
+      // Check if it's a network error and throw NetworkException
+      if (NetworkErrorHelper.isNetworkError(e)) {
+        throw NetworkException(
+          NetworkErrorHelper.getNetworkErrorMessage(e),
+          e,
+        );
+      }
       return null;
     }
   }

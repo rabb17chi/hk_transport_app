@@ -56,15 +56,15 @@ class StationItemWidget extends StatelessWidget {
                               ? 0.85
                               : 0.35)
                       : Theme.of(context).brightness == Brightness.dark
-                          ? Colors.grey[900]
-                          : Colors.white,
+                          ? AppColorScheme.grey900
+                          : AppColorScheme.white,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: isSelected
                         ? AppColorScheme.selectedBorderColor
                         : Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
+                            ? AppColorScheme.white
+                            : AppColorScheme.black,
                     width: isSelected ? 3 : 1,
                   ),
                 ),
@@ -94,7 +94,7 @@ class StationItemWidget extends StatelessWidget {
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: const Color(0xFFF7A925),
+        color: AppColorScheme.kmbBannerTextColor,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Center(

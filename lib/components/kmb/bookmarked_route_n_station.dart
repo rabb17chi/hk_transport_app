@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
+import '../../theme/app_color_scheme.dart';
 import '../ui/eta_dialog.dart';
 import '../../scripts/bookmarks/bookmarks_service.dart';
 import '../../l10n/app_localizations.dart';
@@ -53,7 +54,7 @@ class _BookmarkedRouteWithStationState
         children: [
           // Custom header bar
           Container(
-            color: Colors.yellow[700],
+            color: AppColorScheme.kmbBannerTextColor,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
@@ -61,7 +62,7 @@ class _BookmarkedRouteWithStationState
                   child: Text(
                     'My Bus Bookmarks',
                     style: TextStyle(
-                      color: Colors.black,
+                      color: AppColorScheme.black,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),

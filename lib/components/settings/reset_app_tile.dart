@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../scripts/kmb/kmb_cache_service.dart';
+import '../../theme/app_color_scheme.dart';
 import '../ui/splash_screen.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
 import '../../scripts/utils/first_time_service.dart';
@@ -23,7 +24,7 @@ class _ResetAppTileState extends State<ResetAppTile> {
       children: [
         ListTile(
           title: Text(loc.resetAppTitle),
-          leading: const Icon(Icons.delete_forever, color: Colors.red),
+          leading: const Icon(Icons.delete_forever, color: AppColorScheme.dangerColor),
           trailing: _isResetting
               ? const SizedBox(
                   width: 20,
@@ -34,7 +35,7 @@ class _ResetAppTileState extends State<ResetAppTile> {
                   onPressed: _confirmAndReset,
                   child: Text(
                     loc.resetButton,
-                    style: const TextStyle(color: Colors.red),
+                    style: const TextStyle(color: AppColorScheme.dangerColor),
                   ),
                 ),
         ),
@@ -64,7 +65,7 @@ class _ResetAppTileState extends State<ResetAppTile> {
                   onPressed: () => Navigator.of(ctx).pop(true),
                   child: Text(
                     loc.resetButton,
-                    style: const TextStyle(color: Colors.red),
+                    style: const TextStyle(color: AppColorScheme.dangerColor),
                   ),
                 ),
               ],

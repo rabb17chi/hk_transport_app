@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../scripts/bookmarks/bookmarks_service.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
 import '../../scripts/ctb/ctb_route_stops_service.dart';
+import '../../scripts/utils/network_error_helper.dart';
+import '../../widgets/no_network_return.dart';
 import '../ui/eta_dialog.dart';
 import '../../l10n/locale_utils.dart';
 import '../../l10n/app_localizations.dart';
@@ -217,9 +219,24 @@ class _KMBBookmarksWidgetState extends State<KMBBookmarksWidget> {
       }
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${loc.etaLoadFailed}: $e')),
-      );
+      if (e is NetworkException || NetworkErrorHelper.isNetworkError(e)) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: NoNetworkReturn(),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(loc.close),
+              ),
+            ],
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${loc.etaLoadFailed}: $e')),
+        );
+      }
     }
   }
 
@@ -238,13 +255,13 @@ class _KMBBookmarksWidgetState extends State<KMBBookmarksWidget> {
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
             color: Theme.of(context).brightness == Brightness.dark
-                ? Colors.grey[850]
-                : Colors.grey[100],
+                ? AppColorScheme.grey850
+                : AppColorScheme.grey100,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.grey[700]!
-                  : Colors.grey[300]!,
+                  ? AppColorScheme.grey700
+                  : AppColorScheme.grey300,
               width: 1,
             ),
           ),
@@ -269,8 +286,8 @@ class _KMBBookmarksWidgetState extends State<KMBBookmarksWidget> {
                             context, 20.0),
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black87,
+                            ? AppColorScheme.white
+                            : AppColorScheme.black87,
                       ),
                     ),
                   ],

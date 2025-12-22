@@ -69,7 +69,7 @@ class _BusSettingStepState extends State<BusSettingStep> {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey.shade300),
+                border: Border.all(color: AppColorScheme.grey300),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,7 +107,7 @@ class _BusSettingStepState extends State<BusSettingStep> {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey.shade300),
+                border: Border.all(color: AppColorScheme.grey300),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

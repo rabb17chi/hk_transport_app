@@ -47,7 +47,7 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
             Theme.of(context).colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: AppColorScheme.black.withOpacity(0.1),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),
@@ -152,15 +152,15 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
               decoration: BoxDecoration(
                 color: widget.isMTRMode
                     ? isSelected
-                        ? Colors.blue
-                        : Colors.blue.withOpacity(0.2)
+                        ? AppColorScheme.mtrColor
+                        : AppColorScheme.mtrColor.withOpacity(0.2)
                     : isSelected
-                        ? Colors.orange
-                        : Colors.orange.withOpacity(0.2),
+                        ? AppColorScheme.kmbColor
+                        : AppColorScheme.kmbColor.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color:
-                      isSelected ? Colors.white : Colors.white.withOpacity(0.4),
+                      isSelected ? AppColorScheme.white : AppColorScheme.white.withOpacity(0.4),
                   width: 1,
                 ),
               ),
@@ -169,13 +169,13 @@ class _AppBottomNavBarState extends State<AppBottomNavBar> {
                 children: [
                   Icon(
                     widget.isMTRMode ? Icons.train : Icons.directions_bus,
-                    color: Colors.white,
+                    color: AppColorScheme.white,
                     size: 28,
                   ),
                   Text(
                     widget.isMTRMode ? 'MTR' : 'BUS',
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: AppColorScheme.white,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

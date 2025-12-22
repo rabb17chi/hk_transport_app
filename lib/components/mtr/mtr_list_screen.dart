@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../scripts/mtr/mtr_data.dart';
 import '../../scripts/mtr/mtr_schedule_service.dart';
+import '../../scripts/utils/network_error_helper.dart';
+import '../../widgets/no_network_return.dart';
 import '../../scripts/mtr/mtr_station_order.dart';
 import '../../scripts/utils/vibration_helper.dart';
+import '../../theme/app_color_scheme.dart';
 import 'mtr_schedule_dialog.dart';
 import '../../scripts/bookmarks/mtr_bookmarks_service.dart';
 import '../../l10n/locale_utils.dart';
@@ -212,20 +215,20 @@ class _MTRListScreenState extends State<MTRListScreen> {
         final isBookmarked = snapshot.data ?? false;
 
         return Container(
-          color: isBookmarked ? Colors.pink[50] : null,
+          color: isBookmarked ? AppColorScheme.bookmarkPink50 : null,
           child: ListTile(
             leading: Container(
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: Colors.grey[300],
+                color: AppColorScheme.grey300,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Center(
                 child: Text(
                   stationKey,
                   style: const TextStyle(
-                    color: Colors.black87,
+                    color: AppColorScheme.black87,
                     fontWeight: FontWeight.bold,
                     fontSize: 8,
                   ),
@@ -240,7 +243,7 @@ class _MTRListScreenState extends State<MTRListScreen> {
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: isBookmarked
-                            ? Colors.black
+                            ? AppColorScheme.black
                             : Theme.of(context).colorScheme.onSurface),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -267,7 +270,7 @@ class _MTRListScreenState extends State<MTRListScreen> {
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: isBookmarked
-                        ? Colors.black
+                        ? AppColorScheme.black
                         : Theme.of(context).colorScheme.onSurface)),
             trailing: null,
             onTap: _isLoadingSchedule
@@ -359,7 +362,7 @@ class _MTRListScreenState extends State<MTRListScreen> {
             SnackBar(
               content: Text(AppLocalizations.of(context)!.mtrTimetableUnavailable),
               duration: const Duration(seconds: 3),
-              backgroundColor: Colors.red,
+              backgroundColor: AppColorScheme.snackbarErrorColor,
             ),
           );
         }
@@ -369,7 +372,31 @@ class _MTRListScreenState extends State<MTRListScreen> {
           SnackBar(
             content: Text(AppLocalizations.of(context)!.mtrStationNotFound),
             duration: const Duration(seconds: 2),
-            backgroundColor: Colors.orange,
+            backgroundColor: AppColorScheme.warningColor,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      if (e is NetworkException || NetworkErrorHelper.isNetworkError(e)) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: NoNetworkReturn(),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(AppLocalizations.of(context)!.close),
+              ),
+            ],
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.mtrTimetableUnavailable),
+            duration: const Duration(seconds: 3),
+            backgroundColor: Colors.red,
           ),
         );
       }
@@ -403,7 +430,7 @@ class _MTRListScreenState extends State<MTRListScreen> {
       child: Text(
         code,
         style: const TextStyle(
-          color: Colors.white,
+          color: AppColorScheme.white,
           fontSize: 11,
           fontWeight: FontWeight.w600,
         ),

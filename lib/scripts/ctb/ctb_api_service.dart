@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../utils/network_error_helper.dart';
 import 'ctb_cache_service.dart';
 
 /// CTB (Citybus) API Service
@@ -34,6 +35,13 @@ class CTBApiService {
       return routes;
     } catch (e) {
       print('[CTB] Error getAllRoutes: $e');
+      // Check if it's a network error
+      if (NetworkErrorHelper.isNetworkError(e)) {
+        throw NetworkException(
+          NetworkErrorHelper.getNetworkErrorMessage(e),
+          e,
+        );
+      }
       rethrow;
     }
   }

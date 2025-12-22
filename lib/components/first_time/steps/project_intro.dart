@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../scripts/utils/responsive_utils.dart';
+import '../../../theme/app_color_scheme.dart';
 
 enum IntroMode { bus, mtr }
 
@@ -150,7 +151,10 @@ class _ModeToggleRow extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.greenAccent),
+          border: Border.all(
+            color:
+                mtrSelected ? AppColorScheme.mtrColor : AppColorScheme.kmbColor,
+          ),
           borderRadius: BorderRadius.circular(12),
         ),
         alignment: Alignment.center,
@@ -168,7 +172,7 @@ class _ModeToggleRow extends StatelessWidget {
                   child: const Icon(
                     Icons.directions_bus,
                     size: 100,
-                    color: Colors.orange,
+                    color: AppColorScheme.kmbColor,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -186,7 +190,8 @@ class _ModeToggleRow extends StatelessWidget {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.swap_horiz, size: 40, color: Colors.grey),
+                const Icon(Icons.swap_horiz,
+                    size: 40, color: AppColorScheme.grey500),
                 Text(
                   holdLabel,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -208,7 +213,7 @@ class _ModeToggleRow extends StatelessWidget {
                   child: const Icon(
                     Icons.train,
                     size: 100,
-                    color: Colors.blue,
+                    color: AppColorScheme.mtrColor,
                   ),
                 ),
                 const SizedBox(height: 4),

@@ -3,6 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import '../../main.dart';
 import '../../scripts/utils/startup_service.dart';
 import '../../scripts/utils/first_time_service.dart';
+import '../../theme/app_color_scheme.dart';
 import '../../l10n/app_localizations.dart';
 import '../first_time/first_time_to_app.dart';
 
@@ -69,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               Icon(
                 Icons.wifi,
-                color: Colors.green,
+                color: AppColorScheme.successStateColor,
                 size: 20,
               ),
               const SizedBox(width: 12),
@@ -81,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ],
           ),
-          backgroundColor: Colors.green[700],
+          backgroundColor: AppColorScheme.successStateColor,
           duration: const Duration(seconds: 2),
           behavior: SnackBarBehavior.floating,
         ),
@@ -103,7 +104,7 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               Icon(
                 Icons.wifi_off,
-                color: Colors.red,
+                color: AppColorScheme.errorColor,
                 size: 28,
               ),
               const SizedBox(width: 12),
@@ -175,7 +176,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.directions_transit, size: 72, color: Colors.black54),
+            Icon(Icons.directions_transit, size: 72, color: AppColorScheme.black54),
             SizedBox(height: 16),
             Text(
               'HK Transport',

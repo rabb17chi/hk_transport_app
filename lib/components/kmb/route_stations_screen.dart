@@ -5,6 +5,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:hk_transport_app/l10n/app_localizations.dart';
 import '../../scripts/kmb/kmb_api_service.dart';
 import '../../scripts/ctb/ctb_route_stops_service.dart';
+import '../../scripts/utils/network_error_helper.dart';
+import '../../widgets/no_network_return.dart';
 import '../../scripts/bookmarks/bookmarks_service.dart';
 import '../../scripts/utils/vibration_helper.dart';
 import '../../scripts/utils/responsive_utils.dart';
@@ -204,7 +206,11 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
         print('Error: $e');
         print('================');
       }
-      await _setErrorState('Error loading ETA: $e');
+      if (e is NetworkException) {
+        await _setErrorState(e.toString());
+      } else {
+        await _setErrorState('Error loading ETA: $e');
+      }
     }
   }
 
@@ -275,8 +281,8 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
       decoration: BoxDecoration(
         border: Border.all(
           color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.white
-              : const Color(0xFF323232),
+              ? AppColorScheme.white
+              : AppColorScheme.kmbBannerBackgroundColor,
           width: 1,
         ),
         borderRadius: BorderRadius.circular(8),
@@ -383,44 +389,47 @@ class _RouteStationsScreenState extends State<RouteStationsScreen> {
                       ),
                     )
                   : _errorMessage.isNotEmpty
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.error_outline,
-                                size: 64,
-                                color: AppColorScheme.errorIconColor,
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                _errorMessage,
-                                style: TextStyle(
-                                  fontSize:
-                                      ResponsiveUtils.getOverflowSafeFontSize(
-                                          context, 16.0),
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 16),
-                              ElevatedButton(
-                                onPressed: _loadRouteStops,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFFF7A925),
-                                  foregroundColor: Colors.white,
-                                ),
-                                child: Text(
-                                  'Retry',
-                                  style: TextStyle(
-                                    fontSize:
-                                        ResponsiveUtils.getOverflowSafeFontSize(
-                                            context, 14.0),
+                      ? (NetworkErrorHelper.isNetworkError(_errorMessage) ||
+                              _errorMessage.contains('NetworkException')
+                          ? NoNetworkReturn(onRetry: _loadRouteStops)
+                          : Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.error_outline,
+                                    size: 64,
+                                    color: AppColorScheme.errorIconColor,
                                   ),
-                                ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    _errorMessage,
+                                    style: TextStyle(
+                                      fontSize:
+                                          ResponsiveUtils.getOverflowSafeFontSize(
+                                              context, 16.0),
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  ElevatedButton(
+                                    onPressed: _loadRouteStops,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColorScheme.kmbBannerTextColor,
+                                      foregroundColor: AppColorScheme.white,
+                                    ),
+                                    child: Text(
+                                      'Retry',
+                                      style: TextStyle(
+                                        fontSize:
+                                            ResponsiveUtils.getOverflowSafeFontSize(
+                                                context, 14.0),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        )
+                            ))
                       : (widget.isCTB
                               ? _ctbRouteStops.isEmpty
                               : _routeStops.isEmpty)
@@ -776,8 +785,8 @@ class _RouteStyles {
 
   BoxDecoration getETABlockDecoration(BuildContext context) => BoxDecoration(
         color: Theme.of(context).brightness == Brightness.dark
-            ? Colors.grey[900]
-            : Colors.white,
+            ? AppColorScheme.grey900
+            : AppColorScheme.white,
         border: Border.all(
           color: AppColorScheme.successBorderColor,
           width: 3,

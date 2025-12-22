@@ -6,6 +6,7 @@ import '../../scripts/notifications/notification_tracking_service.dart';
 import '../../scripts/notifications/notification_preferences_service.dart';
 import '../../scripts/ctb/ctb_cache_service.dart';
 import '../../scripts/ctb/ctb_route_stops_service.dart';
+import '../../theme/app_color_scheme.dart';
 
 class DataOperationsSection extends StatelessWidget {
   final Future<void> Function() onRefreshKMB;
@@ -179,7 +180,7 @@ class DataOperationsSection extends StatelessWidget {
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: TextButton.styleFrom(
-              foregroundColor: Colors.red,
+              foregroundColor: AppColorScheme.dangerColor,
             ),
             child: Text(loc.confirm),
           ),
@@ -205,7 +206,7 @@ class DataOperationsSection extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('${loc.resetCTBFailedPlaceholder}: $e'),
-              backgroundColor: Colors.red,
+              backgroundColor: AppColorScheme.snackbarErrorColor,
             ),
           );
         }

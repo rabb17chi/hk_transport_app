@@ -5,6 +5,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../../scripts/mtr/mtr_schedule_service.dart';
+import '../../scripts/utils/network_error_helper.dart';
+import '../../widgets/no_network_return.dart';
 import '../../scripts/mtr/mtr_data.dart';
 import '../../scripts/utils/vibration_helper.dart';
 import '../../scripts/utils/settings_service.dart';
@@ -87,14 +89,29 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
     } catch (e) {
       // 顯示錯誤消息
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content:
-                Text('${AppLocalizations.of(context)!.mtrUpdateError}: $e'),
-            duration: const Duration(seconds: 2),
-            backgroundColor: AppColorScheme.snackbarErrorColor,
-          ),
-        );
+        if (e is NetworkException || NetworkErrorHelper.isNetworkError(e)) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              content: NoNetworkReturn(),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(AppLocalizations.of(context)!.close),
+                ),
+              ],
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content:
+                  Text('${AppLocalizations.of(context)!.mtrUpdateError}: $e'),
+              duration: const Duration(seconds: 2),
+              backgroundColor: AppColorScheme.snackbarErrorColor,
+            ),
+          );
+        }
       }
     } finally {
       if (mounted) {
@@ -177,7 +194,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                         widget.lineCode)
                     : widget.lineCode,
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: AppColorScheme.white,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -332,7 +349,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                             onPressed:
                                 isAdding ? null : () => _handleAddLine(code),
                             style: OutlinedButton.styleFrom(
-                              foregroundColor: Colors.white,
+                              foregroundColor: AppColorScheme.white,
                               backgroundColor: _getLineColor(code),
                               side: BorderSide(color: _getLineColor(code)),
                               padding: const EdgeInsets.symmetric(
@@ -345,7 +362,7 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
                                       valueColor: AlwaysStoppedAnimation<Color>(
-                                          Colors.white),
+                                          AppColorScheme.white),
                                     ),
                                   )
                                 : Text(
@@ -662,10 +679,10 @@ class _MTRScheduleDialogState extends State<MTRScheduleDialog> {
   }
 
   Color _getTimeDifferenceColor(int? minutes) {
-    if (minutes == null || minutes < 0) return Colors.grey;
-    if (minutes < 1) return Colors.red;
-    if (minutes <= 3) return Colors.yellow[700]!;
-    return Colors.green;
+    if (minutes == null || minutes < 0) return AppColorScheme.grey500;
+    if (minutes < 1) return AppColorScheme.mtrScheduleRed;
+    if (minutes <= 3) return AppColorScheme.mtrScheduleYellow;
+    return AppColorScheme.mtrScheduleGreen;
   }
 
   Color _getLineColor(String lineCode) => MTRData.getLineColor(lineCode);

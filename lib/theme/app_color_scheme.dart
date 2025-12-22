@@ -194,6 +194,37 @@ class AppColorScheme {
   static const Color specialRouteShadowColor = Color(0x4D6B7280);
 
   // ============================================================================
+  // COMMON COLORS
+  // ============================================================================
+
+  static const Color white = Color(0xFFFFFFFF);
+  static const Color black = Color(0xFF000000);
+  static const Color black54 = Color(0x8A000000);
+  static const Color black87 = Color(0xDD000000);
+  static const Color white70 = Color(0xB3FFFFFF);
+
+  // Grey variants
+  static const Color grey50 = Color(0xFFFAFAFA);
+  static const Color grey100 = Color(0xFFF5F5F5);
+  static const Color grey200 = Color(0xFFEEEEEE);
+  static const Color grey300 = Color(0xFFE0E0E0);
+  static const Color grey400 = Color(0xFFBDBDBD);
+  static const Color grey500 = Color(0xFF9E9E9E);
+  static const Color grey600 = Color(0xFF757575);
+  static const Color grey700 = Color(0xFF616161);
+  static const Color grey800 = Color(0xFF424242);
+  static const Color grey850 = Color(0xFF303030);
+  static const Color grey900 = Color(0xFF212121);
+
+  // Status colors for MTR schedule
+  static const Color mtrScheduleRed = Color(0xFFD32F2F);
+  static const Color mtrScheduleYellow = Color(0xFFFBC02D);
+  static const Color mtrScheduleGreen = Color(0xFF388E3C);
+
+  // Bookmark pink variant
+  static const Color bookmarkPink50 = Color(0xFFFCE4EC);
+
+  // ============================================================================
   // UTILITY METHODS
   // ============================================================================
 
